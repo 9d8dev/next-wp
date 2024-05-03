@@ -2,12 +2,23 @@ import { getPostsByAuthorSlug, getAuthorBySlug } from "@/lib/wordpress";
 import { Main, Section, Container } from "@/components/craft";
 import Link from "next/link";
 import BackButton from "@/components/back";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const author = await getAuthorBySlug(params.slug);
+  return {
+    title: `Posts by Author: ${author.name}`,
+    description: `Browse posts written by ${author.name}.`,
+  };
+}
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const author = await getAuthorBySlug(params.slug);
   const posts = await getPostsByAuthorSlug(params.slug);
-
-  console.log(posts);
 
   return (
     <Main>

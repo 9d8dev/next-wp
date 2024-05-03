@@ -2,6 +2,14 @@ import { getAllAuthors } from "@/lib/wordpress";
 import { Main, Section, Container } from "@/components/craft";
 import Link from "next/link";
 import BackButton from "@/components/back";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "All Authors",
+    description: "Browse all authors on the site.",
+  };
+}
 
 export default async function Page() {
   const authors = await getAllAuthors();
