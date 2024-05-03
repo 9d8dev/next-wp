@@ -140,3 +140,34 @@ export async function getPostsByAuthor(authorId: number): Promise<Post[]> {
   const posts: Post[] = await response.json();
   return posts;
 }
+
+export async function getPostsByAuthorSlug(
+  authorSlug: string
+): Promise<Post[]> {
+  const author = await getAuthorBySlug(authorSlug);
+  const response = await fetch(
+    `${wordpress.url}/wp-json/wp/v2/posts?author=${author.id}`
+  );
+  const posts: Post[] = await response.json();
+  return posts;
+}
+
+export async function getPostsByCategorySlug(
+  categorySlug: string
+): Promise<Post[]> {
+  const category = await getCategoryBySlug(categorySlug);
+  const response = await fetch(
+    `${wordpress.url}/wp-json/wp/v2/posts?categories=${category.id}`
+  );
+  const posts: Post[] = await response.json();
+  return posts;
+}
+
+export async function getPostsByTagSlug(tagSlug: string): Promise<Post[]> {
+  const tag = await getTagBySlug(tagSlug);
+  const response = await fetch(
+    `${wordpress.url}/wp-json/wp/v2/posts?tags=${tag.id}`
+  );
+  const posts: Post[] = await response.json();
+  return posts;
+}

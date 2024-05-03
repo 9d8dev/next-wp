@@ -14,7 +14,7 @@ export default async function Page() {
           <h2>All Tags</h2>
           <div className="grid">
             {tags.map((tag: any) => (
-              <Link key={tag.id} href={`tags/${tag.id}`}>
+              <Link key={tag.id} href={`tags/${tag.slug}`}>
                 {tag.name}
               </Link>
             ))}

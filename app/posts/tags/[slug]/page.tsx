@@ -1,11 +1,11 @@
-import { getPostsByTag, getTagById } from "@/lib/wordpress";
+import { getPostsByTagSlug, getTagBySlug } from "@/lib/wordpress";
 import { Main, Section, Container } from "@/components/craft";
 import Link from "next/link";
 import BackButton from "@/components/back";
 
-export default async function Page({ params }: { params: { id: number } }) {
-  const posts = await getPostsByTag(params.id);
-  const tag = await getTagById(params.id);
+export default async function Page({ params }: { params: { slug: string } }) {
+  const posts = await getPostsByTagSlug(params.slug);
+  const tag = await getTagBySlug(params.slug);
 
   return (
     <Main>

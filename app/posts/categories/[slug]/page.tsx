@@ -1,18 +1,23 @@
-import { getPostsByCategory, getTagById } from "@/lib/wordpress";
+import {
+  getCategoryById,
+  getCategoryBySlug,
+  getPostsByCategorySlug,
+  getTagBySlug,
+} from "@/lib/wordpress";
 import { Main, Section, Container } from "@/components/craft";
 import Link from "next/link";
 import BackButton from "@/components/back";
 
-export default async function Page({ params }: { params: { id: number } }) {
-  const posts = await getPostsByCategory(params.id);
-  const category = await getTagById(params.id);
+export default async function Page({ params }: { params: { slug: string } }) {
+  const posts = await getPostsByCategorySlug(params.slug);
+  const category = await getCategoryBySlug(params.slug);
 
   return (
     <Main>
       <Section>
         <Container>
           <BackButton />
-          <h2>Posts by Category: {category.name}</h2>
+          <h2>Posts by Category: {category.slug}</h2>
           <div className="grid">
             {posts.map((post: any) => (
               <Link key={post.id} href={`/posts/${post.slug}`}>
