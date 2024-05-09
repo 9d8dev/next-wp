@@ -18,11 +18,14 @@ const ExampleJsx = () => {
     <article className="prose-m-none">
       <h1>
         <Balancer>
-          Hello World, welcome to the Next.js and{" "}
-          <a href="https://github.com/brijr/craft">brijr/craft</a> Starter!
+          Hello World, welcome to the Next.js and WordPress Starter by{" "}
+          <a href="https://9d8.dev">9d8</a>.
         </Balancer>
       </h1>
-      <a className="h-16 block" href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fbrijr%2Fcraft-starter">
+      <a
+        className="h-16 block"
+        href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fbrijr%2Fcraft-starter"
+      >
         {/* eslint-disable-next-line */}
         <img
           className="not-prose my-4"
@@ -31,19 +34,15 @@ const ExampleJsx = () => {
         />
       </a>
       <p>
-        Welcome to the{" "}
-        <a href="https://github.com/brijr/craft-starter">Craft Starter</a> by{" "}
-        <a href="https://bridger.to">Bridger Tower</a>. This Next JS template
-        has been set up based on the recommended{" "}
-        <a
-          className="underline"
-          href="https://ui.shadcn.com/docs/installation/next"
-        >
-          Shadcn/ui Next.js setup
-        </a>
-        . Use this template paired with{" "}
-        <a href="https://components.bridger.to">brijr/components</a> for rapid
-        building.
+        This is <a href="https://github.com/9d8dev/next-wp">next-wp</a>, created
+        as a way to build Wordpress sites with Next.js at rapid speed. This
+        starter is designed with <a href="https://ui.shadcn.com">shadcn/ui</a>,{" "}
+        <a href="https://github.com/brijr/craft">brijr/craft</a>, and Tailwind
+        CSS. Use <a href="https://components.bridger.to">brijr/components</a> to
+        build your site with prebuilt components. The data fetching and
+        typesafety is handled in <code>lib/wordpress.ts</code> and{" "}
+        <code>lib/wordpress.d.ts</code>. Questions? Join the discord community
+        at ...
       </p>
       <hr />
       <h2>Example Heading</h2>
