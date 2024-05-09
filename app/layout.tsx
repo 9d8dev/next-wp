@@ -65,11 +65,11 @@ const Nav = ({ className, children, id }: NavProps) => {
           className="hover:opacity-75 transition-all flex gap-2 items-center"
           href="/"
         >
-          <h2 className="sr-only">Craft UI</h2>
+          <h2 className="sr-only">next-wp starter</h2>
           <Image
             src={Logo}
             alt="Logo"
-            className="invert dark:invert-0"
+            className="dark:invert"
             width={84}
             height={30.54}
           ></Image>
