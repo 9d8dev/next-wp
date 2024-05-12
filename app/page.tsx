@@ -22,6 +22,7 @@ const ExampleJsx = () => {
           <a href="https://9d8.dev">9d8</a>.
         </Balancer>
       </h1>
+      {/* Vercel Clone Starter */}
       <a
         className="h-16 block"
         href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fbrijr%2Fcraft-starter"
