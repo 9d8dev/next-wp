@@ -1,6 +1,7 @@
 import { Main, Section, Container } from "@/components/craft";
 import Balancer from "react-wrap-balancer";
 
+// This page is using the craft.tsx component and design system
 export default function Home() {
   return (
     <Main>
@@ -13,6 +14,7 @@ export default function Home() {
   );
 }
 
+// This is just some example JS to demonstrate the Automatic styling from brijr/craft
 const ExampleJsx = () => {
   return (
     <article className="prose-m-none">
