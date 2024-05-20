@@ -94,17 +94,24 @@ const Container = ({ children, className, id }: ContainerProps) => {
 
 // Article Component
 type ArticleProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   id?: string;
+  dangerouslySetInnerHTML?: { __html: string };
 };
 
-const Article = ({ children, className, id }: ArticleProps) => {
+const Article = ({
+  children,
+  className,
+  id,
+  dangerouslySetInnerHTML,
+}: ArticleProps) => {
   return (
     <article
+      dangerouslySetInnerHTML={dangerouslySetInnerHTML}
       className={cn(
         // General Prose
-        "prose prose-neutral prose:font-sans dark:prose-invert xl:prose-lg max-w-none",
+        "prose prose-neutral prose:font-sans dark:prose-invert xl:prose-lg",
         // Prose Headings
         "prose-headings:font-normal",
         // Prose Paragraphs
