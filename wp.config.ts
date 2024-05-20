@@ -1,3 +1,3 @@
 export const wordpress = {
-  url: "https://windpress.wpenginepowered.com/",
+  url: "https://windpress.wpenginepowered.com",
 };

@@ -2,7 +2,14 @@
 // Used to fetch data from a Wordpress site using the Wordpress REST API
 // Types are imported from `wordpress.d.ts`
 
-import { Post, Category, Tag, Page, Author } from "./wordpress.d";
+import {
+  Post,
+  Category,
+  Tag,
+  Page,
+  Author,
+  FeaturedMedia,
+} from "./wordpress.d";
 import { wordpress } from "@/wp.config";
 
 // Wordpress Functions
@@ -170,4 +177,10 @@ export async function getPostsByTagSlug(tagSlug: string): Promise<Post[]> {
   );
   const posts: Post[] = await response.json();
   return posts;
+}
+
+export async function getFeaturedMediaById(id: number): Promise<FeaturedMedia> {
+  const response = await fetch(`${wordpress.url}/wp-json/wp/v2/media/${id}`);
+  const featuredMedia: FeaturedMedia = await response.json();
+  return featuredMedia;
 }
