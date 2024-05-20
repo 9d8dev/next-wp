@@ -66,7 +66,7 @@ const Nav = ({ className, children, id }: NavProps) => {
       >
         <Link
           className="hover:opacity-75 transition-all flex gap-2 items-center"
-          href="https://9d8.dev"
+          href="/"
         >
           <h2 className="sr-only">next-wp starter</h2>
           <Image
