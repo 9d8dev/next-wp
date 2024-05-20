@@ -1,5 +1,10 @@
+// Craft Imports
 import { Main, Section, Container } from "@/components/craft";
 import Balancer from "react-wrap-balancer";
+
+// Components
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 // This page is using the craft.tsx component and design system
 export default function Home() {
@@ -14,7 +19,7 @@ export default function Home() {
   );
 }
 
-// This is just some example JS to demonstrate the Automatic styling from brijr/craft
+// This is just some example JS to demonstrate automatic styling from brijr/craft
 const ExampleJsx = () => {
   return (
     <article className="prose-m-none">
@@ -24,6 +29,7 @@ const ExampleJsx = () => {
           <a href="https://9d8.dev">9d8</a>.
         </Balancer>
       </h1>
+
       {/* Vercel Clone Starter */}
       <a
         className="h-16 block"
@@ -47,6 +53,14 @@ const ExampleJsx = () => {
         <code>lib/wordpress.d.ts</code>. Questions? Join the discord community
         at ...
       </p>
+
+      <div className="flex flex-wrap gap-4 mt-6">
+        <Link href="/posts">Posts</Link>
+        <Link href="/posts/tags">Tags</Link>
+        <Link href="/posts/categories">Categories</Link>
+        <Link href="/posts/authors">Authors</Link>
+      </div>
+
       <hr />
       <h2>Example Heading</h2>
       <p>

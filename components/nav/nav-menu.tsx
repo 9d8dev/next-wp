@@ -18,36 +18,36 @@ import {
 const components: { title: string; href: string; description: string }[] = [
   {
     title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
+    href: "/",
     description:
       "A modal dialog that interrupts the user with important content and expects a response.",
   },
   {
     title: "Hover Card",
-    href: "/docs/primitives/hover-card",
+    href: "/",
     description:
       "For sighted users to preview content available behind a link.",
   },
   {
     title: "Progress",
-    href: "/docs/primitives/progress",
+    href: "/",
     description:
       "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
   },
   {
     title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
+    href: "//primitives",
     description: "Visually or semantically separates content.",
   },
   {
     title: "Tabs",
-    href: "/docs/primitives/tabs",
+    href: "/",
     description:
       "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
   },
   {
     title: "Tooltip",
-    href: "/docs/primitives/tooltip",
+    href: "/",
     description:
       "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
   },
@@ -58,7 +58,7 @@ export function NavMenu() {
     <NavigationMenu className="hidden md:block">
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
+          <NavigationMenuTrigger>Posts</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
               <li className="row-span-3">
@@ -68,23 +68,22 @@ export function NavMenu() {
                     href="/"
                   >
                     <div className="mb-2 mt-4 text-lg font-medium">
-                      shadcn/ui
+                      9d8/next-wp
                     </div>
                     <p className="text-sm leading-tight text-muted-foreground">
-                      Beautifully designed components that you can copy and
-                      paste into your apps. Accessible. Customizable. Open
-                      Source.
+                      Next.js and WordPress Starter for building production
+                      level websites.
                     </p>
                   </a>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/docs" title="Introduction">
+              <ListItem href="/posts" title="All Posts">
                 Re-usable components built using Radix UI and Tailwind CSS.
               </ListItem>
-              <ListItem href="/docs/installation" title="Installation">
+              <ListItem href="/posts/categories" title="Categories">
                 How to install dependencies and structure your app.
               </ListItem>
-              <ListItem href="/docs/primitives/typography" title="Typography">
+              <ListItem href="/posts/authors" title="Authors">
                 Styles for headings, paragraphs, lists...etc
               </ListItem>
             </ul>
@@ -107,7 +106,7 @@ export function NavMenu() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/docs" legacyBehavior passHref>
+          <Link href="/" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Documentation
             </NavigationMenuLink>
