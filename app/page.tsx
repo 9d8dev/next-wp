@@ -42,6 +42,7 @@ const ExampleJsx = () => {
           alt="Deploy with Vercel"
         />
       </a>
+
       <p>
         This is <a href="https://github.com/9d8dev/next-wp">next-wp</a>, created
         as a way to build Wordpress sites with Next.js at rapid speed. This
@@ -54,14 +55,23 @@ const ExampleJsx = () => {
         at ...
       </p>
 
-      <div className="flex flex-wrap gap-4 mt-6">
-        <Link href="/posts">Posts</Link>
-        <Link href="/posts/tags">Tags</Link>
-        <Link href="/posts/categories">Categories</Link>
-        <Link href="/posts/authors">Authors</Link>
+      <div className="flex flex-wrap gap-2 mt-6 not-prose">
+        <Button variant="outline" asChild>
+          <Link href="/posts">Posts</Link>
+        </Button>
+        <Button variant="outline" asChild>
+          <Link href="/posts/tags">Tags</Link>
+        </Button>
+        <Button variant="outline" asChild>
+          <Link href="/posts/categories">Categories</Link>
+        </Button>
+        <Button variant="outline" asChild>
+          <Link href="/posts/authors">Authors</Link>
+        </Button>
       </div>
 
       <hr />
+
       <h2>Example Heading</h2>
       <p>
         This is an example paragraph to illustrate what an article section might
