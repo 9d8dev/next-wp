@@ -29,7 +29,6 @@ const ExampleJsx = () => {
           <a href="https://9d8.dev">9d8</a>.
         </Balancer>
       </h1>
-
       {/* Vercel Clone Starter */}
       <a
         className="h-16 block"
@@ -42,7 +41,6 @@ const ExampleJsx = () => {
           alt="Deploy with Vercel"
         />
       </a>
-
       <p>
         This is <a href="https://github.com/9d8dev/next-wp">next-wp</a>, created
         as a way to build Wordpress sites with Next.js at rapid speed. This
@@ -51,10 +49,8 @@ const ExampleJsx = () => {
         CSS. Use <a href="https://components.bridger.to">brijr/components</a> to
         build your site with prebuilt components. The data fetching and
         typesafety is handled in <code>lib/wordpress.ts</code> and{" "}
-        <code>lib/wordpress.d.ts</code>. Questions? Join the discord community
-        at ...
+        <code>lib/wordpress.d.ts</code>. Questions? Email 9d8dev@gmail.com
       </p>
-
       <div className="flex flex-wrap gap-2 mt-6 not-prose">
         <Button variant="outline" asChild>
           <Link href="/posts">Posts</Link>
@@ -68,10 +64,11 @@ const ExampleJsx = () => {
         <Button variant="outline" asChild>
           <Link href="/posts/authors">Authors</Link>
         </Button>
+        <Button variant="outline" asChild>
+          <Link href="/pages">Pages</Link>
+        </Button>
       </div>
-
       <hr />
-
       <h2>Example Heading</h2>
       <p>
         This is an example paragraph to illustrate what an article section might
