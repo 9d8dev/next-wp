@@ -8,6 +8,7 @@ import {
 import { Section, Container, Article, Main } from "@/components/craft";
 import { Metadata } from "next";
 import { badgeVariants } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 import Link from "next/link";
 import Balancer from "react-wrap-balancer";
@@ -40,21 +41,26 @@ export default async function Page({ params }: { params: { slug: string } }) {
     <Main>
       <Section>
         <Container>
-          <BackButton />
-          <h1 className="pt-12">
+          <h1>
             <Balancer>{post.title.rendered}</Balancer>
-          </h1>
-
-          <h5 className="mb-12 text-sm">
-            Published {date} by{" "}
-            {author.name && (
-              <span>
-                <a href={`/posts/authors/${author.slug}`}>{author.name}</a>{" "}
-              </span>
-            )}
-          </h5>
-
-          <div className="h-96 mb-12 md:h-[560px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
+          </h1>{" "}
+          <div className="flex justify-between items-center gap-4 text-sm mb-4">
+            <h5>
+              Published {date} by{" "}
+              {author.name && (
+                <span>
+                  <a href={`/posts/authors/${author.slug}`}>{author.name}</a>{" "}
+                </span>
+              )}
+            </h5>
+            <Link
+              href={`/posts/categories/${category.slug}`}
+              className={cn(badgeVariants({ variant: "outline" }), "not-prose")}
+            >
+              {category.name}
+            </Link>
+          </div>
+          <div className="h-96 my-12 md:h-[560px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
             {/* eslint-disable-next-line */}
             <img
               className="w-full"
