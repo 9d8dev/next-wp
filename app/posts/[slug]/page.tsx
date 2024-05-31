@@ -38,41 +38,37 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const category = await getCategoryById(post.categories[0]);
 
   return (
-    <Main>
-      <Section>
-        <Container>
-          <h1>
-            <Balancer>{post.title.rendered}</Balancer>
-          </h1>{" "}
-          <div className="flex justify-between items-center gap-4 text-sm mb-4">
-            <h5>
-              Published {date} by{" "}
-              {author.name && (
-                <span>
-                  <a href={`/posts/authors/${author.slug}`}>{author.name}</a>{" "}
-                </span>
-              )}
-            </h5>
-            <Link
-              href={`/posts/categories/${category.slug}`}
-              className={cn(badgeVariants({ variant: "outline" }), "not-prose")}
-            >
-              {category.name}
-            </Link>
-          </div>
-          <div className="h-96 my-12 md:h-[560px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
-            {/* eslint-disable-next-line */}
-            <img
-              className="w-full"
-              src={featuredMedia.source_url}
-              alt={post.title.rendered}
-            />
-          </div>
-          <Article
-            dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+    <Section>
+      <Container>
+        <h1>
+          <Balancer>{post.title.rendered}</Balancer>
+        </h1>{" "}
+        <div className="flex justify-between items-center gap-4 text-sm mb-4">
+          <h5>
+            Published {date} by{" "}
+            {author.name && (
+              <span>
+                <a href={`/posts/authors/${author.slug}`}>{author.name}</a>{" "}
+              </span>
+            )}
+          </h5>
+          <Link
+            href={`/posts/categories/${category.slug}`}
+            className={cn(badgeVariants({ variant: "outline" }), "not-prose")}
+          >
+            {category.name}
+          </Link>
+        </div>
+        <div className="h-96 my-12 md:h-[560px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
+          {/* eslint-disable-next-line */}
+          <img
+            className="w-full"
+            src={featuredMedia.source_url}
+            alt={post.title.rendered}
           />
-        </Container>
-      </Section>
-    </Main>
+        </div>
+        <Article dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
+      </Container>
+    </Section>
   );
 }

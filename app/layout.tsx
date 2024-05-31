@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { NavMenu } from "@/components/nav/nav-menu";
 import { MobileNav } from "@/components/nav/mobile-nav";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { Main } from "@/components/craft";
 
 import Logo from "@/public/logo.svg";
 
@@ -47,7 +48,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Nav />
-          {children}
+          <Main>{children}</Main>
         </ThemeProvider>
       </body>
     </html>
@@ -57,7 +58,12 @@ export default function RootLayout({
 const Nav = ({ className, children, id }: NavProps) => {
   return (
     <nav
-      className={cn("sticky z-50 top-0 bg-background", "border-b", className)}
+      className={cn(
+        "sticky z-50 top-0 bg-background",
+        "border-b",
+        "fade-in",
+        className,
+      )}
       id={id}
     >
       <div

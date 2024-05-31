@@ -20,14 +20,12 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const page = await getPageBySlug(params.slug);
 
   return (
-    <Main>
-      <Section>
-        <Container>
-          <BackButton />
-          <h1 className="pt-12">{page.title.rendered}</h1>
-          <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
-        </Container>
-      </Section>
-    </Main>
+    <Section>
+      <Container>
+        <BackButton />
+        <h1 className="pt-12">{page.title.rendered}</h1>
+        <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
+      </Container>
+    </Section>
   );
 }
