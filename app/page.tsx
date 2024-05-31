@@ -1,5 +1,5 @@
 // Craft Imports
-import { Main, Section, Container } from "@/components/craft";
+import { Section, Container } from "@/components/craft";
 import Balancer from "react-wrap-balancer";
 
 // Components
@@ -9,13 +9,11 @@ import { Button } from "@/components/ui/button";
 // This page is using the craft.tsx component and design system
 export default function Home() {
   return (
-    <Main>
-      <Section>
-        <Container>
-          <ExampleJsx />
-        </Container>
-      </Section>
-    </Main>
+    <Section>
+      <Container>
+        <ExampleJsx />
+      </Container>
+    </Section>
   );
 }
 

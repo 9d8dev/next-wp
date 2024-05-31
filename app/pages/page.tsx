@@ -1,26 +1,24 @@
 import { getAllPages } from "@/lib/wordpress";
-import { Main, Section, Container } from "@/components/craft";
+import { Section, Container } from "@/components/craft";
 import Link from "next/link";
 
 export default async function Page() {
   const pages = await getAllPages();
 
   return (
-    <Main>
-      <Section>
-        <Container>
-          <h1>Pages</h1>
+    <Section>
+      <Container>
+        <h1>Pages</h1>
 
-          <h2>All Pages</h2>
-          <div className="grid">
-            {pages.map((page: any) => (
-              <Link key={page.id} href={`pages/${page.slug}`}>
-                {page.title.rendered}
-              </Link>
-            ))}
-          </div>
-        </Container>
-      </Section>
-    </Main>
+        <h2>All Pages</h2>
+        <div className="grid">
+          {pages.map((page: any) => (
+            <Link key={page.id} href={`pages/${page.slug}`}>
+              {page.title.rendered}
+            </Link>
+          ))}
+        </div>
+      </Container>
+    </Section>
   );
 }
