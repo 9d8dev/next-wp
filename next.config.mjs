@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "windpress.wpenginepowered.com",
+        hostname: process.env.WORDPRESS_HOSTNAME,
         port: "",
         pathname: "/**",
       },
