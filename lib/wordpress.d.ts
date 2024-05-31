@@ -1,4 +1,4 @@
-export interface Post {
+export type Post = {
   id: number;
   date: string;
   date_gmt: string;
@@ -44,7 +44,7 @@ export interface Post {
   tags: number[];
 }
 
-export interface Category {
+export type Category = {
   id: number;
   count: number;
   description: string;
@@ -56,7 +56,7 @@ export interface Category {
   meta: any[];
 }
 
-export interface Tag {
+export type Tag = {
   id: number;
   count: number;
   description: string;
@@ -67,7 +67,7 @@ export interface Tag {
   meta: any[];
 }
 
-export interface Page {
+export type Page = {
   id: number;
   date: string;
   date_gmt: string;
@@ -101,7 +101,7 @@ export interface Page {
   meta: any[];
 }
 
-export interface Author {
+export type Author = {
   id: number;
   name: string;
   url: string;
@@ -114,7 +114,7 @@ export interface Author {
   meta: any[];
 }
 
-export interface BlockType {
+export type BlockType = {
   api_version: number;
   title: string;
   name: string;
@@ -148,7 +148,7 @@ export interface BlockType {
   style: string;
 }
 
-export interface EditorBlock {
+export type EditorBlock = {
   id: string;
   name: string;
   attributes: {
@@ -159,7 +159,7 @@ export interface EditorBlock {
   innerContent: string[];
 }
 
-export interface TemplatePart {
+export type TemplatePart = {
   id: string;
   slug: string;
   theme: string;
@@ -179,7 +179,7 @@ export interface TemplatePart {
   area: string;
 }
 
-export interface SearchResult {
+export type SearchResult = {
   id: number;
   title: string;
   url: string;
@@ -196,7 +196,7 @@ export interface SearchResult {
   };
 }
 
-export interface FeaturedMedia {
+export type FeaturedMedia = {
   id: number;
   date: string;
   slug: string;
