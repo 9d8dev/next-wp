@@ -15,18 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 
-// Define the menu items
-const mainMenu = {
-  home: "/",
-  about: "/about",
-  contact: "/contact",
-};
-
-const contentMenu = {
-  blog: "/blog",
-  articles: "/articles",
-  tutorials: "/tutorials",
-};
+import { mainMenu, contentMenu } from "@/menu.config";
 
 export function MobileNav() {
   const [open, setOpen] = React.useState(false);
