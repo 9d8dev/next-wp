@@ -127,10 +127,7 @@ const Footer = () => {
               ></Image>
             </Link>
             <p>
-              <Balancer>
-                brijr/components is a collection of Next.js, React, Typescript
-                components for building landing pages and websites.
-              </Balancer>
+              <Balancer>{metadata.description}</Balancer>
             </p>
           </div>
           <div className="flex flex-col gap-2 text-sm">
