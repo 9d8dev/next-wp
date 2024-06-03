@@ -27,9 +27,11 @@ export default async function Page({ params }: { params: { slug: string } }) {
         <h2>Posts by Author: {author.name}</h2>
         <div className="grid">
           {posts.map((post: any) => (
-            <Link key={post.id} href={`/posts/${post.slug}`}>
-              {post.title.rendered}
-            </Link>
+            <Link
+              key={post.id}
+              href={`/posts/${post.slug}`}
+              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+            ></Link>
           ))}
         </div>
       </Container>
