@@ -1,8 +1,8 @@
 import { getPostsByTagSlug, getTagBySlug } from "@/lib/wordpress";
 import { Section, Container } from "@/components/craft";
 import { Metadata } from "next";
-import Link from "next/link";
 import BackButton from "@/components/back";
+import PostCard from "@/components/posts/post-card";
 
 export async function generateMetadata({
   params,
@@ -25,11 +25,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
       <Container>
         <BackButton />
         <h2>Posts by Tag: {tag.name}</h2>
-        <div className="grid">
+        <div className="grid grid-cols-3 gap-4">
           {posts.map((post: any) => (
-            <Link key={post.id} href={`/posts/${post.slug}`}>
-              {post.title.rendered}
-            </Link>
+            <PostCard key={post.id} post={post} />
           ))}
         </div>
       </Container>
