@@ -53,7 +53,7 @@ const Main = ({ children, className, id }: MainProps) => {
         "prose-blockquote:not-italic",
         // Pre and Code Blocks
         "prose-pre:border prose-pre:bg-muted/25 prose-pre:text-foreground",
-        className,
+        className
       )}
       id={id}
     >
@@ -115,7 +115,7 @@ const Article = ({
         // Prose Headings
         "prose-headings:font-normal",
         // Prose Paragraphs
-        "prose-p:mb-0",
+        "prose-p:mb-2",
         // Prose Strong
         "prose-strong:font-semibold",
         // Inline Links
@@ -126,7 +126,9 @@ const Article = ({
         "prose-blockquote:not-italic",
         // Pre and Code Blocks
         "prose-pre:border prose-pre:bg-muted/25",
-        className,
+        // Images
+        "prose-img:rounded-lg prose-img:border prose-img:overflow-hidden",
+        className
       )}
       id={id}
     >
