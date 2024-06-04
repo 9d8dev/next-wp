@@ -53,7 +53,7 @@ const ExampleJsx = () => {
       </p>
       <div className="grid md:grid-cols-3 gap-4 mt-6 not-prose">
         <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between"
+          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
           href="/posts"
         >
           <Pen size={32} />
@@ -65,7 +65,7 @@ const ExampleJsx = () => {
           </span>
         </Link>
         <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between"
+          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
           href="/pages"
         >
           <File size={32} />
@@ -77,7 +77,7 @@ const ExampleJsx = () => {
           </span>
         </Link>
         <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between"
+          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
           href="/posts/authors"
         >
           <User size={32} />
@@ -89,7 +89,7 @@ const ExampleJsx = () => {
           </span>
         </Link>
         <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between"
+          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
           href="/posts/tags"
         >
           <Tag size={32} />
@@ -101,7 +101,7 @@ const ExampleJsx = () => {
           </span>
         </Link>
         <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between"
+          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
           href="/posts/categories"
         >
           <Boxes size={32} />
@@ -113,7 +113,7 @@ const ExampleJsx = () => {
           </span>
         </Link>
         <a
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between"
+          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
           href="https://github.com/9d8dev/next-wp"
         >
           <Folder size={32} />
