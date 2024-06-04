@@ -4,6 +4,8 @@
 
 - `lib/wordpress.ts` -> Functions for fetching WordPress CMS via Rest API
 - `lib/wordpress.d.ts` -> Type declarations for WP Rest API
+- `components/posts/post-card.tsx` -> Component and styling for posts
+- `app/posts/filter.tsx` -> Component for handling filtering of posts
 
 Two `env` variables are required to be set in `.env.local` file:
 
