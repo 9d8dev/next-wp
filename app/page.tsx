@@ -51,7 +51,7 @@ const ExampleJsx = () => {
         typesafety is handled in <code>lib/WordPress.ts</code> and{" "}
         <code>lib/WordPress.d.ts</code>. Questions? Email 9d8dev@gmail.com
       </p>
-      <div className="grid md:grid-cols-3 gap-2 mt-6 not-prose">
+      <div className="grid md:grid-cols-3 gap-4 mt-6 not-prose">
         <Link
           className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between"
           href="/posts"
