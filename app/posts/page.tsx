@@ -6,14 +6,6 @@ import {
 } from "@/lib/wordpress";
 
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import {
   Pagination,
   PaginationContent,
   PaginationItem,
@@ -58,6 +50,18 @@ export default async function Page({
           selectedTag={tag}
           selectedCategory={category}
         />
+
+        {paginatedPosts.length > 0 ? (
+          <div className="grid grid-cols-3 gap-4">
+            {paginatedPosts.map((post: any) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </div>
+        ) : (
+          <div className="h-24 w-full border rounded-lg bg-accent/25 flex items-center justify-center">
+            <p>No Results Found</p>
+          </div>
+        )}
 
         <div className="grid grid-cols-3 gap-4">
           {paginatedPosts.map((post: any) => (
