@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"; // Ensure this is the correct import path
+import { Button } from "@/components/ui/button"; // Add this import for the Button component
 
 interface Author {
   id: number;
@@ -52,6 +53,10 @@ export default function FilterPosts({
       newParams.set(type, value);
     }
     router.push(`/posts?${newParams.toString()}`);
+  };
+
+  const handleResetFilters = () => {
+    router.push("/posts");
   };
 
   return (
@@ -109,6 +114,10 @@ export default function FilterPosts({
           ))}
         </SelectContent>
       </Select>
+
+      <Button variant="outline" onClick={handleResetFilters}>
+        Reset Filters
+      </Button>
     </div>
   );
 }
