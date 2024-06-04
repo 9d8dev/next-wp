@@ -12,12 +12,24 @@ import {
 } from "./wordpress.d";
 
 // Wordpress Config
+
 const url = process.env.WORDPRESS_URL;
 
 // Wordpress Functions
 
-export async function getAllPosts(): Promise<Post[]> {
-  const response = await fetch(`${url}/wp-json/wp/v2/posts`);
+export async function getAllPosts(filterParams?: {
+  author?: string;
+  tag?: string;
+  category?: string;
+}): Promise<Post[]> {
+  let filterUrl = "";
+  if (filterParams) {
+    const { author, tag, category } = filterParams;
+    filterUrl = `${author ? `&author=${author}` : ""}${
+      tag ? `&tags=${tag}` : ""
+    }${category ? `&categories=${category}` : ""}`;
+  }
+  const response = await fetch(`${url}/wp-json/wp/v2/posts?${filterUrl}`);
   const posts: Post[] = await response.json();
   return posts;
 }
