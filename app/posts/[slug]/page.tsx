@@ -48,12 +48,12 @@ export default async function Page({ params }: { params: { slug: string } }) {
             Published {date} by{" "}
             {author.name && (
               <span>
-                <a href={`/posts/authors/${author.slug}`}>{author.name}</a>{" "}
+                <a href={`/posts/?author=${author.id}`}>{author.name}</a>{" "}
               </span>
             )}
           </h5>
           <Link
-            href={`/posts/categories/${category.slug}`}
+            href={`/posts/?category=${category.id}`}
             className={cn(badgeVariants({ variant: "outline" }), "not-prose")}
           >
             {category.name}

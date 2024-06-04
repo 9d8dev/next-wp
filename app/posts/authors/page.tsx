@@ -21,7 +21,7 @@ export default async function Page() {
         <h2>All Authors</h2>
         <div className="grid">
           {authors.map((author: any) => (
-            <Link key={author.id} href={`authors/${author.slug}`}>
+            <Link key={author.id} href={`/posts/?author=${author.id}`}>
               {author.name}
             </Link>
           ))}

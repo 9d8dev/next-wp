@@ -21,7 +21,7 @@ export default async function Page() {
         <h2>All Categories</h2>
         <div className="grid">
           {categories.map((category: any) => (
-            <Link key={category.id} href={`categories/${category.slug}`}>
+            <Link key={category.id} href={`/posts/?category=${category.id}`}>
               {category.name}
             </Link>
           ))}
