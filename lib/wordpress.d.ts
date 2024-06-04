@@ -42,7 +42,7 @@ export type Post = {
   meta: any[];
   categories: number[];
   tags: number[];
-}
+};
 
 export type Category = {
   id: number;
@@ -54,7 +54,7 @@ export type Category = {
   taxonomy: "category";
   parent: number;
   meta: any[];
-}
+};
 
 export type Tag = {
   id: number;
@@ -65,7 +65,7 @@ export type Tag = {
   slug: string;
   taxonomy: "post_tag";
   meta: any[];
-}
+};
 
 export type Page = {
   id: number;
@@ -99,7 +99,7 @@ export type Page = {
   ping_status: "open" | "closed";
   template: string;
   meta: any[];
-}
+};
 
 export type Author = {
   id: number;
@@ -112,7 +112,7 @@ export type Author = {
     [key: string]: string;
   };
   meta: any[];
-}
+};
 
 export type BlockType = {
   api_version: number;
@@ -146,7 +146,7 @@ export type BlockType = {
   script: string;
   editor_style: string;
   style: string;
-}
+};
 
 export type EditorBlock = {
   id: string;
@@ -157,7 +157,7 @@ export type EditorBlock = {
   innerBlocks: EditorBlock[];
   innerHTML: string;
   innerContent: string[];
-}
+};
 
 export type TemplatePart = {
   id: string;
@@ -177,7 +177,7 @@ export type TemplatePart = {
   has_theme_file: boolean;
   author: number;
   area: string;
-}
+};
 
 export type SearchResult = {
   id: number;
@@ -194,7 +194,7 @@ export type SearchResult = {
       href: string;
     }[];
   };
-}
+};
 
 export type FeaturedMedia = {
   id: number;
@@ -227,4 +227,13 @@ export type FeaturedMedia = {
     };
   };
   source_url: string;
-}
+};
+
+type FilterBarProps = {
+  authors: Author[];
+  tags: Tag[];
+  categories: Category[];
+  selectedAuthor?: string;
+  selectedTag?: string;
+  selectedCategory?: string;
+};

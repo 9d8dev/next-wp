@@ -4,8 +4,7 @@ import {
   getAllTags,
   getAllCategories,
 } from "@/lib/wordpress";
-import { Section, Container } from "@/components/craft";
-import PostCard from "@/components/posts/post-card";
+
 import {
   Select,
   SelectContent,
@@ -22,6 +21,10 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+
+import { Section, Container } from "@/components/craft";
+import PostCard from "@/components/posts/post-card";
+import FilterPosts from "./filter";
 
 export default async function Page({
   searchParams,
@@ -47,47 +50,15 @@ export default async function Page({
     <Section>
       <Container>
         <h1>Posts</h1>
-        <div className="flex space-x-4 mb-4">
-          <Select value={author || "all"}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="All Authors" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Authors</SelectItem>
-              {authors.map((author) => (
-                <SelectItem key={author.id} value={author.id.toString()}>
-                  {author.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={tag || "all"}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="All Tags" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Tags</SelectItem>
-              {tags.map((tag) => (
-                <SelectItem key={tag.id} value={tag.id.toString()}>
-                  {tag.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={category || "all"}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="All Categories" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              {categories.map((category) => (
-                <SelectItem key={category.id} value={category.id.toString()}>
-                  {category.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <FilterPosts
+          authors={authors}
+          tags={tags}
+          categories={categories}
+          selectedAuthor={author}
+          selectedTag={tag}
+          selectedCategory={category}
+        />
+
         <div className="grid grid-cols-3 gap-4">
           {paginatedPosts.map((post: any) => (
             <PostCard key={post.id} post={post} />
