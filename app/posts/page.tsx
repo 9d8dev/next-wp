@@ -63,11 +63,6 @@ export default async function Page({
           </div>
         )}
 
-        <div className="grid grid-cols-3 gap-4">
-          {paginatedPosts.map((post: any) => (
-            <PostCard key={post.id} post={post} />
-          ))}
-        </div>
         <div className="mt-8 not-prose">
           <Pagination>
             <PaginationContent>
