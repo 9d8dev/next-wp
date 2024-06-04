@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 
 import Link from "next/link";
 import Balancer from "react-wrap-balancer";
-import BackButton from "@/components/back";
 
 export async function generateMetadata({
   params,
