@@ -7,7 +7,7 @@
 - `components/posts/post-card.tsx` -> Component and styling for posts
 - `app/posts/filter.tsx` -> Component for handling filtering of posts
 
-Two `env` variables are required to be set in `.env.local` file:
+There are two `env` variables are required to be set in `.env.local` file:
 
 ```bash
 WORDPRESS_URL="https://wordpress.com"
