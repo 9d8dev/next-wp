@@ -14,4 +14,4 @@ WORDPRESS_URL="https://wordpress.com"
 WORDPRESS_HOSTNAME="wordpress.com"
 ```
 
-You can find the exampple of `.env.local` file in the `.env.example` file.
+You can find the exampple of `.env.local` file in the `.env.example` file (and in Vercel):
