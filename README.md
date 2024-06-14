@@ -6,6 +6,21 @@ This is a starter template for building a Next.js application that fetches data 
 
 `next-wp` is built with [React](https://react.dev/), [Typescript](https://www.typescriptlang.org/docs/), [Tailwind](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/docs), and [brijr/craft](https://github.com/brijr/craft). It pairs nicely with [brijr/components](https://components.bridger.to/) for a rapid development experience.
 
+## Table of Contents
+
+- [Next.js Starter for Wordpress Headless CMS](#nextjs-starter-for-wordpress-headless-cms)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Wordpress Functions](#wordpress-functions)
+  - [WordPress Types](#wordpress-types)
+  - [Post Card Component](#post-card-component)
+    - [Props](#props)
+    - [Functionality](#functionality)
+    - [Usage](#usage)
+  - [Filter Component](#filter-component)
+    - [Props](#props-1)
+    - [Functionality](#functionality-1)
+
 ## Overview
 
 - `lib/wordpress.ts` -> Functions for fetching WordPress CMS via Rest API
@@ -150,5 +165,9 @@ The `components/posts/filter.tsx` file contains the `FilterPosts` component, whi
 3. When a filter value is changed, the `handleFilterChange` function is called with the filter type and selected value. It updates the URL query parameters accordingly and navigates to the updated URL.
 
 4. The component also includes a "Reset Filters" button that, when clicked, calls the `handleResetFilters` function to navigate back to the `/posts` page without any filters applied.
+
+5. The selected filter values are passed as props to the component and used to set the initial values of the `Select` components.
+
+5. The selected filter values are passed as props to the component and used to set the initial values of the `Select` components.
 
 5. The selected filter values are passed as props to the component and used to set the initial values of the `Select` components.
