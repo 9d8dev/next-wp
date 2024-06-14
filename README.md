@@ -173,3 +173,6 @@ The `components/posts/filter.tsx` file contains the `FilterPosts` component, whi
 5. The selected filter values are passed as props to the component and used to set the initial values of the `Select` components.
 
 5. The selected filter values are passed as props to the component and used to set the initial values of the `Select` components.
+
+
+Built by [Bridger Tower](https://twitter.com/bridgertower) and [Cameron Youngblood](https://twitter.com/youngbloodcyb) at [9d8](https://9d8.dev)
