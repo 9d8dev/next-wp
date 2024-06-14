@@ -25,9 +25,9 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "Wordpress/Next.js Starter by 9d8",
+  title: "WordPress/Next.js Starter by 9d8",
   description:
-    "A starter template for Next.js with Wordpress as a headless CMS.",
+    "A starter template for Next.js with WordPress as a headless CMS.",
   metadataBase: new URL("https://wp.9d8.dev"),
 };
 
