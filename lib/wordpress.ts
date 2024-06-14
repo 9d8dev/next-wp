@@ -1,5 +1,5 @@
-// Description: Wordpress API functions
-// Used to fetch data from a Wordpress site using the Wordpress REST API
+// Description: WordPress API functions
+// Used to fetch data from a WordPress site using the WordPress REST API
 // Types are imported from `wp.d.ts`
 
 import {
@@ -11,11 +11,11 @@ import {
   FeaturedMedia,
 } from "./wordpress.d";
 
-// Wordpress Config
+// WordPress Config
 
 const url = process.env.WORDPRESS_URL;
 
-// Wordpress Functions
+// WordPress Functions
 
 export async function getAllPosts(filterParams?: {
   author?: string;

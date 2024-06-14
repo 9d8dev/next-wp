@@ -1,8 +1,8 @@
-# Next.js Starter for Wordpress Headless CMS
+# Next.js Starter for WordPress Headless CMS
 
-![Wordpress_Next_js Starter by 9d8](https://github.com/9d8dev/next-wp/assets/57158102/76daa171-d286-4bd7-ae72-837c0d911f7a)
+![WordPress_Next_js Starter by 9d8](https://github.com/9d8dev/next-wp/assets/57158102/76daa171-d286-4bd7-ae72-837c0d911f7a)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F9d8dev%2Fnext-wp&env=WORDPRESS_URL,WORDPRESS_HOSTNAME&envDescription=Add%20Wordpress%20URL%20with%20Rest%20API%20enabled%20(ie.%20https%3A%2F%2Fwp.example.com)%20abd%20the%20hostname%20for%20Image%20rendering%20in%20Next%20JS%20(ie.%20wp.example.com)&project-name=next-wp&repository-name=next-wp&demo-title=Next%20JS%20and%20WordPress%20Starter&demo-url=https%3A%2F%2Fwp.9d8.dev)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F9d8dev%2Fnext-wp&env=WORDPRESS_URL,WORDPRESS_HOSTNAME&envDescription=Add%20WordPress%20URL%20with%20Rest%20API%20enabled%20(ie.%20https%3A%2F%2Fwp.example.com)%20abd%20the%20hostname%20for%20Image%20rendering%20in%20Next%20JS%20(ie.%20wp.example.com)&project-name=next-wp&repository-name=next-wp&demo-title=Next%20JS%20and%20WordPress%20Starter&demo-url=https%3A%2F%2Fwp.9d8.dev)
 
 This is a starter template for building a Next.js application that fetches data from a WordPress site using the WordPress REST API. The template includes functions for fetching posts, categories, tags, authors, and featured media from a WordPress site and rendering them in a Next.js application.
 
@@ -10,10 +10,10 @@ This is a starter template for building a Next.js application that fetches data 
 
 ## Table of Contents
 
-- [Next.js Starter for Wordpress Headless CMS](#nextjs-starter-for-wordpress-headless-cms)
+- [Next.js Starter for WordPress Headless CMS](#nextjs-starter-for-wordpress-headless-cms)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
-  - [Wordpress Functions](#wordpress-functions)
+  - [WordPress Functions](#wordpress-functions)
   - [WordPress Types](#wordpress-types)
   - [Post Card Component](#post-card-component)
     - [Props](#props)
@@ -39,7 +39,7 @@ WORDPRESS_HOSTNAME="wordpress.com"
 
 You can find the example of `.env.local` file in the `.env.example` file (and in Vercel):
 
-## Wordpress Functions
+## WordPress Functions
 
 The `lib/wordpress.ts` file contains several functions for fetching data from a WordPress site using the WordPress REST API. Here's a brief overview of each function:
 
