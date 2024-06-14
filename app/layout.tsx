@@ -28,6 +28,7 @@ export const metadata: Metadata = {
   title: "Wordpress/Next.js Starter by 9d8",
   description:
     "A starter template for Next.js with Wordpress as a headless CMS.",
+  metadataBase: new URL("https://wp.9d8.dev"),
 };
 
 // Revalidate content every hour
