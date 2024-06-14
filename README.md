@@ -98,8 +98,6 @@ These type definitions provide type safety and autocompletion when working with 
 
 ## Post Card Component
 
-## Post Card Component
-
 The `components/posts/post-card.tsx` file contains the `PostCard` component, which is responsible for rendering a single post card in the application. Here's an overview of the component:
 
 ### Props
@@ -123,3 +121,30 @@ The `components/posts/post-card.tsx` file contains the `PostCard` component, whi
 ### Usage
 
 To use the `PostCard` component, import it into your desired page or component and pass a `Post` object as the `post` prop.
+
+## Filter Component
+
+## Filter Component
+
+The `components/posts/filter.tsx` file contains the `FilterPosts` component, which provides a filtering interface for posts based on tags, categories, and authors. Here's an overview of the component:
+
+### Props
+
+- `authors`: An array of `Author` objects representing the available authors to filter by.
+- `tags`: An array of `Tag` objects representing the available tags to filter by.
+- `categories`: An array of `Category` objects representing the available categories to filter by.
+- `selectedAuthor`: An optional string representing the currently selected author ID.
+- `selectedTag`: An optional string representing the currently selected tag ID.
+- `selectedCategory`: An optional string representing the currently selected category ID.
+
+### Functionality
+
+1. The component uses the `useRouter` hook from Next.js to handle navigation and URL updates based on the selected filters.
+
+2. It renders three `Select` components for filtering posts by tag, category, and author. Each `Select` component displays the available options and allows the user to select a specific value or choose "All" to reset the filter.
+
+3. When a filter value is changed, the `handleFilterChange` function is called with the filter type and selected value. It updates the URL query parameters accordingly and navigates to the updated URL.
+
+4. The component also includes a "Reset Filters" button that, when clicked, calls the `handleResetFilters` function to navigate back to the `/posts` page without any filters applied.
+
+5. The selected filter values are passed as props to the component and used to set the initial values of the `Select` components.
