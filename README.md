@@ -4,7 +4,7 @@
 
 This is a starter template for building a Next.js application that fetches data from a WordPress site using the WordPress REST API. The template includes functions for fetching posts, categories, tags, authors, and featured media from a WordPress site and rendering them in a Next.js application.
 
-`next-wp` is built with React, Typescript, Tailwind, shadcn/ui, and brijr/craft. It pairs nicely with brijr/components for a rapid development experience.
+`next-wp` is built with [React](https://react.dev/), [Typescript](https://www.typescriptlang.org/docs/), [Tailwind](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/docs), and [brijr/craft](https://github.com/brijr/craft). It pairs nicely with [brijr/components](https://components.bridger.to/) for a rapid development experience.
 
 ## Overview
 
