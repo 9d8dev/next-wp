@@ -130,8 +130,6 @@ To use the `PostCard` component, import it into your desired page or component a
 
 ## Filter Component
 
-## Filter Component
-
 The `components/posts/filter.tsx` file contains the `FilterPosts` component, which provides a filtering interface for posts based on tags, categories, and authors. Here's an overview of the component:
 
 ### Props
