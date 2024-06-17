@@ -68,7 +68,12 @@ export default async function Page({
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
-                  href={`/posts?page=${Math.max(page - 1, 1)}`}
+                  className={page === 1 ? "pointer-events-none text-muted" : ""}
+                  href={`/posts?page=${Math.max(page - 1, 1)}${
+                    category ? `&category=${category}` : ""
+                  }${author ? `&author=${author}` : ""}${
+                    tag ? `&tag=${tag}` : ""
+                  }`}
                 />
               </PaginationItem>
               <PaginationItem>
@@ -78,7 +83,14 @@ export default async function Page({
               </PaginationItem>
               <PaginationItem>
                 <PaginationNext
-                  href={`/posts?page=${Math.min(page + 1, totalPages)}`}
+                  className={
+                    page === totalPages ? "pointer-events-none text-muted" : ""
+                  }
+                  href={`/posts?page=${Math.min(page + 1, totalPages)}${
+                    category ? `&category=${category}` : ""
+                  }${author ? `&author=${author}` : ""}${
+                    tag ? `&tag=${tag}` : ""
+                  }`}
                 />
               </PaginationItem>
             </PaginationContent>
