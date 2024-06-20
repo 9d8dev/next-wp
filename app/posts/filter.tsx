@@ -60,7 +60,7 @@ export default function FilterPosts({
   };
 
   return (
-    <div className="grid gap-2 md:flex flex-row flex-wrap md:space-x-4 mb-4 items-center">
+    <div className="grid gap-2 md:flex flex-row flex-wrap md:space-x-4 mb-4 z-10 items-center">
       <p className="text-sm text-muted-foreground">Tag:</p>
       <Select
         value={selectedTag || "all"}
