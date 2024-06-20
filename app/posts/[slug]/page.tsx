@@ -40,8 +40,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
     <Section>
       <Container>
         <h1>
-          <Balancer>{post.title.rendered}</Balancer>
-        </h1>{" "}
+          <Balancer>
+            <span
+              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+            ></span>
+          </Balancer>
+        </h1>
+
         <div className="flex justify-between items-center gap-4 text-sm mb-4">
           <h5>
             Published {date} by{" "}
