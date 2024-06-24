@@ -60,13 +60,12 @@ export default function FilterPosts({
   };
 
   return (
-    <div className="grid gap-2 md:flex flex-row flex-wrap md:space-x-4 mb-4 z-10 items-center">
-      <p className="text-sm text-muted-foreground">Tag:</p>
+    <div className="grid md:grid-cols-[1fr_1fr_1fr_0.5fr] gap-2 my-4 !z-10">
       <Select
         value={selectedTag || "all"}
         onValueChange={(value) => handleFilterChange("tag", value)}
       >
-        <SelectTrigger className="md:w-[180px]">
+        <SelectTrigger>
           <SelectValue placeholder="All Tags" />
         </SelectTrigger>
         <SelectContent>
@@ -79,12 +78,11 @@ export default function FilterPosts({
         </SelectContent>
       </Select>
 
-      <p className="text-sm text-muted-foreground">Category:</p>
       <Select
         value={selectedCategory || "all"}
         onValueChange={(value) => handleFilterChange("category", value)}
       >
-        <SelectTrigger className="md:w-[180px]">
+        <SelectTrigger>
           <SelectValue placeholder="All Categories" />
         </SelectTrigger>
         <SelectContent>
@@ -97,12 +95,11 @@ export default function FilterPosts({
         </SelectContent>
       </Select>
 
-      <p className="text-sm text-muted-foreground">Author:</p>
       <Select
         value={selectedAuthor || "all"}
         onValueChange={(value) => handleFilterChange("author", value)}
       >
-        <SelectTrigger className="md:w-[180px]">
+        <SelectTrigger>
           <SelectValue placeholder="All Authors" />
         </SelectTrigger>
         <SelectContent>
