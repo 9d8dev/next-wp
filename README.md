@@ -1,6 +1,6 @@
 # Next.js Starter for WordPress Headless CMS
 
-> [Watch the Demo Video](https://youtu.be/ZoWems8EqL4)
+> [Watch the Demo Video](https://www.youtube.com/watch?v=JZc1-BcOvYw)
 
 ![WordPress_Next_js Starter by 9d8](https://github.com/9d8dev/next-wp/assets/57158102/76daa171-d286-4bd7-ae72-837c0d911f7a)
 
