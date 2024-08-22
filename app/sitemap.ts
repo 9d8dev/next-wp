@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/wordpress";
 
 const siteConfig = {
-  site_domain: process.env.NEXT_PUBLIC_SITE_URL,
+  site_domain: process.env.WORDPRESS_URL,
   wordpress_url: process.env.WORDPRESS_URL,
 };
 
