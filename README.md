@@ -32,6 +32,9 @@ This is a starter template for building a Next.js application that fetches data 
 - `lib/wordpress.d.ts` -> Type declarations for WP Rest API
 - `components/posts/post-card.tsx` -> Component and styling for posts
 - `app/posts/filter.tsx` -> Component for handling filtering of posts
+- `/menu.config.ts` -> Site nav menu configuration for desktop and mobile
+- `/site.config.ts` -> Configuration for `sitemap.ts`
+- `app/sitemap.ts` -> Dynamically generated sitemap
 
 There are two `env` variables are required to be set in `.env.local` file:
 
