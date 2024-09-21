@@ -175,11 +175,7 @@ The `components/posts/filter.tsx` file contains the `FilterPosts` component, whi
 4. The component also includes a "Reset Filters" button that, when clicked, calls the `handleResetFilters` function to navigate back to the `/posts` page without any filters applied.
 
 5. The selected filter values are passed as props to the component and used to set the initial values of the `Select` components.
-
-6. The selected filter values are passed as props to the component and used to set the initial values of the `Select` components.
-
-7. The selected filter values are passed as props to the component and used to set the initial values of the `Select` components.
-
+   
 ## Dynamic Site Map
 
 The sitemap for `next-wp` is generated at `@/app/sitemap.ts` and will appear live on your site at `yourdomain.com/sitemap.xml`. In order to set up your sitemap correctly please make sure to update the `site_domain` in the `site.config.ts` to be the domain of your frontend (not your WordPress instance).
