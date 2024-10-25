@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -12,4 +11,6 @@ const nextConfig = {
   },
 };
 
+// Use ES module syntax to export the configuration
 export default nextConfig;
+  
