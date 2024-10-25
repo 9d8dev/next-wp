@@ -8,7 +8,7 @@
 
 This is a starter template for building a Next.js application that fetches data from a WordPress site using the WordPress REST API. The template includes functions for fetching posts, categories, tags, authors, and featured media from a WordPress site and rendering them in a Next.js application.
 
-`next-wp` is built with [Next.js 14](https://nextjs.org/docs), [React](https://react.dev/), [Typescript](https://www.typescriptlang.org/docs/), [Tailwind](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/docs), and [brijr/craft](https://github.com/brijr/craft). It pairs nicely with [brijr/components](https://components.bridger.to/) for a rapid development experience. Built by Cameron and Bridger at [9d8](https://9d8.dev).
+`next-wp` is built with [Next.js 14](https://nextjs.org/docs), [React](https://react.dev/), [Tailwind](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/docs), and [brijr/craft](https://github.com/brijr/craft). It pairs nicely with [brijr/components](https://components.bridger.to/) for a rapid development experience. Built by Cameron and Bridger at [9d8](https://9d8.dev).
 
 ## Table of Contents
 
@@ -28,13 +28,12 @@ This is a starter template for building a Next.js application that fetches data 
 
 ## Overview
 
-- `lib/wordpress.ts` -> Functions for fetching WordPress CMS via Rest API
-- `lib/wordpress.d.ts` -> Type declarations for WP Rest API
-- `components/posts/post-card.tsx` -> Component and styling for posts
-- `app/posts/filter.tsx` -> Component for handling filtering of posts
-- `/menu.config.ts` -> Site nav menu configuration for desktop and mobile
-- `/site.config.ts` -> Configuration for `sitemap.ts`
-- `app/sitemap.ts` -> Dynamically generated sitemap
+- `lib/wordpress.js` -> Functions for fetching WordPress CMS via Rest API
+- `components/posts/post-card.jsx` -> Component and styling for posts
+- `app/posts/filter.jsx` -> Component for handling filtering of posts
+- `/menu.config.js` -> Site nav menu configuration for desktop and mobile
+- `/site.config.js` -> Configuration for `sitemap.js`
+- `app/sitemap.js` -> Dynamically generated sitemap
 
 There are two `env` variables are required to be set in `.env.local` file:
 
@@ -47,7 +46,7 @@ You can find the example of `.env.local` file in the `.env.example` file (and in
 
 ## WordPress Functions
 
-The `lib/wordpress.ts` file contains several functions for fetching data from a WordPress site using the WordPress REST API. Here's a brief overview of each function:
+The `lib/wordpress.js` file contains several functions for fetching data from a WordPress site using the WordPress REST API. Here's a brief overview of each function:
 
 - `getAllPosts(filterParams?: { author?: string; tag?: string; category?: string; })`: Fetches all posts from the WordPress site. Optionally, you can pass filter parameters to filter posts by author, tag, or category.
 
@@ -97,37 +96,9 @@ The `lib/wordpress.ts` file contains several functions for fetching data from a 
 
 These functions provide a convenient way to interact with the WordPress REST API and retrieve various types of data from your WordPress site. They can be used in your Next.js application to fetch and display WordPress content.
 
-## WordPress Types
-
-The `lib/wordpress.d.ts` file contains TypeScript type definitions for various WordPress entities and related data structures. Here's an overview of the main types:
-
-- `Post`: Represents a WordPress post with properties such as `id`, `title`, `content`, `excerpt`, `author`, `categories`, `tags`, and more.
-
-- `Category`: Represents a WordPress category with properties like `id`, `name`, `slug`, `description`, `parent`, and `count`.
-
-- `Tag`: Represents a WordPress tag with properties similar to `Category`, including `id`, `name`, `slug`, `description`, and `count`.
-
-- `Page`: Represents a WordPress page with properties like `id`, `title`, `content`, `excerpt`, `author`, `parent`, and `template`.
-
-- `Author`: Represents a WordPress author with properties such as `id`, `name`, `slug`, `description`, `avatar_urls`, and `meta`.
-
-- `BlockType`: Represents a WordPress block type with properties like `name`, `title`, `description`, `icon`, `category`, `attributes`, and more.
-
-- `EditorBlock`: Represents a block in the WordPress editor with properties like `id`, `name`, `attributes`, `innerBlocks`, and `innerHTML`.
-
-- `TemplatePart`: Represents a template part in WordPress with properties such as `id`, `slug`, `theme`, `type`, `content`, `title`, and `status`.
-
-- `SearchResult`: Represents a search result from WordPress with properties like `id`, `title`, `url`, `type`, and `subtype`.
-
-- `FeaturedMedia`: Represents featured media (e.g., featured image) in WordPress with properties like `id`, `title`, `caption`, `alt_text`, `media_details`, and `source_url`.
-
-- `FilterBarProps`: Represents the props for a filter bar component with properties `authors`, `tags`, `categories`, and selected values for each.
-
-These type definitions provide type safety and autocompletion when working with WordPress data in your Next.js application. They ensure that you are accessing the correct properties and passing the expected data types when interacting with the WordPress REST API.
-
 ## Post Card Component
 
-The `components/posts/post-card.tsx` file contains the `PostCard` component, which is responsible for rendering a single post card in the application. Here's an overview of the component:
+The `components/posts/post-card.jsx` file contains the `PostCard` component, which is responsible for rendering a single post card in the application. Here's an overview of the component:
 
 ### Props
 
@@ -135,7 +106,7 @@ The `components/posts/post-card.tsx` file contains the `PostCard` component, whi
 
 ### Functionality
 
-1. The component fetches the featured media, author, and category associated with the post using the `getFeaturedMediaById`, `getAuthorById`, and `getCategoryById` functions from `lib/wordpress.ts`.
+1. The component fetches the featured media, author, and category associated with the post using the `getFeaturedMediaById`, `getAuthorById`, and `getCategoryById` functions from `lib/wordpress.js`.
 
 2. It formats the post date using the `toLocaleDateString` method with the specified options.
 
@@ -153,7 +124,7 @@ To use the `PostCard` component, import it into your desired page or component a
 
 ## Filter Component
 
-The `components/posts/filter.tsx` file contains the `FilterPosts` component, which provides a filtering interface for posts based on tags, categories, and authors. Here's an overview of the component:
+The `components/posts/filter.jsx` file contains the `FilterPosts` component, which provides a filtering interface for posts based on tags, categories, and authors. Here's an overview of the component:
 
 ### Props
 
@@ -182,6 +153,6 @@ The `components/posts/filter.tsx` file contains the `FilterPosts` component, whi
 
 ## Dynamic Site Map
 
-The sitemap for `next-wp` is generated at `@/app/sitemap.ts` and will appear live on your site at `yourdomain.com/sitemap.xml`. In order to set up your sitemap correctly please make sure to update the `site_domain` in the `site.config.ts` to be the domain of your frontend (not your WordPress instance).
+The sitemap for `next-wp` is generated at `@/app/sitemap.js` and will appear live on your site at `yourdomain.com/sitemap.xml`. In order to set up your sitemap correctly please make sure to update the `site_domain` in the `site.config.js` to be the domain of your frontend (not your WordPress instance).
 
 Built by [Bridger Tower](https://twitter.com/bridgertower) and [Cameron Youngblood](https://twitter.com/youngbloodcyb) at [9d8](https://9d8.dev)
