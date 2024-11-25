@@ -23,18 +23,43 @@ function getUrl(path: string, query?: Record<string, any>) {
     return `${baseUrl}${path}${params ? `?${params}` : ""}`
 }
 
-// WordPress Functions
-
-export async function getAllPosts(filterParams?: {
-  author?: string;
-  tag?: string;
-  category?: string;
-}): Promise<Post[]> {  
-  const url = getUrl("/wp-json/wp/v2/posts", { author: filterParams?.author, tags: filterParams?.tag, categories: filterParams?.category });
-  const response = await fetch(url);
-  const posts: Post[] = await response.json();
-  return posts;
+export interface GetPostsResult {
+  posts: Post[];
+  totalPages: number;
 }
+
+export async function getAllPosts(
+  filterParams?: {
+    author?: string;
+    tag?: string;
+    category?: string;
+  },
+  page: number = 1,
+  perPage: number = 100
+): Promise<GetPostsResult> {  
+  const url = getUrl("/wp-json/wp/v2/posts", { 
+    author: filterParams?.author, 
+    tags: filterParams?.tag, 
+    categories: filterParams?.category,
+    per_page: Math.min(perPage, 100), // WordPress max is 100
+    page
+  });
+
+  const response = await fetch(url);
+  
+  if (!response.ok) {
+    throw new Error(`Error fetching posts: ${response.statusText}`);
+  }
+
+  const posts: Post[] = await response.json();
+
+  // Parse the total number of pages from the response headers
+  const totalPagesHeader = response.headers.get('X-WP-TotalPages');
+  const totalPages = totalPagesHeader ? parseInt(totalPagesHeader, 10) : 1;
+
+  return { posts, totalPages };
+}
+
 
 export async function getPostById(id: number): Promise<Post> {
   const url = getUrl(`/wp-json/wp/v2/posts/${id}`);
