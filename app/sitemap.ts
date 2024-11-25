@@ -1,9 +1,11 @@
+// app/sitemap.tsx or wherever your sitemap file is located
+
 import { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/wordpress";
 import { siteConfig } from "@/site.config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await getAllPosts();
+  const { posts } = await getAllPosts(); // Destructure posts from the result
 
   const staticUrls: MetadataRoute.Sitemap = [
     {
