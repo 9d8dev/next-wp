@@ -1,20 +1,8 @@
 // pages/page.tsx
 
-import {
-  getAllPosts,
-  getAllAuthors,
-  getAllTags,
-  getAllCategories,
-} from "@/lib/wordpress";
-
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import * as React from "react";
+import { getAllPosts, getAllAuthors, getAllTags, getAllCategories } from "@/lib/wordpress";
+import PaginationComponent from "@/components/ui/pagination-component"; // Adjust the path as needed
 
 import { Section, Container } from "@/components/craft";
 import PostCard from "@/components/posts/post-card";
@@ -26,24 +14,20 @@ export default async function Page({
   searchParams: { [key: string]: string | undefined };
 }) {
   const { author, tag, category, page: pageParam } = searchParams;
-  
-  // Determine the current page
-  const page = pageParam ? parseInt(pageParam, 10) : 1;
-  const postsPerPage = 9;
 
-  // Calculate per_page for the API (fetch more to fill the current page)
-  // For example, if postsPerPage is 9, set per_page to 9
-  const perPage = postsPerPage;
+  // Determine the current page
+  const currentPage = pageParam ? parseInt(pageParam, 10) : 1;
+  const postsPerPage = 9;
 
   // Fetch posts for the current page
   const { posts, totalPages } = await getAllPosts(
     { author, tag, category },
-    page,
-    perPage
+    currentPage,
+    postsPerPage
   );
 
   // Fetch filter options
-  const [authors, tags, categories] = await Promise.all([
+  const [authors, tagsList, categoriesList] = await Promise.all([
     getAllAuthors(),
     getAllTags(),
     getAllCategories(),
@@ -52,11 +36,11 @@ export default async function Page({
   return (
     <Section>
       <Container>
-        <h1>Newest Posts</h1>
+        <h1>Najnovšie články</h1>
         <FilterPosts
           authors={authors}
-          tags={tags}
-          categories={categories}
+          tags={tagsList}
+          categories={categoriesList}
           selectedAuthor={author}
           selectedTag={tag}
           selectedCategory={category}
@@ -70,42 +54,19 @@ export default async function Page({
           </div>
         ) : (
           <div className="h-24 w-full border rounded-lg bg-accent/25 flex items-center justify-center">
-            <p>No results</p>
+            <p>Žiadny výsledok</p>
           </div>
         )}
 
+        {/* Pagination */}
         <div className="mt-8 not-prose">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  className={page === 1 ? "pointer-events-none text-muted" : ""}
-                  href={`/posts?page=${Math.max(page - 1, 1)}${
-                    category ? `&category=${category}` : ""
-                  }${author ? `&author=${author}` : ""}${
-                    tag ? `&tag=${tag}` : ""
-                  }`}
-                />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href={`/posts?page=${page}`}>
-                  {page}
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext
-                  className={
-                    page === totalPages ? "pointer-events-none text-muted" : ""
-                  }
-                  href={`/posts?page=${Math.min(page + 1, totalPages)}${
-                    category ? `&category=${category}` : ""
-                  }${author ? `&author=${author}` : ""}${
-                    tag ? `&tag=${tag}` : ""
-                  }`}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          <PaginationComponent
+            currentPage={currentPage}
+            totalPages={totalPages}
+            category={category}
+            author={author}
+            tag={tag}
+          />
         </div>
       </Container>
     </Section>
