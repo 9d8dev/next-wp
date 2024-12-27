@@ -7,17 +7,25 @@ import BackButton from "@/components/back";
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const page = await getPageBySlug(params.slug);
+  const { slug } = await params;
+  const page = await getPageBySlug(slug);
   return {
     title: page.title.rendered,
     description: page.excerpt.rendered,
   };
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  const page = await getPageBySlug(params.slug);
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<Record<string, string>>;
+}) {
+  const { slug } = await params;
+  const page = await getPageBySlug(slug);
 
   return (
     <Section>
