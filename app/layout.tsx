@@ -69,7 +69,7 @@ const Nav = ({ className, children, id }: NavProps) => {
         "sticky z-50 top-0 bg-background",
         "border-b",
         "fade-in",
-        className,
+        className
       )}
       id={id}
     >
@@ -86,8 +86,8 @@ const Nav = ({ className, children, id }: NavProps) => {
             src={Logo}
             alt="Logo"
             className="dark:invert"
-            width={84}
-            height={30.54}
+            width={42}
+            height={26.44}
           ></Image>
         </Link>
         {children}
@@ -122,13 +122,13 @@ const Footer = () => {
               <Image
                 src={Logo}
                 alt="Logo"
-                width={120}
-                height={27.27}
-                className="dark:invert hover:opacity-75 transition-all"
+                className="dark:invert"
+                width={42}
+                height={26.44}
               ></Image>
             </Link>
             <p>
-              <Balancer>{metadata.description}</Balancer>
+              <Balancer>Next.js meets headless WordPress</Balancer>
             </p>
           </div>
           <div className="flex flex-col gap-2 text-sm">
