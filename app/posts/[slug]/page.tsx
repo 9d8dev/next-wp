@@ -71,14 +71,16 @@ export default async function Page({
             {category.name}
           </Link>
         </div>
-        <div className="h-96 my-12 md:h-[560px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
-          {/* eslint-disable-next-line */}
-          <img
-            className="w-full"
-            src={featuredMedia.source_url}
-            alt={post.title.rendered}
-          />
-        </div>
+        {featuredMedia?.source_url && (
+          <div className="h-96 my-12 md:h-[560px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
+            {/* eslint-disable-next-line */}
+            <img
+              className="w-full"
+              src={featuredMedia.source_url}
+              alt={post.title.rendered}
+            />
+          </div>
+        )}
         <Article dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
       </Container>
     </Section>
