@@ -21,9 +21,16 @@ import FilterPosts from "./filter";
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | undefined };
+  searchParams: Promise<{
+    author?: string;
+    tag?: string;
+    category?: string;
+    page?: string;
+  }>;
 }) {
-  const { author, tag, category, page: pageParam } = searchParams;
+  const params = await searchParams;
+  const { author, tag, category, page: pageParam } = params;
+
   const posts = await getAllPosts({ author, tag, category });
   const authors = await getAllAuthors();
   const tags = await getAllTags();
