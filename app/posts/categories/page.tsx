@@ -16,10 +16,10 @@ export default async function Page() {
 
   return (
     <Section>
-      <Container>
-        <BackButton />
+      <Container className="space-y-6">
         <h2>All Categories</h2>
-        <div className="grid">
+        <BackButton />
+        <div className="grid craft">
           {categories.map((category: any) => (
             <Link key={category.id} href={`/posts/?category=${category.id}`}>
               {category.name}
