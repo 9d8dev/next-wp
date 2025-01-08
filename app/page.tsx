@@ -54,9 +54,10 @@ const ExampleJsx = () => {
                 className="not-prose my-4"
                 src="https://vercel.com/button"
                 alt="Deploy with Vercel"
+                // width={}
               />
             </a>
-            <p className="!text-sm text-muted-foreground">
+            <p className="!text-sm sr-only sm:not-sr-only text-muted-foreground">
               Deploy with Vercel in seconds.
             </p>
           </div>
