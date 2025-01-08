@@ -10,6 +10,7 @@ import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { mainMenu, contentMenu } from "@/menu.config";
 import { Section, Container } from "@/components/craft";
 import { Analytics } from "@vercel/analytics/react";
+import { siteConfig } from "@/site.config";
 
 import Balancer from "react-wrap-balancer";
 import Logo from "@/public/logo.svg";
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
   title: "WordPress & Next.js Starter by 9d8",
   description:
     "A starter template for Next.js with WordPress as a headless CMS.",
-  metadataBase: new URL("https://wp.9d8.dev"),
+  metadataBase: new URL(siteConfig.site_domain),
 };
 
 // Revalidate content every hour
@@ -114,7 +115,7 @@ const Footer = () => {
         <Container className="grid md:grid-cols-[1.5fr_0.5fr_0.5fr] gap-12">
           <div className="flex flex-col gap-6 not-prose">
             <Link href="/">
-              <h3 className="sr-only">brijr/components</h3>
+              <h3 className="sr-only">{siteConfig.site_name}</h3>
               <Image
                 src={Logo}
                 alt="Logo"
@@ -124,7 +125,7 @@ const Footer = () => {
               ></Image>
             </Link>
             <p>
-              <Balancer>Next.js meets headless WordPress</Balancer>
+              <Balancer>{siteConfig.site_description}</Balancer>
             </p>
           </div>
           <div className="flex flex-col gap-2 text-sm">
@@ -156,7 +157,7 @@ const Footer = () => {
           <ThemeToggle />
           <p className="text-muted-foreground">
             © <a href="https://9d8.dev">9d8</a>. All rights reserved.
-            2024-present.
+            2025-present.
           </p>
         </Container>
       </Section>
