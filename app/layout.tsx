@@ -81,6 +81,7 @@ const Nav = ({ className, children, id }: NavProps) => {
           <Image
             src={Logo}
             alt="Logo"
+            loading="eager"
             className="dark:invert"
             width={42}
             height={26.44}
