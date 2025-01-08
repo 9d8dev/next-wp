@@ -9,7 +9,6 @@ export default async function Page() {
     <Section>
       <Container>
         <h1>Pages</h1>
-
         <h2>All Pages</h2>
         <div className="grid">
           {pages.map((page: any) => (
