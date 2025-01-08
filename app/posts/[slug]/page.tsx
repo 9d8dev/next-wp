@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 
 import Link from "next/link";
 import Balancer from "react-wrap-balancer";
-import Image from "next/image";
 import { siteConfig } from "@/site.config";
 
 export async function generateMetadata({
@@ -104,10 +103,10 @@ export default async function Page({
         </div>
 
         {featuredMedia?.source_url && (
-          <div className="h-96 my-12 md:h-[560px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
+          <div className="h-96 my-12 md:h-[500px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
             {/* eslint-disable-next-line */}
             <img
-              className="w-full"
+              className="w-full h-full object-cover"
               src={featuredMedia.source_url}
               alt={post.title.rendered}
             />
