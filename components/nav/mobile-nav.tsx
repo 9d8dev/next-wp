@@ -12,10 +12,17 @@ import { cn } from "@/lib/utils";
 // Component Imports
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+  SheetHeader,
+} from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 
 import { mainMenu, contentMenu } from "@/menu.config";
+import { siteConfig } from "@/site.config";
 
 export function MobileNav() {
   const [open, setOpen] = React.useState(false);
@@ -32,14 +39,18 @@ export function MobileNav() {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="pr-0">
-        <MobileLink
-          href="/"
-          className="flex items-center"
-          onOpenChange={setOpen}
-        >
-          <ArrowRightSquare className="mr-2 h-4 w-4" />
-          <span className="text-muted-foreground">My Site</span>
-        </MobileLink>
+        <SheetHeader>
+          <SheetTitle className="text-left">
+            <MobileLink
+              href="/"
+              className="flex items-center"
+              onOpenChange={setOpen}
+            >
+              <ArrowRightSquare className="mr-2 h-4 w-4" />
+              <span>{siteConfig.site_name}</span>
+            </MobileLink>
+          </SheetTitle>
+        </SheetHeader>
         <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
           <div className="flex flex-col space-y-3">
             <h3 className="text-small mt-6">Menu</h3>
