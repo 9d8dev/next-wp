@@ -14,7 +14,7 @@
   /* Headings */
   h1,
   .h1 {
-    @apply text-4xl font-medium tracking-tight;
+    @apply text-4xl md:text-5xl font-medium tracking-tight;
   }
 
   h2,
