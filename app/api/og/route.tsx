@@ -51,6 +51,11 @@ export async function GET(request: NextRequest) {
                 whiteSpace: "pre-wrap",
                 lineHeight: 1.2,
                 maxWidth: "800px",
+                display: "-webkit-box",
+                WebkitLineClamp: "2",
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               }}
             >
               {description}
