@@ -159,7 +159,7 @@ const Article = ({
   return (
     <article
       dangerouslySetInnerHTML={dangerouslySetInnerHTML}
-      className={cn("craft spaced", className)}
+      className={cn("craft spaced max-w-prose", className)}
       id={id}
     >
       {children}
