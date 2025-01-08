@@ -1,8 +1,6 @@
 import { getPageBySlug } from "@/lib/wordpress";
-import { Section, Container, Main } from "@/components/craft";
+import { Section, Container } from "@/components/craft";
 import { Metadata } from "next";
-
-import BackButton from "@/components/back";
 
 export async function generateMetadata({
   params,
@@ -28,8 +26,7 @@ export default async function Page({
   return (
     <Section className="craft spaced">
       <Container className="space-y-6">
-        <h1>{page.title.rendered}</h1>
-        <BackButton />
+        <h2>{page.title.rendered}</h2>
         <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
       </Container>
     </Section>
