@@ -75,10 +75,9 @@ const Nav = ({ className, children, id }: NavProps) => {
         className="max-w-5xl mx-auto py-4 px-6 sm:px-8 flex justify-between items-center"
       >
         <Link
-          className="hover:opacity-75 transition-all flex gap-2 items-center"
+          className="hover:opacity-75 transition-all flex gap-4 items-center"
           href="/"
         >
-          <h2 className="sr-only">next-wp starter</h2>
           <Image
             src={Logo}
             alt="Logo"
@@ -86,6 +85,7 @@ const Nav = ({ className, children, id }: NavProps) => {
             width={42}
             height={26.44}
           ></Image>
+          <h2 className="text-sm">{siteConfig.site_name}</h2>
         </Link>
         {children}
         <div className="flex items-center gap-2">
