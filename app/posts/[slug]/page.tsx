@@ -28,10 +28,8 @@ export async function generateMetadata({
 
 export default async function Page({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<Record<string, string>>;
 }) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
