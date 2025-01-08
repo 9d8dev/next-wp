@@ -27,7 +27,7 @@ export default async function Page({
 
   return (
     <Section className="craft spaced">
-      <Container>
+      <Container className="space-y-6">
         <h1>{page.title.rendered}</h1>
         <BackButton />
         <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
