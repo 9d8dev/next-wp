@@ -1,26 +1,24 @@
+import "./globals.css";
+import "@/components/craft/craft.css";
+
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import { Analytics } from "@vercel/analytics/react";
-
-import "./globals.css";
-
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/nav/mobile-nav";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { Main } from "@/components/craft";
 import { mainMenu, contentMenu } from "@/menu.config";
 import { Section, Container } from "@/components/craft";
+import { Analytics } from "@vercel/analytics/react";
+
 import Balancer from "react-wrap-balancer";
-
 import Logo from "@/public/logo.svg";
-
 import Image from "next/image";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
-const fontSans = FontSans({
+const font = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
@@ -43,9 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body
-        className={cn("min-h-screen font-sans antialiased", fontSans.variable)}
-      >
+      <body className={cn("min-h-screen font-sans antialiased", font.variable)}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -53,7 +49,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Nav />
-          <Main>{children}</Main>
+          {children}
           <Footer />
         </ThemeProvider>
         <Analytics />

@@ -1,0 +1,490 @@
+/* craft.css - Comprehensive typography styling with shadcn colors */
+
+.container {
+  @apply max-w-5xl mx-auto p-6 sm:p-8;
+}
+
+.section {
+  @apply py-8 md:py-12;
+}
+
+.craft {
+  @apply font-sans antialiased;
+
+  /* Headings */
+  h1,
+  .h1 {
+    @apply text-4xl font-medium tracking-tight;
+  }
+
+  h2,
+  .h2 {
+    @apply text-3xl font-medium tracking-tight;
+  }
+
+  h3,
+  .h3 {
+    @apply text-2xl font-medium tracking-tight;
+  }
+
+  h4,
+  .h4 {
+    @apply text-xl font-medium tracking-tight;
+  }
+
+  h5,
+  .h5 {
+    @apply text-lg font-medium tracking-tight;
+  }
+
+  h6,
+  .h6 {
+    @apply text-base font-medium tracking-tight;
+  }
+
+  /* Paragraph */
+  p,
+  .p {
+    @apply text-base leading-7;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    @apply border-l-2 pl-6 italic;
+  }
+
+  /* Lists */
+  ul {
+    @apply list-disc ml-6 my-2;
+  }
+
+  ol {
+    @apply list-decimal ml-6 my-2;
+  }
+
+  /* Definition Lists */
+  dl {
+    dt {
+      @apply font-medium;
+
+      &:not(:first-child) {
+        @apply mt-2;
+      }
+    }
+
+    dd {
+      @apply ml-4;
+    }
+  }
+
+  /* Horizontal Rule */
+  hr {
+    @apply my-6;
+  }
+
+  /* Links */
+  a {
+    @apply underline underline-offset-2 transition-all hover:text-muted-foreground;
+  }
+
+  /* Strong */
+  strong {
+    @apply font-medium;
+  }
+
+  /* Code */
+  code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+  }
+
+  pre {
+    @apply overflow-x-auto rounded-lg border bg-muted p-4;
+
+    code {
+      @apply relative rounded bg-transparent p-0;
+    }
+  }
+
+  article {
+    @apply max-w-prose;
+  }
+
+  /* Tables */
+  table {
+    @apply w-full overflow-y-auto;
+
+    thead {
+      @apply border-b;
+
+      tr {
+        @apply border-t p-0;
+      }
+
+      th {
+        @apply border px-4 py-2 text-left font-semibold [&[align=center]]:text-center [&[align=right]]:text-right;
+      }
+    }
+
+    tbody {
+      tr {
+        @apply border-t p-0;
+      }
+
+      td {
+        @apply border px-4 py-2 text-left text-muted-foreground [&[align=center]]:text-center [&[align=right]]:text-right;
+      }
+    }
+  }
+
+  /* Figure */
+  figure {
+    figcaption {
+      @apply text-xs mt-2 text-muted-foreground;
+    }
+  }
+
+  /* Images */
+  img {
+    @apply rounded-lg border;
+  }
+
+  /* Video */
+  video {
+    @apply rounded-lg border;
+  }
+
+  /* Small */
+  small {
+    @apply text-sm font-medium leading-none;
+  }
+
+  /* Subscript and Superscript */
+  sub,
+  sup {
+    @apply text-sm;
+  }
+
+  /* Abbreviations */
+  abbr {
+    @apply cursor-help underline underline-offset-4;
+  }
+
+  /* Details and Summary */
+  details {
+    @apply rounded-lg border px-4 py-2;
+
+    summary {
+      @apply cursor-pointer font-semibold;
+    }
+  }
+
+  /* Keyboard */
+  kbd {
+    @apply rounded-md border bg-muted px-1.5 py-0.5 text-sm font-mono;
+  }
+
+  /* Mark */
+  mark {
+    @apply bg-primary/10 px-1;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-primary/10;
+  }
+
+  /* Lead Paragraph */
+  .lead {
+    @apply text-xl text-muted-foreground;
+  }
+
+  /* Large Text */
+  .large {
+    @apply text-lg font-semibold;
+  }
+
+  /* Small Text */
+  .small {
+    @apply text-sm font-medium leading-none;
+  }
+
+  /* Muted Text */
+  .muted {
+    @apply text-sm text-muted-foreground;
+  }
+
+  /* Lists within Lists */
+  ul ul,
+  ol ol,
+  ul ol,
+  ol ul {
+    @apply ml-6;
+  }
+
+  /* Nested Navigation Lists */
+  nav {
+    ul,
+    ol {
+      @apply list-none;
+    }
+  }
+
+  /* Description Lists */
+  dt {
+    @apply font-semibold;
+  }
+
+  dd {
+    @apply ml-4 text-muted-foreground;
+  }
+
+  /* Blockquote Citations */
+  blockquote cite {
+    @apply block text-sm text-muted-foreground;
+  }
+
+  /* Code Block Filename */
+  pre[data-filename]::before {
+    @apply block text-sm font-medium text-muted-foreground;
+    content: attr(data-filename);
+  }
+
+  /* Table of Contents */
+  .table-of-contents {
+    @apply rounded-lg border p-4;
+
+    ol {
+      @apply ml-4 list-none;
+    }
+
+    a {
+      @apply text-muted-foreground no-underline;
+    }
+  }
+
+  /* Footnotes */
+  .footnotes {
+    @apply border-t pt-6 text-sm text-muted-foreground;
+  }
+
+  /* Task Lists */
+  .task-list {
+    @apply list-none pl-0;
+
+    .task-list-item {
+      @apply flex items-center;
+
+      input[type="checkbox"] {
+        @apply mr-2;
+      }
+    }
+  }
+
+  /* Interactive States */
+  button {
+    @apply transition-all duration-200;
+
+    &:hover {
+      @apply opacity-90 transform scale-[0.98];
+    }
+
+    &:focus-visible {
+      @apply outline-none ring-2 ring-primary ring-offset-2;
+    }
+
+    &:active {
+      @apply opacity-80 transform scale-[0.96];
+    }
+  }
+
+  /* Form Elements */
+  input,
+  textarea,
+  select {
+    @apply transition-colors duration-200;
+
+    &:hover {
+      @apply border-primary/50;
+    }
+
+    &:focus {
+      @apply outline-none ring-2 ring-primary ring-offset-2 border-primary;
+    }
+  }
+
+  /* Interactive Cards */
+  .card {
+    @apply transition-all duration-200;
+
+    &:hover {
+      @apply transform translate-y-[-2px] shadow-lg;
+    }
+
+    &:active {
+      @apply transform translate-y-0 shadow-md;
+    }
+  }
+}
+
+/* Craft Disabled - Resets craft styles */
+.craft.disable-craft {
+  /* Reset all typography */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  blockquote,
+  pre,
+  a,
+  code,
+  ul,
+  ol,
+  li,
+  dl,
+  dt,
+  dd {
+    all: revert;
+  }
+
+  /* Reset specific components */
+  table,
+  thead,
+  tbody,
+  tr,
+  th,
+  td,
+  figure,
+  figcaption,
+  img,
+  video,
+  small,
+  sub,
+  sup,
+  abbr,
+  details,
+  kbd,
+  mark {
+    all: revert;
+  }
+
+  /* Reset links - both regular and Next.js Links */
+  a,
+  a[href],
+  [href],
+  :where(a),
+  :where([href]) {
+    all: revert !important;
+    text-decoration: revert !important;
+    color: revert !important;
+    transition: revert !important;
+    &:hover {
+      all: revert !important;
+    }
+  }
+
+  /* Reset interactive elements */
+  button,
+  input,
+  textarea,
+  select {
+    all: revert;
+  }
+
+  /* Reset utility classes */
+  .lead,
+  .large,
+  .small,
+  .muted {
+    all: revert;
+  }
+
+  /* Reset spacing */
+  &.spaced > * + * {
+    margin-top: revert;
+  }
+}
+
+.spaced {
+  /* Base element spacing */
+  > * + * {
+    @apply mt-6;
+  }
+
+  /* Lists */
+  ul,
+  ol {
+    @apply my-6;
+    li {
+      @apply mt-2;
+    }
+  }
+
+  /* Definition Lists */
+  dl {
+    @apply my-6;
+    dd {
+      @apply mt-2;
+    }
+  }
+
+  /* Tables */
+  table {
+    @apply my-6;
+  }
+
+  /* Figures */
+  figure {
+    @apply my-8;
+    figcaption {
+      @apply mt-4;
+    }
+  }
+
+  /* Code blocks */
+  pre {
+    @apply my-6;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    @apply my-6;
+    cite {
+      @apply mt-2;
+    }
+  }
+
+  /* Table of Contents */
+  .table-of-contents {
+    @apply my-6;
+    li {
+      @apply my-2;
+    }
+  }
+
+  /* Headings */
+  h1 {
+    @apply mb-8 mt-6;
+  }
+
+  h2 {
+    @apply mb-6 mt-12;
+  }
+
+  h3 {
+    @apply mb-4 mt-8;
+  }
+
+  h4,
+  h5,
+  h6 {
+    @apply mb-4 mt-6;
+  }
+
+  /* Footnotes */
+  .footnotes {
+    @apply mt-12;
+  }
+}
