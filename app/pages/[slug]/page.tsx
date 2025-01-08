@@ -19,19 +19,17 @@ export async function generateMetadata({
 
 export default async function Page({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<Record<string, string>>;
 }) {
   const { slug } = await params;
   const page = await getPageBySlug(slug);
 
   return (
-    <Section>
+    <Section className="craft spaced">
       <Container>
+        <h1>{page.title.rendered}</h1>
         <BackButton />
-        <h1 className="pt-12">{page.title.rendered}</h1>
         <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
       </Container>
     </Section>

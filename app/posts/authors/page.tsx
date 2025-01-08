@@ -16,10 +16,10 @@ export default async function Page() {
 
   return (
     <Section>
-      <Container>
-        <BackButton />
+      <Container className="space-y-6">
         <h2>All Authors</h2>
-        <div className="grid">
+        <BackButton />
+        <div className="grid craft">
           {authors.map((author: any) => (
             <Link key={author.id} href={`/posts/?author=${author.id}`}>
               {author.name}

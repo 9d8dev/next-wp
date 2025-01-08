@@ -46,7 +46,7 @@ export default async function Page({
 
   return (
     <Section>
-      <Container>
+      <Container className="craft spaced">
         <h1>
           <Balancer>
             <span
@@ -71,6 +71,7 @@ export default async function Page({
             {category.name}
           </Link>
         </div>
+
         {featuredMedia?.source_url && (
           <div className="h-96 my-12 md:h-[560px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
             {/* eslint-disable-next-line */}
@@ -81,6 +82,7 @@ export default async function Page({
             />
           </div>
         )}
+
         <Article dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
       </Container>
     </Section>

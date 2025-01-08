@@ -16,10 +16,10 @@ export default async function Page() {
 
   return (
     <Section>
-      <Container>
-        <BackButton />
+      <Container className="space-y-6">
         <h2>All Tags</h2>
-        <div className="grid">
+        <BackButton />
+        <div className="grid craft">
           {tags.map((tag: any) => (
             <Link key={tag.id} href={`/posts/?tag=${tag.id}`}>
               {tag.name}
