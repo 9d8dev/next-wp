@@ -3,5 +3,5 @@ type SiteConfig = {
 };
 
 export const siteConfig: SiteConfig = {
-  site_domain: "https://wp.9d8.dev",
+  site_domain: "https://next-wp.com",
 };
