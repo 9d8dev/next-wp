@@ -25,6 +25,7 @@ This is a starter template for building a Next.js application that fetches data 
     - [Props](#props-1)
     - [Functionality](#functionality-1)
   - [Dynamic Sitemap](#dynamic-sitemap)
+  - [Dynamic OG Images](#dynamic-og-images)
 
 ## Overview
 
@@ -176,11 +177,34 @@ The `components/posts/filter.tsx` file contains the `FilterPosts` component, whi
 
 5. The selected filter values are passed as props to the component and used to set the initial values of the `Select` components.
 
-6. The selected filter values are passed as props to the component and used to set the initial values of the `Select` components.
+## Dynamic OG Images
 
-7. The selected filter values are passed as props to the component and used to set the initial values of the `Select` components.
+This starter includes automatic OG image generation for both posts and pages. The OG images are generated on-demand using the Edge Runtime and include:
 
-## Dynamic Site Map
+- Dynamic title and description
+- Modern, responsive design
+- Proper social media card sizes
+- Automatic text wrapping and scaling
+
+You can test the OG image generation by visiting:
+
+```
+/api/og?title=Your Title&description=Your Description
+```
+
+The OG images are automatically generated for:
+
+- Blog posts: `/posts/[slug]`
+- Pages: `/pages/[slug]`
+
+Each OG image includes:
+
+- The post/page title
+- A snippet of the content (automatically trimmed and cleaned)
+- Consistent branding across your site
+- Proper dimensions for social media platforms
+
+## Dynamic Sitemap
 
 The sitemap for `next-wp` is generated at `@/app/sitemap.ts` and will appear live on your site at `yourdomain.com/sitemap.xml`. In order to set up your sitemap correctly please make sure to update the `site_domain` in the `site.config.ts` to be the domain of your frontend (not your WordPress instance).
 
