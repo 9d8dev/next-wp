@@ -29,6 +29,9 @@ export const metadata: Metadata = {
   description:
     "A starter template for Next.js with WordPress as a headless CMS.",
   metadataBase: new URL(siteConfig.site_domain),
+  alternates: {
+    canonical: "/",
+  },
 };
 
 // Revalidate content every hour
@@ -66,7 +69,7 @@ const Nav = ({ className, children, id }: NavProps) => {
         "sticky z-50 top-0 bg-background",
         "border-b",
         "fade-in",
-        className
+        className,
       )}
       id={id}
     >
