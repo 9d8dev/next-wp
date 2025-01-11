@@ -56,7 +56,7 @@ const ToDelete = () => {
               src="https://vercel.com/button"
               alt="Deploy with Vercel"
               width={105}
-              height={34}
+              height={32.62}
             />
           </a>
           <p className="!text-sm sr-only sm:not-sr-only text-muted-foreground">
