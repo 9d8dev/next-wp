@@ -1,5 +1,5 @@
 import { getPageBySlug } from "@/lib/wordpress";
-import { Section, Container } from "@/components/craft";
+import { Section, Container, Prose } from "@/components/craft";
 import { Metadata } from "next";
 import { siteConfig } from "@/site.config";
 
@@ -20,7 +20,10 @@ export async function generateMetadata({
   // Strip HTML tags for description and limit length
   const description = page.excerpt?.rendered
     ? page.excerpt.rendered.replace(/<[^>]*>/g, "").trim()
-    : page.content.rendered.replace(/<[^>]*>/g, "").trim().slice(0, 200) + "...";
+    : page.content.rendered
+        .replace(/<[^>]*>/g, "")
+        .trim()
+        .slice(0, 200) + "...";
   ogUrl.searchParams.append("description", description);
 
   return {
@@ -58,10 +61,12 @@ export default async function Page({
   const page = await getPageBySlug(slug);
 
   return (
-    <Section className="craft spaced">
-      <Container className="space-y-6">
-        <h2>{page.title.rendered}</h2>
-        <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
+    <Section>
+      <Container>
+        <Prose>
+          <h2>{page.title.rendered}</h2>
+          <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
+        </Prose>
       </Container>
     </Section>
   );
