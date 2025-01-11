@@ -1,5 +1,4 @@
 import "./globals.css";
-import "@/components/craft/craft.css";
 
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
@@ -69,7 +68,7 @@ const Nav = ({ className, children, id }: NavProps) => {
         "sticky z-50 top-0 bg-background",
         "border-b",
         "fade-in",
-        className,
+        className
       )}
       id={id}
     >
