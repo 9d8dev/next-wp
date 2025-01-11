@@ -14,9 +14,15 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-import { Section, Container } from "@/components/craft";
+import { Section, Container, Prose } from "@/components/craft";
 import PostCard from "@/components/posts/post-card";
 import FilterPosts from "./filter";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Blog Posts",
+  description: "Browse all our blog posts",
+};
 
 export default async function Page({
   searchParams,
@@ -29,6 +35,7 @@ export default async function Page({
   }>;
 }) {
   const params = await searchParams;
+
   const { author, tag, category, page: pageParam } = params;
 
   const posts = await getAllPosts({ author, tag, category });
@@ -48,7 +55,9 @@ export default async function Page({
   return (
     <Section>
       <Container>
-        <h1 className="sr-only">Posts</h1>
+        <Prose>
+          <h2>All Posts</h2>
+        </Prose>
         <FilterPosts
           authors={authors}
           tags={tags}
