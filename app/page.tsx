@@ -1,12 +1,12 @@
 // Craft Imports
-import { Main, Section, Container, Prose } from "@/components/craft";
+import { Section, Container, Prose } from "@/components/craft";
 import Balancer from "react-wrap-balancer";
 
 // Next.js Imports
 import Link from "next/link";
 
 // Icons
-import { File, Pen, Tag, Boxes, User, Folder } from "lucide-react";
+import { File, Pen, Tag, Diamond, User, Folder } from "lucide-react";
 import { WordPressIcon } from "@/components/icons/wordpress";
 import { NextJsIcon } from "@/components/icons/nextjs";
 
@@ -15,14 +15,14 @@ export default function Home() {
   return (
     <Section>
       <Container>
-        <ExampleJsx />
+        <ToDelete />
       </Container>
     </Section>
   );
 }
 
-// This is just some example JS to demonstrate automatic styling from brijr/craft
-const ExampleJsx = () => {
+// This is just some example TSX
+const ToDelete = () => {
   return (
     <main className="space-y-6">
       <Prose>
@@ -35,10 +35,10 @@ const ExampleJsx = () => {
           created as a way to build WordPress sites with Next.js at rapid speed.
           This starter is designed with{" "}
           <a href="https://ui.shadcn.com">shadcn/ui</a>,{" "}
-          <a href="https://github.com/brijr/craft">brijr/craft</a>, and Tailwind
-          CSS. Use <a href="https://components.work">brijr/components</a> to
-          build your site with prebuilt components. The data fetching and
-          typesafety is handled in <code>lib/wordpress.ts</code> and{" "}
+          <a href="https://craft-ds.com">craft-ds</a>, and Tailwind CSS. Use{" "}
+          <a href="https://components.work">brijr/components</a> to build your
+          site with prebuilt components. The data fetching and typesafety is
+          handled in <code>lib/wordpress.ts</code> and{" "}
           <code>lib/wordpress.d.ts</code>.
         </p>
       </Prose>
@@ -123,7 +123,7 @@ const ExampleJsx = () => {
           className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
           href="/posts/categories"
         >
-          <Boxes size={32} />
+          <Diamond size={32} />
           <span>
             Categories{" "}
             <span className="block text-sm text-muted-foreground">
