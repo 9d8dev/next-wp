@@ -58,6 +58,7 @@ export default async function Page({
         <Prose>
           <h2>All Posts</h2>
         </Prose>
+
         <FilterPosts
           authors={authors}
           tags={tags}
