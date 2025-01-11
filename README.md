@@ -22,6 +22,7 @@ This is a starter template for building a Next.js application that fetches data 
   - [Dynamic Sitemap](#dynamic-sitemap)
   - [Dynamic OG Images](#dynamic-og-images)
   - [Revalidation Setup](#revalidation-setup)
+  - [Search Functionality](#search-functionality)
 
 ## Overview
 
@@ -296,6 +297,82 @@ The `components/posts/filter.tsx` file contains the `FilterPosts` component, whi
 4. The component also includes a "Reset Filters" button that, when clicked, calls the `handleResetFilters` function to navigate back to the `/posts` page without any filters applied.
 
 5. The selected filter values are passed as props to the component and used to set the initial values of the `Select` components.
+
+## Search Functionality
+
+The template includes a powerful search system that works seamlessly with WordPress's REST API:
+
+### Search Component
+
+Located in `components/posts/search-input.tsx`, the SearchInput component provides real-time search capabilities:
+
+```typescript
+// Usage example
+import { SearchInput } from "@/components/posts/search-input";
+
+<SearchInput defaultValue={search} />
+```
+
+Features:
+- Real-time search with 300ms debouncing
+- URL-based state management
+- Maintains filters while searching
+- Server-side rendering for SEO
+- Combines with existing category, tag, and author filters
+
+### Search Implementation
+
+The search system is implemented across several layers:
+
+1. **Client-Side Component** (`search-input.tsx`):
+   - Uses Next.js App Router's URL handling
+   - Debounced input for better performance
+   - Maintains search state in URL parameters
+
+2. **Server-Side Processing** (`page.tsx`):
+   - Handles search parameters server-side
+   - Combines search with other filters
+   - Parallel data fetching for better performance
+
+3. **WordPress API Integration** (`wordpress.ts`):
+   - Comprehensive search across:
+     - Post content and titles
+     - Author names
+     - Category names
+     - Tag names
+   - Smart query construction
+   - Filter combination support
+
+### Search API Functions
+
+The following search-related functions are available in `lib/wordpress.ts`:
+
+```typescript
+// Search posts with combined filters
+getAllPosts({ 
+  search?: string,
+  author?: string,
+  tag?: string,
+  category?: string 
+})
+
+// Search specific content types
+searchCategories(query: string)
+searchTags(query: string)
+searchAuthors(query: string)
+```
+
+### Example Usage
+
+```typescript
+// In your page component
+const { search } = await searchParams;
+const posts = search
+  ? await getAllPosts({ search })
+  : await getAllPosts();
+```
+
+The search functionality automatically updates filters and results as you type, providing a smooth user experience while maintaining good performance through debouncing and server-side rendering.
 
 ## Dynamic OG Images
 
