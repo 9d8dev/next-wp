@@ -33,9 +33,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Revalidate content every hour
-export const revalidate = 3600;
-
 export default function RootLayout({
   children,
 }: {
@@ -154,7 +151,7 @@ const Footer = () => {
         <Container className="border-t not-prose flex flex-col md:flex-row md:gap-2 gap-6 justify-between md:items-center">
           <ThemeToggle />
           <p className="text-muted-foreground">
-            © <a href="https://9d8.dev">9d8</a>. All rights reserved.
+            &copy; <a href="https://9d8.dev">9d8</a>. All rights reserved.
             2025-present.
           </p>
         </Container>
