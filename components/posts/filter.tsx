@@ -34,7 +34,7 @@ interface FilterPostsProps {
   selectedCategory?: string;
 }
 
-export default function FilterPosts({
+export function FilterPosts({
   authors,
   tags,
   categories,

@@ -91,20 +91,36 @@ export async function getAllPosts(filterParams?: {
   author?: string;
   tag?: string;
   category?: string;
+  search?: string;
 }): Promise<Post[]> {
-  const url = getUrl("/wp-json/wp/v2/posts", {
-    author: filterParams?.author,
-    tags: filterParams?.tag,
-    categories: filterParams?.category,
-  });
-  const response = await wordpressFetch<Post[]>(url, {
+  const query: Record<string, any> = {
+    _embed: true,
+    per_page: 100,
+  };
+
+  if (filterParams?.author) {
+    query.author = filterParams.author;
+  }
+
+  if (filterParams?.tag) {
+    query.tags = filterParams.tag;
+  }
+
+  if (filterParams?.category) {
+    query.categories = filterParams.category;
+  }
+
+  if (filterParams?.search) {
+    query.search = filterParams.search;
+  }
+
+  const url = getUrl("/wp-json/wp/v2/posts", query);
+  return wordpressFetch<Post[]>(url, {
     next: {
       ...defaultFetchOptions.next,
       tags: ["wordpress", "posts"],
     },
   });
-
-  return response;
 }
 
 export async function getPostById(id: number): Promise<Post> {
