@@ -43,87 +43,208 @@ WORDPRESS_HOSTNAME="wordpress.com"
 WORDPRESS_WEBHOOK_SECRET="your-secret-key-here"
 ```
 
-You can find the example of `.env.local` file in the `.env.example` file (and in Vercel):
+You can find the example of `.env.local` file in the `.env.example` file (and in Vercel).
 
 ## WordPress Functions
 
-The `lib/wordpress.ts` file contains several functions for fetching data from a WordPress site using the WordPress REST API. Here's a brief overview of each function:
+The `lib/wordpress.ts` file contains a comprehensive set of functions for interacting with the WordPress REST API. Each function is optimized for Next.js 15's caching system and includes proper error handling.
 
-- `getAllPosts(filterParams?: { author?: string; tag?: string; category?: string; })`: Fetches all posts from the WordPress site. Optionally, you can pass filter parameters to filter posts by author, tag, or category.
+### Core Functionality
 
-- `getPostById(id: number)`: Fetches a single post by its ID.
+```typescript
+// Default fetch options for all WordPress API calls
+const defaultFetchOptions = {
+  next: {
+    tags: ["wordpress"],
+    revalidate: 3600, // 1 hour cache
+  },
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+};
+```
 
-- `getPostBySlug(slug: string)`: Fetches a single post by its slug.
+### Available Functions
 
-- `getAllCategories()`: Fetches all categories from the WordPress site.
+#### Posts
 
-- `getCategoryById(id: number)`: Fetches a single category by its ID.
+- `getAllPosts(filterParams?: { author?: string; tag?: string; category?: string; })`: Fetches posts with optional filtering by author, tag, or category. Uses cache tags for efficient revalidation.
 
-- `getCategoryBySlug(slug: string)`: Fetches a single category by its slug.
+- `getPostById(id: number)`: Retrieves a specific post by ID with proper error handling.
 
-- `getPostsByCategory(categoryId: number)`: Fetches all posts belonging to a specific category by its ID.
+- `getPostBySlug(slug: string)`: Fetches a post using its URL-friendly slug.
 
-- `getPostsByTag(tagId: number)`: Fetches all posts tagged with a specific tag by its ID.
+#### Categories
 
-- `getTagsByPost(postId: number)`: Fetches all tags associated with a specific post by its ID.
+- `getAllCategories()`: Retrieves all categories with cache invalidation support.
 
-- `getAllTags()`: Fetches all tags from the WordPress site.
+- `getCategoryById(id: number)`: Gets a specific category with error handling.
 
-- `getTagById(id: number)`: Fetches a single tag by its ID.
+- `getCategoryBySlug(slug: string)`: Fetches a category by its slug.
 
-- `getTagBySlug(slug: string)`: Fetches a single tag by its slug.
+- `getPostsByCategory(categoryId: number)`: Gets all posts in a category, using proper cache tags.
 
-- `getAllPages()`: Fetches all pages from the WordPress site.
+#### Tags
 
-- `getPageById(id: number)`: Fetches a single page by its ID.
+- `getAllTags()`: Fetches all available tags.
 
-- `getPageBySlug(slug: string)`: Fetches a single page by its slug.
+- `getTagById(id: number)`: Retrieves a specific tag.
 
-- `getAllAuthors()`: Fetches all authors from the WordPress site.
+- `getTagBySlug(slug: string)`: Gets a tag by its slug.
 
-- `getAuthorById(id: number)`: Fetches a single author by their ID.
+- `getTagsByPost(postId: number)`: Fetches all tags associated with a post.
 
-- `getAuthorBySlug(slug: string)`: Fetches a single author by their slug.
+- `getPostsByTag(tagId: number)`: Gets all posts with a specific tag.
 
-- `getPostsByAuthor(authorId: number)`: Fetches all posts written by a specific author by their ID.
+#### Pages
 
-- `getPostsByAuthorSlug(authorSlug: string)`: Fetches all posts written by a specific author by their slug.
+- `getAllPages()`: Retrieves all WordPress pages.
 
-- `getPostsByCategorySlug(categorySlug: string)`: Fetches all posts belonging to a specific category by its slug.
+- `getPageById(id: number)`: Gets a specific page by ID.
 
-- `getPostsByTagSlug(tagSlug: string)`: Fetches all posts tagged with a specific tag by its slug.
+- `getPageBySlug(slug: string)`: Fetches a page by its slug.
 
-- `getFeaturedMediaById(id: number)`: Fetches the featured media (e.g., featured image) by its ID.
+#### Authors
 
-These functions provide a convenient way to interact with the WordPress REST API and retrieve various types of data from your WordPress site. They can be used in your Next.js application to fetch and display WordPress content.
+- `getAllAuthors()`: Fetches all WordPress authors.
+
+- `getAuthorById(id: number)`: Gets a specific author.
+
+- `getAuthorBySlug(slug: string)`: Retrieves an author by slug.
+
+- `getPostsByAuthor(authorId: number)`: Gets all posts by a specific author.
+
+#### Media
+
+- `getFeaturedMediaById(id: number)`: Retrieves featured media (images) with size information.
+
+### Error Handling
+
+All functions use the custom `WordPressAPIError` class for consistent error handling:
+
+```typescript
+class WordPressAPIError extends Error {
+  constructor(message: string, public status: number, public endpoint: string) {
+    super(message);
+    this.name = "WordPressAPIError";
+  }
+}
+```
+
+### Cache Management
+
+Each function supports Next.js 15's cache tags for efficient revalidation:
+
+```typescript
+// Example cache configuration
+{
+  next: {
+    tags: ["wordpress", "posts", `post-${id}`],
+    revalidate: 3600,
+  }
+}
+```
+
+### Usage Example
+
+```typescript
+try {
+  // Fetch posts with filtering
+  const posts = await getAllPosts({
+    author: "123",
+    category: "news",
+    tag: "featured",
+  });
+
+  // Handle errors properly
+} catch (error) {
+  if (error instanceof WordPressAPIError) {
+    console.error(`API Error: ${error.message} (${error.status})`);
+  }
+}
+```
+
+These functions are designed to work seamlessly with Next.js 15's App Router and provide proper TypeScript support through the types defined in `wordpress.d.ts`.
 
 ## WordPress Types
 
-The `lib/wordpress.d.ts` file contains TypeScript type definitions for various WordPress entities and related data structures. Here's an overview of the main types:
+The `lib/wordpress.d.ts` file contains comprehensive TypeScript type definitions for WordPress entities. The type system is built around a core `WPEntity` interface that provides common properties for WordPress content:
 
-- `Post`: Represents a WordPress post with properties such as `id`, `title`, `content`, `excerpt`, `author`, `categories`, `tags`, and more.
+```typescript
+interface WPEntity {
+  id: number;
+  date: string;
+  date_gmt: string;
+  modified: string;
+  modified_gmt: string;
+  slug: string;
+  status: "publish" | "future" | "draft" | "pending" | "private";
+  link: string;
+  guid: {
+    rendered: string;
+  };
+}
+```
 
-- `Category`: Represents a WordPress category with properties like `id`, `name`, `slug`, `description`, `parent`, and `count`.
+Key type definitions include:
 
-- `Tag`: Represents a WordPress tag with properties similar to `Category`, including `id`, `name`, `slug`, `description`, and `count`.
+### Content Types
 
-- `Page`: Represents a WordPress page with properties like `id`, `title`, `content`, `excerpt`, `author`, `parent`, and `template`.
+- `Post`: Blog posts and articles (extends `WPEntity`)
+- `Page`: Static pages (extends `WPEntity`)
+- `Author`: User information
+- `Category`: Post categories (extends `Taxonomy`)
+- `Tag`: Post tags (extends `Taxonomy`)
+- `FeaturedMedia`: Media attachments (extends `WPEntity`)
 
-- `Author`: Represents a WordPress author with properties such as `id`, `name`, `slug`, `description`, `avatar_urls`, and `meta`.
+### Shared Interfaces
 
-- `BlockType`: Represents a WordPress block type with properties like `name`, `title`, `description`, `icon`, `category`, `attributes`, and more.
+- `RenderedContent`: For content with HTML rendering
+- `RenderedTitle`: For titles with HTML rendering
+- `Taxonomy`: Base interface for categories and tags
 
-- `EditorBlock`: Represents a block in the WordPress editor with properties like `id`, `name`, `attributes`, `innerBlocks`, and `innerHTML`.
+### Component Types
 
-- `TemplatePart`: Represents a template part in WordPress with properties such as `id`, `slug`, `theme`, `type`, `content`, `title`, and `status`.
+```typescript
+interface FilterBarProps {
+  authors: Author[];
+  tags: Tag[];
+  categories: Category[];
+  selectedAuthor?: Author["id"];
+  selectedTag?: Tag["id"];
+  selectedCategory?: Category["id"];
+  onAuthorChange?: (authorId: Author["id"] | undefined) => void;
+  onTagChange?: (tagId: Tag["id"] | undefined) => void;
+  onCategoryChange?: (categoryId: Category["id"] | undefined) => void;
+}
+```
 
-- `SearchResult`: Represents a search result from WordPress with properties like `id`, `title`, `url`, `type`, and `subtype`.
+### Media Types
 
-- `FeaturedMedia`: Represents featured media (e.g., featured image) in WordPress with properties like `id`, `title`, `caption`, `alt_text`, `media_details`, and `source_url`.
+```typescript
+interface MediaDetails {
+  width: number;
+  height: number;
+  file: string;
+  sizes: Record<string, MediaSize>;
+}
 
-- `FilterBarProps`: Represents the props for a filter bar component with properties `authors`, `tags`, `categories`, and selected values for each.
+interface MediaSize {
+  file: string;
+  width: number;
+  height: number;
+  mime_type: string;
+  source_url: string;
+}
+```
 
-These type definitions provide type safety and autocompletion when working with WordPress data in your Next.js application. They ensure that you are accessing the correct properties and passing the expected data types when interacting with the WordPress REST API.
+All types are designed to be:
+
+- Fully type-safe
+- Extensible
+- Self-documenting
+- Compatible with the WordPress REST API
 
 ## Post Card Component
 
