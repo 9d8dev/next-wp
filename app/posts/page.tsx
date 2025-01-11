@@ -19,7 +19,7 @@ import {
 
 import { Section, Container, Prose } from "@/components/craft";
 import { Metadata } from "next";
-import PostCard from "@/components/posts/post-card";
+import { PostCard } from "@/components/posts/post-card";
 import { FilterPosts } from "@/components/posts/filter";
 import { SearchInput } from "@/components/posts/search-input";
 
