@@ -4,7 +4,7 @@
 
 ![CleanShot 2025-01-07 at 23 18 41@2x](https://github.com/user-attachments/assets/8b268c36-eb0d-459f-b9f1-b5f129bd29bc)
 
-[![Deploy with Vercel](https://vercel.com/button)](<https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F9d8dev%2Fnext-wp&env=WORDPRESS_URL,WORDPRESS_HOSTNAME&envDescription=Add%20WordPress%20URL%20with%20Rest%20API%20enabled%20(ie.%20https%3A%2F%2Fwp.example.com)%20abd%20the%20hostname%20for%20Image%20rendering%20in%20Next%20JS%20(ie.%20wp.example.com)&project-name=next-wp&repository-name=next-wp&demo-title=Next%20JS%20and%20WordPress%20Starter&demo-url=https%3A%2F%2Fwp.9d8.dev>)
+[![Deploy with Vercel](https://vercel.com/button)](<https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F9d8dev%2Fnext-wp&env=WORDPRESS_URL,WORDPRESS_HOSTNAME,WORDPRESS_WEBHOOK_SECRET&envDescription=Add%20WordPress%20URL%20with%20Rest%20API%20enabled%20(ie.%20https%3A%2F%2Fwp.example.com)%2C%20the%20hostname%20for%20Image%20rendering%20in%20Next%20JS%20(ie.%20wp.example.com)%2C%20and%20a%20secret%20key%20for%20secure%20revalidation&project-name=next-wp&repository-name=next-wp&demo-title=Next%20JS%20and%20WordPress%20Starter&demo-url=https%3A%2F%2Fwp.9d8.dev>)
 
 This is a starter template for building a Next.js application that fetches data from a WordPress site using the WordPress REST API. The template includes functions for fetching posts, categories, tags, authors, and featured media from a WordPress site and rendering them in a Next.js application.
 
@@ -18,30 +18,29 @@ This is a starter template for building a Next.js application that fetches data 
   - [WordPress Functions](#wordpress-functions)
   - [WordPress Types](#wordpress-types)
   - [Post Card Component](#post-card-component)
-    - [Props](#props)
-    - [Functionality](#functionality)
-    - [Usage](#usage)
   - [Filter Component](#filter-component)
-    - [Props](#props-1)
-    - [Functionality](#functionality-1)
   - [Dynamic Sitemap](#dynamic-sitemap)
   - [Dynamic OG Images](#dynamic-og-images)
+  - [Revalidation Setup](#revalidation-setup)
 
 ## Overview
 
-- `lib/wordpress.ts` -> Functions for fetching WordPress CMS via Rest API
+- `lib/wordpress.ts` -> Functions for fetching WordPress CMS via Rest API with cache tags
 - `lib/wordpress.d.ts` -> Type declarations for WP Rest API
 - `components/posts/post-card.tsx` -> Component and styling for posts
 - `app/posts/filter.tsx` -> Component for handling filtering of posts
 - `/menu.config.ts` -> Site nav menu configuration for desktop and mobile
 - `/site.config.ts` -> Configuration for `sitemap.ts`
 - `app/sitemap.ts` -> Dynamically generated sitemap
+- `app/api/revalidate/route.ts` -> Webhook endpoint for content revalidation
+- `wordpress/next-revalidate/` -> WordPress plugin for automatic revalidation
 
-There are two `env` variables are required to be set in `.env.local` file:
+The following environment variables are required in your `.env.local` file:
 
 ```bash
 WORDPRESS_URL="https://wordpress.com"
 WORDPRESS_HOSTNAME="wordpress.com"
+WORDPRESS_WEBHOOK_SECRET="your-secret-key-here"
 ```
 
 You can find the example of `.env.local` file in the `.env.example` file (and in Vercel):
@@ -207,5 +206,58 @@ Each OG image includes:
 ## Dynamic Sitemap
 
 The sitemap for `next-wp` is generated at `@/app/sitemap.ts` and will appear live on your site at `yourdomain.com/sitemap.xml`. In order to set up your sitemap correctly please make sure to update the `site_domain` in the `site.config.ts` to be the domain of your frontend (not your WordPress instance).
+
+## Revalidation Setup
+
+This starter implements an intelligent caching and revalidation system using Next.js 15's cache tags. Here's how it works:
+
+### Cache Tags System
+
+The WordPress API functions use a hierarchical cache tag system:
+
+- Global tag: `wordpress` (affects all content)
+- Content type tags: `posts`, `pages`, `categories`, etc.
+- Individual item tags: `post-123`, `category-456`, etc.
+
+### Automatic Revalidation
+
+1. **Install the WordPress Plugin:**
+
+   - Navigate to `wordpress/next-revalidate/`
+   - Create a zip file of the folder
+   - Install and activate through WordPress admin
+   - Go to Settings > Next.js Revalidation
+   - Configure your Next.js URL and webhook secret
+
+2. **Configure Next.js:**
+
+   - Add `WORDPRESS_WEBHOOK_SECRET` to your environment variables
+   - The webhook endpoint at `/api/revalidate` is already set up
+   - No additional configuration needed
+
+3. **How it Works:**
+   - When content is updated in WordPress, the plugin sends a webhook
+   - The webhook includes content type and ID information
+   - Next.js automatically revalidates the appropriate cache tags
+   - Only affected content is updated, maintaining performance
+
+### Manual Revalidation
+
+You can also manually revalidate content using the `revalidateWordPressData` function:
+
+```typescript
+// Revalidate all WordPress content
+await revalidateWordPressData();
+
+// Revalidate specific content types
+await revalidateWordPressData(["posts"]);
+await revalidateWordPressData(["categories"]);
+
+// Revalidate specific items
+await revalidateWordPressData(["post-123"]);
+await revalidateWordPressData(["category-456"]);
+```
+
+This system ensures your content stays fresh while maintaining optimal performance through intelligent caching.
 
 Built by [Bridger Tower](https://twitter.com/bridgertower) and [Cameron Youngblood](https://twitter.com/youngbloodcyb) at [9d8](https://9d8.dev)
