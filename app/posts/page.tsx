@@ -48,7 +48,7 @@ export default async function Page({
   return (
     <Section>
       <Container>
-        <h1>Posts</h1>
+        <h1 className="sr-only">Posts</h1>
         <FilterPosts
           authors={authors}
           tags={tags}
@@ -70,39 +70,37 @@ export default async function Page({
           </div>
         )}
 
-        <div className="mt-8 not-prose">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  className={page === 1 ? "pointer-events-none text-muted" : ""}
-                  href={`/posts?page=${Math.max(page - 1, 1)}${
-                    category ? `&category=${category}` : ""
-                  }${author ? `&author=${author}` : ""}${
-                    tag ? `&tag=${tag}` : ""
-                  }`}
-                />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href={`/posts?page=${page}`}>
-                  {page}
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext
-                  className={
-                    page === totalPages ? "pointer-events-none text-muted" : ""
-                  }
-                  href={`/posts?page=${Math.min(page + 1, totalPages)}${
-                    category ? `&category=${category}` : ""
-                  }${author ? `&author=${author}` : ""}${
-                    tag ? `&tag=${tag}` : ""
-                  }`}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+        <Pagination className="mt-8">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                className={page === 1 ? "pointer-events-none text-muted" : ""}
+                href={`/posts?page=${Math.max(page - 1, 1)}${
+                  category ? `&category=${category}` : ""
+                }${author ? `&author=${author}` : ""}${
+                  tag ? `&tag=${tag}` : ""
+                }`}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href={`/posts?page=${page}`}>
+                {page}
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                className={
+                  page === totalPages ? "pointer-events-none text-muted" : ""
+                }
+                href={`/posts?page=${Math.min(page + 1, totalPages)}${
+                  category ? `&category=${category}` : ""
+                }${author ? `&author=${author}` : ""}${
+                  tag ? `&tag=${tag}` : ""
+                }`}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </Container>
     </Section>
   );
