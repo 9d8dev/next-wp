@@ -10,7 +10,7 @@ import {
   getCategoryById,
 } from "@/lib/wordpress";
 
-export default async function PostCard({ post }: { post: Post }) {
+export async function PostCard({ post }: { post: Post }) {
   const media = post.featured_media
     ? await getFeaturedMediaById(post.featured_media)
     : null;
