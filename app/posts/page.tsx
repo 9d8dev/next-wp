@@ -16,7 +16,7 @@ import {
 
 import { Section, Container, Prose } from "@/components/craft";
 import PostCard from "@/components/posts/post-card";
-import FilterPosts from "@/components/filter";
+import FilterPosts from "@/components/posts/filter";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
