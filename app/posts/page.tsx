@@ -3,6 +3,9 @@ import {
   getAllAuthors,
   getAllTags,
   getAllCategories,
+  searchAuthors,
+  searchTags,
+  searchCategories,
 } from "@/lib/wordpress";
 
 import {
@@ -42,11 +45,13 @@ export default async function Page({
   const params = await searchParams;
   const { author, tag, category, page: pageParam, search } = params;
 
-  // Fetch all data
-  const posts = await getAllPosts({ author, tag, category, search });
-  const authors = await getAllAuthors();
-  const tags = await getAllTags();
-  const categories = await getAllCategories();
+  // Fetch data based on search parameters
+  const [posts, authors, tags, categories] = await Promise.all([
+    getAllPosts({ author, tag, category, search }),
+    search ? searchAuthors(search) : getAllAuthors(),
+    search ? searchTags(search) : getAllTags(),
+    search ? searchCategories(search) : getAllCategories(),
+  ]);
 
   // Handle pagination
   const page = pageParam ? parseInt(pageParam, 10) : 1;
@@ -74,6 +79,10 @@ export default async function Page({
         <div className="space-y-8">
           <Prose>
             <h2>All Posts</h2>
+            <p className="text-muted-foreground">
+              {posts.length} {posts.length === 1 ? "post" : "posts"} found
+              {search && " matching your search"}
+            </p>
           </Prose>
 
           <div className="space-y-4">
@@ -101,27 +110,33 @@ export default async function Page({
             </div>
           )}
 
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  className={page <= 1 ? "pointer-events-none opacity-50" : ""}
-                  href={createPaginationUrl(page - 1)}
-                />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href={createPaginationUrl(page)}>
-                  {page}
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext
-                  className={page >= totalPages ? "pointer-events-none opacity-50" : ""}
-                  href={createPaginationUrl(page + 1)}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          {totalPages > 1 && (
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    className={
+                      page <= 1 ? "pointer-events-none opacity-50" : ""
+                    }
+                    href={createPaginationUrl(page - 1)}
+                  />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href={createPaginationUrl(page)}>
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext
+                    className={
+                      page >= totalPages ? "pointer-events-none opacity-50" : ""
+                    }
+                    href={createPaginationUrl(page + 1)}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          )}
         </div>
       </Container>
     </Section>

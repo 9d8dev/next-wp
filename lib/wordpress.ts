@@ -98,20 +98,31 @@ export async function getAllPosts(filterParams?: {
     per_page: 100,
   };
 
-  if (filterParams?.author) {
-    query.author = filterParams.author;
-  }
-
-  if (filterParams?.tag) {
-    query.tags = filterParams.tag;
-  }
-
-  if (filterParams?.category) {
-    query.categories = filterParams.category;
-  }
-
   if (filterParams?.search) {
+    // Search in post content and title
     query.search = filterParams.search;
+
+    // If we have additional filters with search, use them
+    if (filterParams?.author) {
+      query.author = filterParams.author;
+    }
+    if (filterParams?.tag) {
+      query.tags = filterParams.tag;
+    }
+    if (filterParams?.category) {
+      query.categories = filterParams.category;
+    }
+  } else {
+    // If no search term, just apply filters
+    if (filterParams?.author) {
+      query.author = filterParams.author;
+    }
+    if (filterParams?.tag) {
+      query.tags = filterParams.tag;
+    }
+    if (filterParams?.category) {
+      query.categories = filterParams.category;
+    }
   }
 
   const url = getUrl("/wp-json/wp/v2/posts", query);
@@ -392,6 +403,33 @@ export async function getFeaturedMediaById(id: number): Promise<FeaturedMedia> {
   });
 
   return response;
+}
+
+// Helper function to search across categories
+export async function searchCategories(query: string): Promise<Category[]> {
+  const url = getUrl("/wp-json/wp/v2/categories", {
+    search: query,
+    per_page: 100,
+  });
+  return wordpressFetch<Category[]>(url);
+}
+
+// Helper function to search across tags
+export async function searchTags(query: string): Promise<Tag[]> {
+  const url = getUrl("/wp-json/wp/v2/tags", {
+    search: query,
+    per_page: 100,
+  });
+  return wordpressFetch<Tag[]>(url);
+}
+
+// Helper function to search across authors
+export async function searchAuthors(query: string): Promise<Author[]> {
+  const url = getUrl("/wp-json/wp/v2/users", {
+    search: query,
+    per_page: 100,
+  });
+  return wordpressFetch<Author[]>(url);
 }
 
 // Helper function to revalidate WordPress data
