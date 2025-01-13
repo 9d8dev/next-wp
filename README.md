@@ -26,19 +26,29 @@ This is a starter template for building a Next.js application that fetches data 
 
 ## Overview
 
-### What's included? 
+### What's included?
 
-- ✅ Type-safe data layer with the WordPress RestAPI
-- ✅ Setup for all basic WordPress options: Posts, Pages, Authors, Categories, Tags
-- ✅ Easy integration with custom post types and ACF
-- ✅ Dynamic routes for Posts and Pages
-- ✅ Design system for layout and prose styling ([craft-ds.com](https://craft-ds.com))
-- ✅ Filter, Search, and Card components
-- ✅ Dynamically rendered sitemap
-- ✅ Dynamically generated metadata
-- ✅ Responsive Nav and Footer components
-- ✅ Site configuration file
-- ✅ Menu configuration file 
+✅ Type-safe data layer with the WordPress RestAPI
+
+✅ Setup for all basic WordPress options: Posts, Pages, Authors, Categories, Tags
+
+✅ Easy integration with custom post types and ACF
+
+✅ Dynamic routes for Posts and Pages
+
+✅ Design system for layout and prose styling ([craft-ds.com](https://craft-ds.com))
+
+✅ Filter, Search, and Card components
+
+✅ Dynamically rendered sitemap
+
+✅ Dynamically generated metadata
+
+✅ Responsive Nav and Footer components
+
+✅ Site configuration file
+
+✅ Menu configuration file
 
 ### Important files
 
@@ -142,7 +152,11 @@ All functions use the custom `WordPressAPIError` class for consistent error hand
 
 ```typescript
 class WordPressAPIError extends Error {
-  constructor(message: string, public status: number, public endpoint: string) {
+  constructor(
+    message: string,
+    public status: number,
+    public endpoint: string,
+  ) {
     super(message);
     this.name = "WordPressAPIError";
   }
@@ -330,6 +344,7 @@ import { SearchInput } from "@/components/posts/search-input";
 ```
 
 Features:
+
 - Real-time search with 300ms debouncing
 - URL-based state management
 - Maintains filters while searching
@@ -341,11 +356,13 @@ Features:
 The search system is implemented across several layers:
 
 1. **Client-Side Component** (`search-input.tsx`):
+
    - Uses Next.js App Router's URL handling
    - Debounced input for better performance
    - Maintains search state in URL parameters
 
 2. **Server-Side Processing** (`page.tsx`):
+
    - Handles search parameters server-side
    - Combines search with other filters
    - Parallel data fetching for better performance
@@ -365,11 +382,11 @@ The following search-related functions are available in `lib/wordpress.ts`:
 
 ```typescript
 // Search posts with combined filters
-getAllPosts({ 
+getAllPosts({
   search?: string,
   author?: string,
   tag?: string,
-  category?: string 
+  category?: string
 })
 
 // Search specific content types
@@ -383,9 +400,7 @@ searchAuthors(query: string)
 ```typescript
 // In your page component
 const { search } = await searchParams;
-const posts = search
-  ? await getAllPosts({ search })
-  : await getAllPosts();
+const posts = search ? await getAllPosts({ search }) : await getAllPosts();
 ```
 
 The search functionality automatically updates filters and results as you type, providing a smooth user experience while maintaining good performance through debouncing and server-side rendering.
