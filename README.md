@@ -26,15 +26,31 @@ This is a starter template for building a Next.js application that fetches data 
 
 ## Overview
 
+### What's included? 
+
+✅ Type-safe data layer with the WordPress RestAPI
+✅ Setup for all basic WordPress options: Posts, Pages, Authors, Categories, Tags
+✅ Easy integration with custom post types and ACF
+✅ Dynamic routes for Posts and Pages 
+✅ Design system for layout and prose styling ([craft-ds.com](https://craft-ds.com))
+✅ Filter, Search, and Card components 
+✅ Dynamically rendered sitmap
+✅ Dynamically generated metadata 
+✅ Responsive Nav and Footer components 
+✅ Site configuration file 
+✅ Menu configuration file 
+
+### Important files
+
 - `lib/wordpress.ts` -> Functions for fetching WordPress CMS via Rest API with cache tags
-- `lib/wordpress.d.ts` -> Type declarations for WP Rest API
+- `lib/wordpress.d.ts` -> Type declarations for the WordPress Rest API
+- `components/craft.tsx` -> Handles the design system for the site and prose styling
 - `components/posts/post-card.tsx` -> Component and styling for posts
-- `app/posts/filter.tsx` -> Component for handling filtering of posts
-- `/menu.config.ts` -> Site nav menu configuration for desktop and mobile
-- `/site.config.ts` -> Configuration for `sitemap.ts`
+- `components/posts/filter.tsx` -> Filter component for Posts
+- `components/posts/search-input.tsx` -> Search component for Posts
+- `menu.config.ts` -> Site nav menu configuration for desktop and mobile
+- `site.config.ts` -> Configuration for `sitemap.ts` and more
 - `app/sitemap.ts` -> Dynamically generated sitemap
-- `app/api/revalidate/route.ts` -> Webhook endpoint for content revalidation
-- `wordpress/next-revalidate/` -> WordPress plugin for automatic revalidation
 
 The following environment variables are required in your `.env.local` file:
 
