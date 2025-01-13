@@ -43,6 +43,7 @@ This is a starter template for building a Next.js application that fetches data 
 ✅ Menu configuration file<br>
 ✅ Lite and dark mode support<br>
 ✅ shadcn/ui components and theming<br>
+✅ Vercel analytics<br>
 
 ### Important files
 
