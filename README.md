@@ -41,6 +41,8 @@ This is a starter template for building a Next.js application that fetches data 
 ✅ Responsive Nav and Footer components
 ✅ Site configuration file
 ✅ Menu configuration file
+✅ Lite and dark mode support
+✅ shadcn/ui components and themeing
 
 ### Important files
 
