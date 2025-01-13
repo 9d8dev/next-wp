@@ -28,17 +28,17 @@ This is a starter template for building a Next.js application that fetches data 
 
 ### What's included? 
 
-✅ Type-safe data layer with the WordPress RestAPI
-✅ Setup for all basic WordPress options: Posts, Pages, Authors, Categories, Tags
-✅ Easy integration with custom post types and ACF
-✅ Dynamic routes for Posts and Pages 
-✅ Design system for layout and prose styling ([craft-ds.com](https://craft-ds.com))
-✅ Filter, Search, and Card components 
-✅ Dynamically rendered sitmap
-✅ Dynamically generated metadata 
-✅ Responsive Nav and Footer components 
-✅ Site configuration file 
-✅ Menu configuration file 
+- ✅ Type-safe data layer with the WordPress RestAPI
+- ✅ Setup for all basic WordPress options: Posts, Pages, Authors, Categories, Tags
+- ✅ Easy integration with custom post types and ACF
+- ✅ Dynamic routes for Posts and Pages
+- ✅ Design system for layout and prose styling ([craft-ds.com](https://craft-ds.com))
+- ✅ Filter, Search, and Card components
+- ✅ Dynamically rendered sitmap
+- ✅ Dynamically generated metadata
+- ✅ Responsive Nav and Footer components
+- ✅ Site configuration file
+- ✅ Menu configuration file 
 
 ### Important files
 
