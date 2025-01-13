@@ -29,25 +29,17 @@ This is a starter template for building a Next.js application that fetches data 
 ### What's included?
 
 ✅ Type-safe data layer with the WordPress RestAPI
-
+✅ Granualar access to revalidation and cache tags
 ✅ Setup for all basic WordPress options: Posts, Pages, Authors, Categories, Tags
-
 ✅ Easy integration with custom post types and ACF
-
 ✅ Dynamic routes for Posts and Pages
-
 ✅ Design system for layout and prose styling ([craft-ds.com](https://craft-ds.com))
-
 ✅ Filter, Search, and Card components
-
 ✅ Dynamically rendered sitemap
-
 ✅ Dynamically generated metadata
-
+✅ Dynamically generated OG/Twitter Cards for Posts and pages
 ✅ Responsive Nav and Footer components
-
 ✅ Site configuration file
-
 ✅ Menu configuration file
 
 ### Important files
@@ -97,49 +89,35 @@ const defaultFetchOptions = {
 #### Posts
 
 - `getAllPosts(filterParams?: { author?: string; tag?: string; category?: string; })`: Fetches posts with optional filtering by author, tag, or category. Uses cache tags for efficient revalidation.
-
 - `getPostById(id: number)`: Retrieves a specific post by ID with proper error handling.
-
 - `getPostBySlug(slug: string)`: Fetches a post using its URL-friendly slug.
 
 #### Categories
 
 - `getAllCategories()`: Retrieves all categories with cache invalidation support.
-
 - `getCategoryById(id: number)`: Gets a specific category with error handling.
-
 - `getCategoryBySlug(slug: string)`: Fetches a category by its slug.
-
 - `getPostsByCategory(categoryId: number)`: Gets all posts in a category, using proper cache tags.
 
 #### Tags
 
 - `getAllTags()`: Fetches all available tags.
-
 - `getTagById(id: number)`: Retrieves a specific tag.
-
 - `getTagBySlug(slug: string)`: Gets a tag by its slug.
-
 - `getTagsByPost(postId: number)`: Fetches all tags associated with a post.
-
 - `getPostsByTag(tagId: number)`: Gets all posts with a specific tag.
 
 #### Pages
 
 - `getAllPages()`: Retrieves all WordPress pages.
-
 - `getPageById(id: number)`: Gets a specific page by ID.
-
 - `getPageBySlug(slug: string)`: Fetches a page by its slug.
 
 #### Authors
 
 - `getAllAuthors()`: Fetches all WordPress authors.
-
 - `getAuthorById(id: number)`: Gets a specific author.
-
 - `getAuthorBySlug(slug: string)`: Retrieves an author by slug.
-
 - `getPostsByAuthor(authorId: number)`: Gets all posts by a specific author.
 
 #### Media
