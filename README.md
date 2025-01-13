@@ -34,7 +34,7 @@ This is a starter template for building a Next.js application that fetches data 
 - ✅ Dynamic routes for Posts and Pages
 - ✅ Design system for layout and prose styling ([craft-ds.com](https://craft-ds.com))
 - ✅ Filter, Search, and Card components
-- ✅ Dynamically rendered sitmap
+- ✅ Dynamically rendered sitemap
 - ✅ Dynamically generated metadata
 - ✅ Responsive Nav and Footer components
 - ✅ Site configuration file
