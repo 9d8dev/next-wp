@@ -65,7 +65,7 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
-  const featuredMedia = await getFeaturedMediaById(post.featured_media);
+  const featuredMedia = post.featured_media ? await getFeaturedMediaById(post.featured_media) : null;
   const author = await getAuthorById(post.author);
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
