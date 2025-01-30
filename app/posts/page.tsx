@@ -6,7 +6,7 @@ import {
   searchAuthors,
   searchTags,
   searchCategories,
-} from "@/lib/wordpress";
+} from "@/lib/wordpress"
 
 import {
   Pagination,
@@ -15,63 +15,63 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@/components/ui/pagination"
 
-import { Section, Container, Prose } from "@/components/craft";
-import { Metadata } from "next";
-import { PostCard } from "@/components/posts/post-card";
-import { FilterPosts } from "@/components/posts/filter";
-import { SearchInput } from "@/components/posts/search-input";
+import { Section, Container, Prose } from "@/components/craft"
+import type { Metadata } from "next"
+import { PostCard } from "@/components/posts/post-card"
+import { FilterPosts } from "@/components/posts/filter"
+import { SearchInput } from "@/components/posts/search-input"
 
 export const metadata: Metadata = {
-  title: "Blog Posts",
+  title: "Goodfit Blog",
   description: "Browse all our blog posts",
-};
+}
 
-export const dynamic = "auto";
-export const revalidate = 600;
+export const dynamic = "auto"
+export const revalidate = 600
 
 export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<{
-    author?: string;
-    tag?: string;
-    category?: string;
-    page?: string;
-    search?: string;
-  }>;
+    author?: string
+    tag?: string
+    category?: string
+    page?: string
+    search?: string
+  }>
 }) {
-  const params = await searchParams;
-  const { author, tag, category, page: pageParam, search } = params;
+  const params = await searchParams
+  const { author, tag, category, page: pageParam, search } = params
 
-  // Fetch data based on search parameters
+  // fetch data based on search parameters
   const [posts, authors, tags, categories] = await Promise.all([
     getAllPosts({ author, tag, category, search }),
     search ? searchAuthors(search) : getAllAuthors(),
     search ? searchTags(search) : getAllTags(),
     search ? searchCategories(search) : getAllCategories(),
-  ]);
+  ])
 
-  // Handle pagination
-  const page = pageParam ? parseInt(pageParam, 10) : 1;
-  const postsPerPage = 9;
-  const totalPages = Math.ceil(posts.length / postsPerPage);
+  // handle pagination
+  const page = pageParam ? Number.parseInt(pageParam, 10) : 1
+  const postsPerPage = 9
+  const totalPages = Math.ceil(posts.length / postsPerPage)
   const paginatedPosts = posts.slice(
     (page - 1) * postsPerPage,
     page * postsPerPage
-  );
+  )
 
-  // Create pagination URL helper
+  // pagination url helper
   const createPaginationUrl = (newPage: number) => {
-    const params = new URLSearchParams();
-    if (newPage > 1) params.set("page", newPage.toString());
-    if (category) params.set("category", category);
-    if (author) params.set("author", author);
-    if (tag) params.set("tag", tag);
-    if (search) params.set("search", search);
-    return `/posts${params.toString() ? `?${params.toString()}` : ""}`;
-  };
+    const params = new URLSearchParams()
+    if (newPage > 1) params.set("page", newPage.toString())
+    if (category) params.set("category", category)
+    if (author) params.set("author", author)
+    if (tag) params.set("tag", tag)
+    if (search) params.set("search", search)
+    return `/posts${params.toString() ? `?${params.toString()}` : ""}`
+  }
 
   return (
     <Section>
@@ -100,7 +100,7 @@ export default async function Page({
 
           {paginatedPosts.length > 0 ? (
             <div className="grid md:grid-cols-3 gap-4">
-              {paginatedPosts.map((post) => (
+              {paginatedPosts.map(post => (
                 <PostCard key={post.id} post={post} />
               ))}
             </div>
@@ -140,5 +140,5 @@ export default async function Page({
         </div>
       </Container>
     </Section>
-  );
+  )
 }

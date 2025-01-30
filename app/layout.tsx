@@ -24,9 +24,9 @@ const font = FontSans({
 })
 
 export const metadata: Metadata = {
-  title: "WordPress & Next.js Starter by 9d8",
+  title: "Goodfit | No Ghosting. Just Instant AI Interviews.",
   description:
-    "A starter template for Next.js with WordPress as a headless CMS.",
+    "The hiring process is broken. Get real AI interviews and instant results—no waiting, no gatekeeping.",
   metadataBase: new URL(siteConfig.site_domain),
   alternates: {
     canonical: "/",
@@ -148,11 +148,11 @@ const Footer = () => {
             ))}
           </div>
         </Container>
-        <Container className="border-t not-prose flex flex-col md:flex-row md:gap-2 gap-6 justify-between md:items-center">
+        <Container className="border-t not-prose flex flex-col md:flex-row md:gap-2 gap-6 justify-between md:items-center text-xs">
           <ThemeToggle />
           <p className="text-muted-foreground">
-            &copy; <a href="https://9d8.dev">9d8</a>. All rights reserved.
-            2025-present.
+            &copy; <a href="https://goodfit.so">Goodfit</a>. All rights
+            reserved. 2025-present.
           </p>
         </Container>
       </Section>

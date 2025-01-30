@@ -1,16 +1,10 @@
-// Craft Imports
-import { Section, Container, Prose } from "@/components/craft"
-import Balancer from "react-wrap-balancer"
-
-// Next.js Imports
 import Link from "next/link"
-
-// Icons
+import Balancer from "react-wrap-balancer"
 import { File, Pen, Tag, Diamond, User, Folder } from "lucide-react"
-import { WordPressIcon } from "@/components/icons/wordpress"
-import { NextJsIcon } from "@/components/icons/nextjs"
 
-// This page is using the craft.tsx component and design system
+import { Section, Container, Prose } from "@/components/craft"
+
+// uses craft.tsx component and design system
 export default function Home() {
   return (
     <Section>
@@ -21,7 +15,6 @@ export default function Home() {
   )
 }
 
-// This is just some example TSX
 const ToDelete = () => {
   return (
     <main className="space-y-6">
@@ -29,48 +22,7 @@ const ToDelete = () => {
         <h1>
           <Balancer>No Resumes. No Gosting. Instant AI Interviews</Balancer>
         </h1>
-
-        <p>
-          This is&nbsp;
-          <a href="https://github.com/otherwise-company">Otherwise Company</a>,
-          created as a way to build WordPress sites with Next.js at rapid speed.
-          This starter is designed with&nbsp;
-          <a href="https://ui.shadcn.com">shadcn/ui</a>,&nbsp;
-          <a href="https://craft-ds.com">craft-ds</a>, and Tailwind CSS.
-          Use&nbsp;
-          <a href="https://components.work">brijr/components</a> to build your
-          site with prebuilt components. The data fetching and typesafety is
-          handled in <code>lib/wordpress.ts</code> and&nbsp;
-          <code>lib/wordpress.d.ts</code>.
-        </p>
       </Prose>
-
-      <div className="flex justify-between items-center gap-4">
-        {/* Vercel Clone Starter */}
-        <div className="flex items-center gap-3">
-          <a
-            className="h-auto block"
-            href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F9d8dev%2Fnext-wp&env=WORDPRESS_URL,WORDPRESS_HOSTNAME&envDescription=Add%20WordPress%20URL%20with%20Rest%20API%20enabled%20(ie.%20https%3A%2F%2Fwp.example.com)%20abd%20the%20hostname%20for%20Image%20rendering%20in%20Next%20JS%20(ie.%20wp.example.com)&project-name=next-wp&repository-name=next-wp&demo-title=Next%20JS%20and%20WordPress%20Starter&demo-url=https%3A%2F%2Fwp.9d8.dev"
-          >
-            {/* eslint-disable-next-line */}
-            <img
-              className="not-prose my-4"
-              src="https://vercel.com/button"
-              alt="Deploy with Vercel"
-              width={105}
-              height={32.62}
-            />
-          </a>
-          <p className="!text-sm sr-only sm:not-sr-only text-muted-foreground">
-            Deploy with Vercel in seconds.
-          </p>
-        </div>
-
-        <div className="flex gap-2 items-center">
-          <WordPressIcon className="text-foreground" width={32} height={32} />
-          <NextJsIcon className="text-foreground" width={32} height={32} />
-        </div>
-      </div>
 
       <div className="grid md:grid-cols-3 gap-4 mt-6">
         <Link
