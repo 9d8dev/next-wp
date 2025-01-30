@@ -1,14 +1,14 @@
 // Craft Imports
-import { Section, Container, Prose } from "@/components/craft";
-import Balancer from "react-wrap-balancer";
+import { Section, Container, Prose } from "@/components/craft"
+import Balancer from "react-wrap-balancer"
 
 // Next.js Imports
-import Link from "next/link";
+import Link from "next/link"
 
 // Icons
-import { File, Pen, Tag, Diamond, User, Folder } from "lucide-react";
-import { WordPressIcon } from "@/components/icons/wordpress";
-import { NextJsIcon } from "@/components/icons/nextjs";
+import { File, Pen, Tag, Diamond, User, Folder } from "lucide-react"
+import { WordPressIcon } from "@/components/icons/wordpress"
+import { NextJsIcon } from "@/components/icons/nextjs"
 
 // This page is using the craft.tsx component and design system
 export default function Home() {
@@ -18,7 +18,7 @@ export default function Home() {
         <ToDelete />
       </Container>
     </Section>
-  );
+  )
 }
 
 // This is just some example TSX
@@ -27,18 +27,20 @@ const ToDelete = () => {
     <main className="space-y-6">
       <Prose>
         <h1>
-          <Balancer>Headless WordPress built with the Next.js</Balancer>
+          <Balancer>No Resumes. No Gosting. Instant AI Interviews</Balancer>
         </h1>
 
         <p>
-          This is <a href="https://github.com/9d8dev/next-wp">next-wp</a>,
+          This is&nbsp;
+          <a href="https://github.com/otherwise-company">Otherwise Company</a>,
           created as a way to build WordPress sites with Next.js at rapid speed.
-          This starter is designed with{" "}
-          <a href="https://ui.shadcn.com">shadcn/ui</a>,{" "}
-          <a href="https://craft-ds.com">craft-ds</a>, and Tailwind CSS. Use{" "}
+          This starter is designed with&nbsp;
+          <a href="https://ui.shadcn.com">shadcn/ui</a>,&nbsp;
+          <a href="https://craft-ds.com">craft-ds</a>, and Tailwind CSS.
+          Use&nbsp;
           <a href="https://components.work">brijr/components</a> to build your
           site with prebuilt components. The data fetching and typesafety is
-          handled in <code>lib/wordpress.ts</code> and{" "}
+          handled in <code>lib/wordpress.ts</code> and&nbsp;
           <code>lib/wordpress.d.ts</code>.
         </p>
       </Prose>
@@ -77,7 +79,7 @@ const ToDelete = () => {
         >
           <Pen size={32} />
           <span>
-            Posts{" "}
+            Posts&nbsp;
             <span className="block text-sm text-muted-foreground">
               All posts from your WordPress
             </span>
@@ -89,7 +91,7 @@ const ToDelete = () => {
         >
           <File size={32} />
           <span>
-            Pages{" "}
+            Pages&nbsp;
             <span className="block text-sm text-muted-foreground">
               Custom pages from your WordPress
             </span>
@@ -101,7 +103,7 @@ const ToDelete = () => {
         >
           <User size={32} />
           <span>
-            Authors{" "}
+            Authors&nbsp;
             <span className="block text-sm text-muted-foreground">
               List of the authors from your WordPress
             </span>
@@ -113,7 +115,7 @@ const ToDelete = () => {
         >
           <Tag size={32} />
           <span>
-            Tags{" "}
+            Tags&nbsp;
             <span className="block text-sm text-muted-foreground">
               Content by tags from your WordPress
             </span>
@@ -125,7 +127,7 @@ const ToDelete = () => {
         >
           <Diamond size={32} />
           <span>
-            Categories{" "}
+            Categories&nbsp;
             <span className="block text-sm text-muted-foreground">
               Categories from your WordPress
             </span>
@@ -137,7 +139,7 @@ const ToDelete = () => {
         >
           <Folder size={32} />
           <span>
-            Documentation{" "}
+            Documentation&nbsp;
             <span className="block text-sm text-muted-foreground">
               How to use `next-wp`
             </span>
@@ -145,5 +147,5 @@ const ToDelete = () => {
         </a>
       </div>
     </main>
-  );
-};
+  )
+}

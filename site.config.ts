@@ -1,11 +1,11 @@
 type SiteConfig = {
-  site_domain: string;
-  site_name: string;
-  site_description: string;
+	site_domain: string;
+	site_name: string;
+	site_description: string;
 };
 
 export const siteConfig: SiteConfig = {
-  site_name: "next-wp",
-  site_description: "Starter template for Headless WordPress with Next.js",
-  site_domain: "https://next-wp.com",
+	site_name: "goodfit",
+	site_description: "No Resumes. No Gosting. Instant AI Interviews",
+	site_domain: "https://app.goodfit.so",
 };
