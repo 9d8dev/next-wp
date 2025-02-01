@@ -78,7 +78,7 @@ export default async function Page({
       <Container>
         <div className="space-y-8">
           <Prose>
-            <h2>All Posts</h2>
+            <h2>All Blogposts</h2>
             <p className="text-muted-foreground">
               {posts.length} {posts.length === 1 ? "post" : "posts"} found
               {search && " matching your search"}
@@ -88,14 +88,14 @@ export default async function Page({
           <div className="space-y-4">
             <SearchInput defaultValue={search} />
 
-            <FilterPosts
+            {/* <FilterPosts
               authors={authors}
               tags={tags}
               categories={categories}
               selectedAuthor={author}
               selectedTag={tag}
               selectedCategory={category}
-            />
+            /> */}
           </div>
 
           {paginatedPosts.length > 0 ? (

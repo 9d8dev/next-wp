@@ -1,30 +1,30 @@
-import { getPageBySlug } from "@/lib/wordpress";
-import { Section, Container, Prose } from "@/components/craft";
-import { Metadata } from "next";
-import { siteConfig } from "@/site.config";
+import { getPageBySlug } from "@/lib/wordpress"
+import { Section, Container, Prose } from "@/components/craft"
+import type { Metadata } from "next"
+import { siteConfig } from "@/site.config"
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const page = await getPageBySlug(slug);
+  const { slug } = await params
+  const page = await getPageBySlug(slug)
 
   if (!page) {
-    return {};
+    return {}
   }
 
-  const ogUrl = new URL(`${siteConfig.site_domain}/api/og`);
-  ogUrl.searchParams.append("title", page.title.rendered);
-  // Strip HTML tags for description and limit length
+  const ogUrl = new URL(`${siteConfig.site_domain}/api/og`)
+  ogUrl.searchParams.append("title", page.title.rendered)
+  // strip HTML tags for description and limit length
   const description = page.excerpt?.rendered
     ? page.excerpt.rendered.replace(/<[^>]*>/g, "").trim()
-    : page.content.rendered
+    : `${page.content.rendered
         .replace(/<[^>]*>/g, "")
         .trim()
-        .slice(0, 200) + "...";
-  ogUrl.searchParams.append("description", description);
+        .slice(0, 200)}...`
+  ogUrl.searchParams.append("description", description)
 
   return {
     title: page.title.rendered,
@@ -49,25 +49,26 @@ export async function generateMetadata({
       description: description,
       images: [ogUrl.toString()],
     },
-  };
+  }
 }
 
 export default async function Page({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>
 }) {
-  const { slug } = await params;
-  const page = await getPageBySlug(slug);
+  const { slug } = await params
+  const page = await getPageBySlug(slug)
 
   return (
     <Section>
       <Container>
         <Prose>
           <h2>{page.title.rendered}</h2>
+          {/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
           <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
         </Prose>
       </Container>
     </Section>
-  );
+  )
 }
