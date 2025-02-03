@@ -7,7 +7,8 @@ import Link from "next/link";
 import Balancer from "react-wrap-balancer";
 import { Analytics } from "@vercel/analytics/react";
 
-import { ThemeProvider } from "@/components/theme/theme-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
+import { PostHogProvider } from "@/providers/posthog";
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/nav/mobile-nav";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
@@ -53,9 +54,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Nav />
-          {children}
-          {/* <Footer /> */}
+          <PostHogProvider>
+            <Nav />
+            {children}
+            {/* <Footer /> */}
+          </PostHogProvider>
           <ThemeToggle />
         </ThemeProvider>
         <Analytics />
