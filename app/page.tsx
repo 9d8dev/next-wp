@@ -1,11 +1,11 @@
-import Image from "next/image"
-import { Input } from "@/components/ui/input"
-import { subscribeToWaitlist } from "@/app/actions"
-import { SubmitButton } from "./submit-button"
+import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { subscribeToWaitlist } from "@/app/actions";
+import { SubmitButton } from "./submit-button";
 
 export default function Hero() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[radial-gradient(at_68%_92%,rgba(151,71,255,0.8)_0px,transparent_50%),radial-gradient(at_35%_84%,rgba(255,183,3,0.9)_0px,transparent_50%)]">
       <div className="container px-4 mx-auto">
         <div className="max-w-4xl mx-auto text-center pt-6 md:pt-24 pb-16">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight md:leading-tight mb-6 selection:bg-primary selection:text-secondary">
@@ -68,5 +68,5 @@ export default function Hero() {
         </div>
       </div>
     </div>
-  )
+  );
 }
