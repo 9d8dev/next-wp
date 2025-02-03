@@ -1,27 +1,27 @@
-import "./globals.css"
+import "./globals.css";
 
-import type { Metadata } from "next"
-import { Plus_Jakarta_Sans } from "next/font/google"
-import Image from "next/image"
-import Link from "next/link"
-import Balancer from "react-wrap-balancer"
-import { Analytics } from "@vercel/analytics/react"
+import type { Metadata } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import Image from "next/image";
+import Link from "next/link";
+import Balancer from "react-wrap-balancer";
+import { Analytics } from "@vercel/analytics/react";
 
-import { ThemeProvider } from "@/components/theme/theme-provider"
-import { Button } from "@/components/ui/button"
-import { MobileNav } from "@/components/nav/mobile-nav"
-import { ThemeToggle } from "@/components/theme/theme-toggle"
-import { Section, Container } from "@/components/craft"
-import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
-import { mainMenu, contentMenu } from "@/menu.config"
-import { siteConfig } from "@/site.config"
-import Logo from "@/public/logo.svg"
+import { ThemeProvider } from "@/components/theme/theme-provider";
+import { Button } from "@/components/ui/button";
+import { MobileNav } from "@/components/nav/mobile-nav";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { Section, Container } from "@/components/craft";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import { mainMenu, contentMenu } from "@/menu.config";
+import { siteConfig } from "@/site.config";
+import Logo from "@/public/logo.svg";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
-})
+});
 
 export const metadata: Metadata = {
   title: "Goodfit | No Ghosting. Just Instant AI Interviews.",
@@ -31,12 +31,12 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -45,7 +45,6 @@ export default function RootLayout({
         className={cn(
           "min-h-screen font-sans antialiased",
           plusJakartaSans.className,
-          "bg-[radial-gradient(at_68%_92%,rgba(151,71,255,0.8)_0px,transparent_50%),radial-gradient(at_35%_84%,rgba(255,183,3,0.9)_0px,transparent_50%)]"
         )}
       >
         <ThemeProvider
@@ -62,7 +61,7 @@ export default function RootLayout({
         <Analytics />
       </body>
     </html>
-  )
+  );
 }
 
 const Nav = ({ className, children, id }: NavProps) => {
@@ -118,8 +117,8 @@ const Nav = ({ className, children, id }: NavProps) => {
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
 
 const Footer = () => {
   return (
@@ -174,5 +173,5 @@ const Footer = () => {
         </Container>
       </Section>
     </footer>
-  )
-}
+  );
+};
