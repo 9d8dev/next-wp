@@ -6,6 +6,6 @@ type SiteConfig = {
 
 export const siteConfig: SiteConfig = {
 	site_name: "goodfit",
-	site_description: "No Resumes. No Gosting. Instant AI Interviews",
+	site_description: "No Resumes. No Ghosting. Instant AI Interviews",
 	site_domain: "https://app.goodfit.so",
 };

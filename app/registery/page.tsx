@@ -20,7 +20,7 @@ const ToDelete = () => {
     <main className="space-y-6">
       <Prose>
         <h1>
-          <Balancer>No Resumes. No Gosting. Instant AI Interviews</Balancer>
+          <Balancer>No Resumes. No Ghosting. Instant AI Interviews</Balancer>
         </h1>
       </Prose>
 

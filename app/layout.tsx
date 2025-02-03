@@ -56,7 +56,7 @@ export default function RootLayout({
         >
           <Nav />
           {children}
-          <Footer />
+          {/* <Footer /> */}
         </ThemeProvider>
         <Analytics />
       </body>
@@ -108,7 +108,7 @@ const Nav = ({ className, children, id }: NavProps) => {
           </div>
           {/* sneaky trick to focus on the input element without javascript */}
           <Label
-            className="flex justify-center items-center h-10 px-4 py-2 rounded-full bg-violet-500 text-white hover:bg-violet-600 transition-all"
+            className="hidden md:flex justify-center items-center h-10 px-4 py-2 rounded-full bg-violet-500 text-white hover:bg-violet-600 transition-all"
             htmlFor="email"
           >
             Request Early Access

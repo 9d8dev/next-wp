@@ -9,7 +9,7 @@ export function SubmitButton() {
   return (
     <Button
       type="submit"
-      className="h-10 px-8 rounded-xl cursor-pointer"
+      className="h-12 sm:h-10 px-8 rounded-xl cursor-pointer w-full sm:w-auto text-base font-medium shadow-lg hover:shadow-xl transition-all"
       disabled={pending}
     >
       {pending ? "Processing..." : "Request Early Access"}

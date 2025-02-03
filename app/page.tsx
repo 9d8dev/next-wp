@@ -7,8 +7,8 @@ export default function Hero() {
   return (
     <div className="min-h-screen">
       <div className="container px-4 mx-auto">
-        <div className="max-w-4xl mx-auto text-center pt-24 pb-16">
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tight leading-tight md:leading-tight mb-6 selection:bg-primary selection:text-secondary">
+        <div className="max-w-4xl mx-auto text-center pt-6 md:pt-24 pb-16">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight md:leading-tight mb-6 selection:bg-primary selection:text-secondary">
             <span className="bg-gradient-to-r from-amber-500 to-primary text-transparent bg-clip-text">
               AI-powered&nbsp;
             </span>
@@ -18,7 +18,7 @@ export default function Hero() {
                 alt="Avatar group"
                 width={120}
                 height={60}
-                className="inline-block shadow-xl rounded-full"
+                className="inline-block shadow-xl rounded-full selection:bg-transparent selection:text-transparent"
               />
             </span>
             <span className="inline-flex items-center">
@@ -33,7 +33,7 @@ export default function Hero() {
                   alt="Avatar group"
                   width={120}
                   height={60}
-                  className="inline-block"
+                  className="hidden md:inline-block selection:bg-transparent selection:text-transparent"
                 />
               </span>
             </span>
@@ -49,19 +49,19 @@ export default function Hero() {
           <form
             // @ts-expect-error
             action={subscribeToWaitlist}
-            className="max-w-md mx-auto relative"
+            className="max-w-lg mx-auto relative px-4 sm:px-0"
           >
-            <div className="space-y-2">
-              <div className="relative flex items-center">
-                <Input
-                  id="email"
-                  className="peer h-12 pr-[180px] text-3xl focus:ring-violet-400/60 focus-visible:ring-violet-400/60 focus:ring-2 focus-visible:ring-2 rounded-2xl border-none shadow-xl"
-                  placeholder="  future.hire@email.com" // clumsy little trick to simulate padding left on placeholder
-                  type="email"
-                />
-                <div className="absolute right-1 z-10">
-                  <SubmitButton />
-                </div>
+            <div className="relative flex flex-col sm:flex-row gap-3 sm:gap-0 sm:items-center">
+              <Input
+                required
+                id="email"
+                name="email"
+                className="peer h-12 text-lg sm:text-2xl focus:ring-violet-400/60 focus-visible:ring-violet-400/60 focus:ring-2 focus-visible:ring-2 rounded-xl md:rounded-2xl border-none shadow-xl sm:pr-[180px]"
+                placeholder="  future.hire@email.com"
+                type="email"
+              />
+              <div className="sm:absolute sm:right-1 z-10 flex justify-center">
+                <SubmitButton />
               </div>
             </div>
           </form>
