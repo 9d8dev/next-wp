@@ -1,7 +1,7 @@
 // craft-ds, v0.3.2
-// This is a design system for building responsive layouts in React and handling prose
+// design system for building responsive layouts in react and handling prose
 
-import React from "react";
+import type React from "react";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -237,12 +237,14 @@ export const Article = ({
   dangerouslySetInnerHTML,
 }: BaseProps & HTMLProps) => (
   <article
+    // biome-ignore lint/security/noDangerouslySetInnerHtml: yolo
+    // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: yolo
     dangerouslySetInnerHTML={dangerouslySetInnerHTML}
     className={cn(
       articleTypographyStyles,
       styles.layout.spacing,
       styles.layout.article,
-      className
+      className,
     )}
     id={id}
   >
@@ -257,6 +259,8 @@ export const Prose = ({
   dangerouslySetInnerHTML,
 }: BaseProps & HTMLProps) => (
   <div
+    // biome-ignore lint/security/noDangerouslySetInnerHtml: yolo
+    // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: yolo
     dangerouslySetInnerHTML={dangerouslySetInnerHTML}
     className={cn(baseTypographyStyles, styles.layout.spacing, className)}
     id={id}
@@ -268,7 +272,7 @@ export const Prose = ({
 // Utility function for responsive classes
 const getResponsiveClass = <T extends string | number>(
   value: ResponsiveValue<T> | undefined,
-  classMap: Record<T, string>
+  classMap: Record<T, string>,
 ): string => {
   if (!value) return "";
   if (typeof value === "object") {
@@ -340,7 +344,7 @@ export const Box = ({
         getResponsiveClass(gap, gapClasses),
         cols && getResponsiveClass(cols, colsClasses),
         rows && getResponsiveClass(rows, colsClasses),
-        className
+        className,
       )}
       id={id}
     >

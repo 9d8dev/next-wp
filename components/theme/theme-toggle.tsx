@@ -1,29 +1,29 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { useTheme } from "next-themes"
-import { useHotkeys } from "react-hotkeys-hook"
-import { Moon, SunDim } from "lucide-react"
+import { useTheme } from "next-themes";
+import { useHotkeys } from "react-hotkeys-hook";
+import { Moon, SunDim } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
-type Theme = "light" | "dark" | "system"
+type Theme = "light" | "dark" | "system";
 
-const KEYS = ["ctrl+u", "meta+u"]
+const KEYS = ["ctrl+u", "meta+u"];
 
 export function ThemeToggle() {
-  const { setTheme, theme } = useTheme()
+  const { setTheme, theme } = useTheme();
 
   const handleChangeTheme = (theme: Theme) => {
     // if (!document.startViewTransition) return setTheme(theme);
     // document.startViewTransition(() => setTheme(theme));
-    setTheme(theme)
-  }
+    setTheme(theme);
+  };
 
   useHotkeys(KEYS, () => {
-    handleChangeTheme(theme === "light" ? "dark" : "light")
-  })
+    handleChangeTheme(theme === "light" ? "dark" : "light");
+  });
 
   return (
     <div className="fixed bottom-2 left-4 z-50">
@@ -40,5 +40,5 @@ export function ThemeToggle() {
         )}
       </Button>
     </div>
-  )
+  );
 }

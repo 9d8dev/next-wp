@@ -1,4 +1,4 @@
-// Define the menu items
+// define the menu items
 export const mainMenu = {
   // home: "/",
   // about: "https://github.com/otherwise-company",
