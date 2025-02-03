@@ -57,6 +57,7 @@ export default function RootLayout({
           <Nav />
           {children}
           {/* <Footer /> */}
+          <ThemeToggle />
         </ThemeProvider>
         <Analytics />
       </body>
@@ -166,7 +167,6 @@ const Footer = () => {
           </div>
         </Container>
         <Container className="border-t not-prose flex flex-col md:flex-row md:gap-2 gap-6 justify-between md:items-center text-xs">
-          <ThemeToggle />
           <p className="text-muted-foreground">
             &copy; <a href="https://goodfit.so">Goodfit</a>. All rights
             reserved. 2025-present.
