@@ -18,10 +18,11 @@ import {
 } from "@/components/ui/pagination";
 
 import { Section, Container, Prose } from "@/components/craft";
-import { Metadata } from "next";
 import { PostCard } from "@/components/posts/post-card";
 import { FilterPosts } from "@/components/posts/filter";
 import { SearchInput } from "@/components/posts/search-input";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Blog Posts",
