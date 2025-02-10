@@ -1,7 +1,19 @@
-import { getPageBySlug } from "@/lib/wordpress";
+import { getPageBySlug, getAllPages } from "@/lib/wordpress";
 import { Section, Container, Prose } from "@/components/craft";
-import { Metadata } from "next";
 import { siteConfig } from "@/site.config";
+
+import type { Metadata } from "next";
+
+// Revalidate pages every hour
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const pages = await getAllPages();
+
+  return pages.map((page) => ({
+    slug: page.slug,
+  }));
+}
 
 export async function generateMetadata({
   params,
