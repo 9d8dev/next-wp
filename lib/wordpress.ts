@@ -4,7 +4,6 @@
 
 import querystring from "query-string";
 import { revalidateTag } from "next/cache";
-import { headers } from "next/headers";
 
 import type {
   Post,
@@ -28,7 +27,6 @@ interface FetchOptions {
     revalidate?: number | false;
     tags?: string[];
   };
-  headers?: HeadersInit;
 }
 
 function getUrl(path: string, query?: Record<string, any>) {
@@ -41,10 +39,6 @@ const defaultFetchOptions: FetchOptions = {
   next: {
     tags: ["wordpress"],
     revalidate: 3600, // Revalidate every hour by default
-  },
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
   },
 };
 
@@ -61,16 +55,13 @@ async function wordpressFetch<T>(
   url: string,
   options: FetchOptions = {}
 ): Promise<T> {
-  const headersList = await headers();
-  const userAgent = headersList.get("user-agent") || "Next.js WordPress Client";
+  const userAgent = "Next.js WordPress Client";
 
   const response = await fetch(url, {
     ...defaultFetchOptions,
     ...options,
     headers: {
-      ...defaultFetchOptions.headers,
       "User-Agent": userAgent,
-      ...options.headers,
     },
   });
 
