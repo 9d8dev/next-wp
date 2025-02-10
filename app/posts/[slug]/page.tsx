@@ -3,16 +3,26 @@ import {
   getFeaturedMediaById,
   getAuthorById,
   getCategoryById,
+  getAllPosts,
 } from "@/lib/wordpress";
 
 import { Section, Container, Article, Prose } from "@/components/craft";
-import { Metadata } from "next";
 import { badgeVariants } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/site.config";
 
 import Link from "next/link";
 import Balancer from "react-wrap-balancer";
+
+import type { Metadata } from "next";
+
+export async function generateStaticParams() {
+  const posts = await getAllPosts();
+
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
 
 export async function generateMetadata({
   params,
@@ -65,7 +75,9 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
-  const featuredMedia = post.featured_media ? await getFeaturedMediaById(post.featured_media) : null;
+  const featuredMedia = post.featured_media
+    ? await getFeaturedMediaById(post.featured_media)
+    : null;
   const author = await getAuthorById(post.author);
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
