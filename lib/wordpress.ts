@@ -54,7 +54,10 @@ class WordPressAPIError extends Error {
 async function wordpressFetch<T>(
   url: string,
   options: FetchOptions = {}
-): Promise<T> {
+): Promise<{
+  data: unknown,
+  headers: Headers
+}> {
   const userAgent = "Next.js WordPress Client";
 
   const response = await fetch(url, {
@@ -73,7 +76,10 @@ async function wordpressFetch<T>(
     );
   }
 
-  return response.json();
+  return ({
+    data: await response.json(),
+    headers: response.headers
+  })
 }
 
 // WordPress Functions
@@ -83,10 +89,19 @@ export async function getAllPosts(filterParams?: {
   tag?: string;
   category?: string;
   search?: string;
-}): Promise<Post[]> {
+  page?: number;
+  perPage?: number;
+  news?: boolean
+}): Promise<{
+  posts: Post[],
+  pages: number,
+  total: number,
+}> {
   const query: Record<string, any> = {
-    _embed: true,
-    per_page: 100,
+    // _embed: true,
+    // per_page: 100,
+    per_page: filterParams?.perPage || 9,
+    page: filterParams?.page || 1,
   };
 
   if (filterParams?.search) {
@@ -117,12 +132,18 @@ export async function getAllPosts(filterParams?: {
   }
 
   const url = getUrl("/wp-json/wp/v2/posts", query);
-  return wordpressFetch<Post[]>(url, {
+  const data = await wordpressFetch(url, {
     next: {
       ...defaultFetchOptions.next,
-      tags: ["wordpress", "posts"],
+      tags: ["wordpress", "authors"],
     },
-  });
+  })
+  
+  return ({
+    posts: data.data,
+    pages: Number(data.headers.get('x-wp-totalpages')),
+    total: Number(data.headers.get('x-wp-total'))
+  })
 }
 
 export async function getPostById(id: number): Promise<Post> {
@@ -134,7 +155,7 @@ export async function getPostById(id: number): Promise<Post> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getPostBySlug(slug: string): Promise<Post> {
@@ -146,7 +167,7 @@ export async function getPostBySlug(slug: string): Promise<Post> {
     },
   });
 
-  return response[0];
+  return response.data[0];
 }
 
 export async function getAllCategories(): Promise<Category[]> {
@@ -158,7 +179,7 @@ export async function getAllCategories(): Promise<Category[]> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getCategoryById(id: number): Promise<Category> {
@@ -170,7 +191,7 @@ export async function getCategoryById(id: number): Promise<Category> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getCategoryBySlug(slug: string): Promise<Category> {
@@ -182,7 +203,7 @@ export async function getCategoryBySlug(slug: string): Promise<Category> {
     },
   });
 
-  return response[0];
+  return response.data[0];
 }
 
 export async function getPostsByCategory(categoryId: number): Promise<Post[]> {
@@ -194,7 +215,7 @@ export async function getPostsByCategory(categoryId: number): Promise<Post[]> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getPostsByTag(tagId: number): Promise<Post[]> {
@@ -206,7 +227,7 @@ export async function getPostsByTag(tagId: number): Promise<Post[]> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getTagsByPost(postId: number): Promise<Tag[]> {
@@ -218,7 +239,7 @@ export async function getTagsByPost(postId: number): Promise<Tag[]> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getAllTags(): Promise<Tag[]> {
@@ -230,7 +251,7 @@ export async function getAllTags(): Promise<Tag[]> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getTagById(id: number): Promise<Tag> {
@@ -242,7 +263,7 @@ export async function getTagById(id: number): Promise<Tag> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getTagBySlug(slug: string): Promise<Tag> {
@@ -254,7 +275,7 @@ export async function getTagBySlug(slug: string): Promise<Tag> {
     },
   });
 
-  return response[0];
+  return response.data[0];
 }
 
 export async function getAllPages(): Promise<Page[]> {
@@ -266,7 +287,7 @@ export async function getAllPages(): Promise<Page[]> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getPageById(id: number): Promise<Page> {
@@ -278,7 +299,7 @@ export async function getPageById(id: number): Promise<Page> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getPageBySlug(slug: string): Promise<Page> {
@@ -290,7 +311,7 @@ export async function getPageBySlug(slug: string): Promise<Page> {
     },
   });
 
-  return response[0];
+  return response.data[0];
 }
 
 export async function getAllAuthors(): Promise<Author[]> {
@@ -302,7 +323,7 @@ export async function getAllAuthors(): Promise<Author[]> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getAuthorById(id: number): Promise<Author> {
@@ -314,7 +335,7 @@ export async function getAuthorById(id: number): Promise<Author> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getAuthorBySlug(slug: string): Promise<Author> {
@@ -326,7 +347,7 @@ export async function getAuthorBySlug(slug: string): Promise<Author> {
     },
   });
 
-  return response[0];
+  return response.data[0];
 }
 
 export async function getPostsByAuthor(authorId: number): Promise<Post[]> {
@@ -338,7 +359,7 @@ export async function getPostsByAuthor(authorId: number): Promise<Post[]> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getPostsByAuthorSlug(
@@ -353,7 +374,7 @@ export async function getPostsByAuthorSlug(
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getPostsByCategorySlug(
@@ -368,7 +389,7 @@ export async function getPostsByCategorySlug(
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getPostsByTagSlug(tagSlug: string): Promise<Post[]> {
@@ -381,7 +402,7 @@ export async function getPostsByTagSlug(tagSlug: string): Promise<Post[]> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 export async function getFeaturedMediaById(id: number): Promise<FeaturedMedia> {
@@ -393,7 +414,7 @@ export async function getFeaturedMediaById(id: number): Promise<FeaturedMedia> {
     },
   });
 
-  return response;
+  return response.data;
 }
 
 // Helper function to search across categories
