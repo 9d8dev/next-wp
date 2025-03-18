@@ -11,18 +11,41 @@ import {
 } from "@/lib/wordpress";
 
 export async function PostCard({ post }: { post: Post }) {
-  const media = post.featured_media
-    ? await getFeaturedMediaById(post.featured_media)
-    : null;
-  const author = post.author ? await getAuthorById(post.author) : null;
+  let media = null;
+  try {
+    if (post.featured_media) {
+      media = await getFeaturedMediaById(post.featured_media);
+    }
+  } catch (error) {
+    console.error('Error fetching featured media:', error);
+    // Continue without media if there's an error
+  }
+
+  let author = null;
+  try {
+    if (post.author) {
+      author = await getAuthorById(post.author);
+    }
+  } catch (error) {
+    console.error('Error fetching author:', error);
+    // Continue without author if there's an error
+  }
+
+  let category = null;
+  try {
+    if (post.categories?.[0]) {
+      category = await getCategoryById(post.categories[0]);
+    }
+  } catch (error) {
+    console.error('Error fetching category:', error);
+    // Continue without category if there's an error
+  }
+
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
   });
-  const category = post.categories?.[0]
-    ? await getCategoryById(post.categories[0])
-    : null;
 
   return (
     <Link

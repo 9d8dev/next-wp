@@ -8,6 +8,8 @@ import {
   searchCategories,
 } from "@/lib/wordpress";
 
+import type { Post, Author, Tag, Category } from "@/lib/wordpress.d";
+
 import {
   Pagination,
   PaginationContent,
@@ -46,13 +48,30 @@ export default async function Page({
   const params = await searchParams;
   const { author, tag, category, page: pageParam, search } = params;
 
-  // Fetch data based on search parameters
-  const [posts, authors, tags, categories] = await Promise.all([
-    getAllPosts({ author, tag, category, search }),
-    search ? searchAuthors(search) : getAllAuthors(),
-    search ? searchTags(search) : getAllTags(),
-    search ? searchCategories(search) : getAllCategories(),
-  ]);
+  // Fetch data sequentially to better handle errors
+  let posts: Post[] = [];
+  let authors: Author[] = [];
+  let tags: Tag[] = [];
+  let categories: Category[] = [];
+
+  try {
+    // First fetch posts
+    posts = await getAllPosts({ author, tag, category, search });
+    
+    // Then fetch other data
+    if (search) {
+      authors = await searchAuthors(search);
+      tags = await searchTags(search);
+      categories = await searchCategories(search);
+    } else {
+      authors = await getAllAuthors();
+      tags = await getAllTags();
+      categories = await getAllCategories();
+    }
+  } catch (error) {
+    console.error('Error fetching WordPress data:', error);
+    // Continue with empty arrays if there's an error
+  }
 
   // Handle pagination
   const page = pageParam ? parseInt(pageParam, 10) : 1;
