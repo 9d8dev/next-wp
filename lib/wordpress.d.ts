@@ -76,6 +76,9 @@ export interface Post extends WPEntity {
   categories: number[];
   tags: number[];
   meta: Record<string, unknown>;
+  _embedded?: {
+    'wp:featuredmedia'?: FeaturedMedia[];
+  };
 }
 
 export interface Page extends WPEntity {

@@ -5,29 +5,18 @@ import { Post } from "@/lib/wordpress.d";
 import { cn } from "@/lib/utils";
 
 import {
-  getFeaturedMediaById,
   getAuthorById,
   getCategoryById,
 } from "@/lib/wordpress";
 
 export async function PostCard({ post }: { post: Post }) {
-  let media = null;
-  try {
-    if (post.featured_media) {
-      media = await getFeaturedMediaById(post.featured_media);
-    }
-  } catch (error) {
-    console.error('Error fetching featured media:', error);
-    // Continue without media if there's an error
-  }
-
   let author = null;
   try {
     if (post.author) {
       author = await getAuthorById(post.author);
     }
   } catch (error) {
-    console.error('Error fetching author:', error);
+    console.error(`Error fetching author for post ${post.id} (${post.slug}):`, error);
     // Continue without author if there's an error
   }
 
@@ -37,7 +26,7 @@ export async function PostCard({ post }: { post: Post }) {
       category = await getCategoryById(post.categories[0]);
     }
   } catch (error) {
-    console.error('Error fetching category:', error);
+    console.error(`Error fetching category for post ${post.id} (${post.slug}):`, error);
     // Continue without category if there's an error
   }
 
@@ -46,6 +35,9 @@ export async function PostCard({ post }: { post: Post }) {
     day: "numeric",
     year: "numeric",
   });
+
+  // Get the featured media from the embedded data
+  const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0];
 
   return (
     <Link
@@ -57,13 +49,14 @@ export async function PostCard({ post }: { post: Post }) {
     >
       <div className="flex flex-col gap-4">
         <div className="h-48 w-full overflow-hidden relative rounded-md border flex items-center justify-center bg-muted">
-          {media?.source_url ? (
+          {featuredMedia?.source_url ? (
             <Image
               className="h-full w-full object-cover"
-              src={media.source_url}
+              src={featuredMedia.source_url}
               alt={post.title?.rendered || "Post thumbnail"}
               width={400}
               height={200}
+              priority={false}
             />
           ) : (
             <div className="flex items-center justify-center w-full h-full text-muted-foreground">
