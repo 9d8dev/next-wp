@@ -65,7 +65,9 @@ const ToDelete = () => {
         </div>
 
         <div className="flex gap-2 items-center">
-          <WordPressIcon className="text-foreground" width={32} height={32} />
+          <a href="#wordpress">
+            <WordPressIcon className="text-foreground" width={32} height={32} />
+          </a>
           <NextJsIcon className="text-foreground" width={32} height={32} />
         </div>
       </div>
