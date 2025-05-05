@@ -1,12 +1,19 @@
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+
+export const maxDuration = 30;
+
+/**
+ * WordPress webhook handler for content revalidation
+ * Receives notifications from WordPress when content changes
+ * and revalidates the entire site
+ */
 
 export async function POST(request: NextRequest) {
   try {
     const requestBody = await request.json();
     const secret = request.headers.get("x-webhook-secret");
 
-    // Validate webhook secret
     if (secret !== process.env.WORDPRESS_WEBHOOK_SECRET) {
       console.error("Invalid webhook secret");
       return NextResponse.json(
@@ -15,7 +22,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Extract content type and ID from the webhook payload
     const { contentType, contentId } = requestBody;
 
     if (!contentType) {
@@ -25,56 +31,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Determine which tags to revalidate
-    const tagsToRevalidate = ["wordpress"];
+    try {
+      console.log("Revalidating entire site");
+      revalidatePath("/", "layout");
 
-    // Add content type specific tag
-    if (contentType === "post") {
-      tagsToRevalidate.push("posts");
-      if (contentId) {
-        tagsToRevalidate.push(`post-${contentId}`);
-      }
-    } else if (contentType === "page") {
-      tagsToRevalidate.push("pages");
-      if (contentId) {
-        tagsToRevalidate.push(`page-${contentId}`);
-      }
-    } else if (contentType === "category") {
-      tagsToRevalidate.push("categories");
-      if (contentId) {
-        tagsToRevalidate.push(`category-${contentId}`);
-      }
-    } else if (contentType === "tag") {
-      tagsToRevalidate.push("tags");
-      if (contentId) {
-        tagsToRevalidate.push(`tag-${contentId}`);
-      }
-    } else if (contentType === "author" || contentType === "user") {
-      tagsToRevalidate.push("authors");
-      if (contentId) {
-        tagsToRevalidate.push(`author-${contentId}`);
-      }
-    } else if (contentType === "media") {
-      tagsToRevalidate.push("media");
-      if (contentId) {
-        tagsToRevalidate.push(`media-${contentId}`);
-      }
+      return NextResponse.json({
+        revalidated: true,
+        message: `Revalidated entire site due to ${contentType} update${
+          contentId ? ` (ID: ${contentId})` : ""
+        }`,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error("Error revalidating path:", error);
+      return NextResponse.json(
+        {
+          revalidated: false,
+          message: "Failed to revalidate site",
+          error: (error as Error).message,
+          timestamp: new Date().toISOString(),
+        },
+        { status: 500 }
+      );
     }
-
-    // Revalidate all determined tags
-    for (const tag of tagsToRevalidate) {
-      console.log(`Revalidating tag: ${tag}`);
-      revalidateTag(tag);
-    }
-
-    return NextResponse.json({
-      revalidated: true,
-      message: `Revalidated tags: ${tagsToRevalidate.join(", ")}`,
-    });
   } catch (error) {
     console.error("Revalidation error:", error);
     return NextResponse.json(
-      { message: "Error revalidating content" },
+      {
+        message: "Error revalidating content",
+        error: (error as Error).message,
+        timestamp: new Date().toISOString(),
+      },
       { status: 500 }
     );
   }
