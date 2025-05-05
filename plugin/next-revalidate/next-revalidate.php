@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Next.js Revalidation
  * Description: Revalidates Next.js site when WordPress content changes
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: 9d8
  * Author URI: https://9d8.dev
  */
@@ -19,6 +19,8 @@ class Next_Revalidation {
     public function __construct() {
         // Initialize plugin
         add_action('init', array($this, 'init'));
+        // Register AJAX actions for manual revalidation
+        add_action('init', array($this, 'register_ajax_actions'));
         
         // Register settings
         add_action('admin_init', array($this, 'register_settings'));
@@ -92,8 +94,10 @@ class Next_Revalidation {
     public function sanitize_settings($input) {
         $new_input = array();
         
-        if(isset($input['next_url'])) {
-            $new_input['next_url'] = esc_url_raw(trim($input['next_url']));
+        if (isset($input['next_url'])) {
+            // Normalize and sanitize Next.js site URL (remove trailing slash)
+            $url = rtrim(trim($input['next_url']), '/');
+            $new_input['next_url'] = esc_url_raw($url);
         }
         
         if(isset($input['webhook_secret'])) {
