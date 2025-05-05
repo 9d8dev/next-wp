@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Next.js Revalidation
  * Description: Revalidates Next.js site when WordPress content changes
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: 9d8
  * Author URI: https://9d8.dev
  */
@@ -28,9 +28,12 @@ class Next_Revalidation {
         // Add admin menu
         add_action('admin_menu', array($this, 'add_admin_menu'));
         
-        // Post save/update hooks
+        // Post save/update hooks - any post status change
+        add_action('transition_post_status', array($this, 'on_post_status_change'), 10, 3);
         add_action('save_post', array($this, 'on_content_change'), 10, 3);
-        add_action('deleted_post', array($this, 'on_post_delete'), 10);
+        add_action('wp_trash_post', array($this, 'on_post_trash'), 10);
+        add_action('untrash_post', array($this, 'on_post_untrash'), 10);
+        add_action('before_delete_post', array($this, 'on_post_delete'), 10);
         
         // Term changes
         add_action('created_term', array($this, 'on_term_change'), 10, 3);
@@ -213,6 +216,19 @@ class Next_Revalidation {
         }
     }
 
+    // Triggered when a post changes status (draft, publish, trash, etc.)
+    public function on_post_status_change($new_status, $old_status, $post) {
+        // Skip if it's a revision or autosave
+        if (wp_is_post_revision($post->ID) || wp_is_post_autosave($post->ID)) {
+            return;
+        }
+        
+        // If the status is changing, we should revalidate
+        if ($new_status !== $old_status) {
+            $this->send_revalidation_request($post->post_type, $post->ID);
+        }
+    }
+
     public function on_content_change($post_id, $post = null, $update = null) {
         // Don't revalidate on autosave or revision
         if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) {
@@ -224,16 +240,18 @@ class Next_Revalidation {
             $post = get_post($post_id);
         }
         
-        // Only revalidate published content
-        if ('publish' !== $post->post_status) {
-            return;
-        }
+        // Revalidate regardless of post status
+        $this->send_revalidation_request($post->post_type, $post_id);
+    }
 
-        // Determine content type
-        $content_type = $post->post_type;
-        
-        // Revalidate the entire site
-        $this->send_revalidation_request($content_type, $post_id);
+    public function on_post_trash($post_id) {
+        $post_type = get_post_type($post_id);
+        $this->send_revalidation_request($post_type, $post_id);
+    }
+
+    public function on_post_untrash($post_id) {
+        $post_type = get_post_type($post_id);
+        $this->send_revalidation_request($post_type, $post_id);
     }
 
     public function on_post_delete($post_id) {
