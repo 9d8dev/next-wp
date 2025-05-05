@@ -1,5 +1,5 @@
 {
-  "name": "craft-starter",
+  "name": "next-wp",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -44,7 +44,6 @@
     "eslint-config-next": "^15.3.1",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.8.3"
     "typescript": "^5.8.3"
   }
 }
