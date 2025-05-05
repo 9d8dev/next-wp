@@ -17,7 +17,7 @@ After installing and activating the plugin:
 
 1. Go to Settings > Next.js Revalidation in your WordPress admin
 2. Enter your Next.js site URL (without trailing slash)
-3. Create a secure webhook secret (a random string)
+3. Create a secure webhook secret (a random string), you can use `openssl rand -base64 32` to generate one
 4. Save your settings
 
 ### 2. Next.js Environment Variables
