@@ -433,15 +433,15 @@ The WordPress API functions use a hierarchical cache tag system:
 
 1. **Install the WordPress Plugin:**
 
-   - Navigate to `wordpress/next-revalidate/`
-   - Create a zip file of the folder
+   - Navigate to the `/plugin` directory
+   - Use the pre-built `next-revalidate.zip` file or create a ZIP from the `next-revalidate` folder
    - Install and activate through WordPress admin
    - Go to Settings > Next.js Revalidation
    - Configure your Next.js URL and webhook secret
 
 2. **Configure Next.js:**
 
-   - Add `WORDPRESS_WEBHOOK_SECRET` to your environment variables
+   - Add `WORDPRESS_WEBHOOK_SECRET` to your environment variables (same secret as in WordPress plugin)
    - The webhook endpoint at `/api/revalidate` is already set up
    - No additional configuration needed
 
@@ -450,6 +450,16 @@ The WordPress API functions use a hierarchical cache tag system:
    - The webhook includes content type and ID information
    - Next.js automatically revalidates the appropriate cache tags
    - Only affected content is updated, maintaining performance
+
+### Plugin Features
+
+The Next.js Revalidation plugin includes:
+
+- Automatic revalidation when posts, pages, categories, tags, authors, or media are modified
+- Settings page to configure your Next.js site URL and webhook secret
+- Manual revalidation option for full site refresh
+- Support for custom post types and taxonomies
+- Optional admin notifications for revalidation events
 
 ### Manual Revalidation
 
