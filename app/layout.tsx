@@ -1,22 +1,23 @@
 import "./globals.css";
 
-import type { Metadata } from "next";
+import { Section, Container } from "@/components/craft";
 import { Inter as FontSans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import { Button } from "@/components/ui/button";
-import { MobileNav } from "@/components/nav/mobile-nav";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { mainMenu, contentMenu } from "@/menu.config";
-import { Section, Container } from "@/components/craft";
+import { MobileNav } from "@/components/nav/mobile-nav";
 import { Analytics } from "@vercel/analytics/react";
+import { Button } from "@/components/ui/button";
+
+import { mainMenu, contentMenu } from "@/menu.config";
 import { siteConfig } from "@/site.config";
+import { cn } from "@/lib/utils";
 
 import Balancer from "react-wrap-balancer";
 import Logo from "@/public/logo.svg";
 import Image from "next/image";
 import Link from "next/link";
 
-import { cn } from "@/lib/utils";
+import type { Metadata } from "next";
 
 const font = FontSans({
   subsets: ["latin"],
