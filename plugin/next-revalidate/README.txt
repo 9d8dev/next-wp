@@ -3,7 +3,7 @@ Contributors: 9d8
 Tags: next.js, headless, revalidation, cache
 Requires at least: 5.0
 Tested up to: 6.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -55,6 +55,9 @@ Yes, the plugin automatically detects and handles revalidation for custom post t
 
 == Changelog ==
 
+  = 1.0.1 =
+* Fix: Register AJAX actions for manual revalidation
+* Fix: Normalize Next.js site URL in settings (remove trailing slash)
 = 1.0.0 =
 * Initial release
 
