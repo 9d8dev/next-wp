@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Next.js Revalidation
  * Description: Revalidates Next.js site when WordPress content changes
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: 9d8
  * Author URI: https://9d8.dev
  */
@@ -232,17 +232,8 @@ class Next_Revalidation {
         // Determine content type
         $content_type = $post->post_type;
         
-        // Revalidate
+        // Revalidate the entire site
         $this->send_revalidation_request($content_type, $post_id);
-        
-        // Also revalidate any associated terms
-        $taxonomies = get_object_taxonomies($post->post_type);
-        foreach ($taxonomies as $taxonomy) {
-            $terms = wp_get_post_terms($post_id, $taxonomy);
-            foreach ($terms as $term) {
-                $this->send_revalidation_request($taxonomy, $term->term_id);
-            }
-        }
     }
 
     public function on_post_delete($post_id) {
@@ -284,37 +275,9 @@ class Next_Revalidation {
         // Prepare API endpoint
         $endpoint = trailingslashit($this->options['next_url']) . 'api/revalidate';
         
-        // Map WordPress content types to Next.js cache tags
-        switch ($content_type) {
-            case 'post':
-                $contentType = 'post';
-                break;
-            case 'page':
-                $contentType = 'page';
-                break;
-            case 'category':
-                $contentType = 'category';
-                break;
-            case 'post_tag':
-                $contentType = 'tag';
-                break;
-            case 'author':
-            case 'user':
-                $contentType = 'author';
-                break;
-            case 'attachment':
-                $contentType = 'media';
-                break;
-            case 'all':
-                $contentType = 'all';
-                break;
-            default:
-                $contentType = $content_type;
-        }
-
         // Prepare request payload
         $payload = array(
-            'contentType' => $contentType,
+            'contentType' => $content_type,
         );
         
         if ($content_id !== null) {
@@ -352,7 +315,7 @@ class Next_Revalidation {
         if ($success) {
             if (!empty($this->options['enable_notifications'])) {
                 add_action('admin_notices', function() use ($content_type, $content_id) {
-                    echo '<div class="notice notice-success is-dismissible"><p>Next.js revalidation successful for ' . esc_html($content_type) . ($content_id ? ' (ID: ' . esc_html($content_id) . ')' : '') . '</p></div>';
+                    echo '<div class="notice notice-success is-dismissible"><p>Next.js site revalidated successfully due to ' . esc_html($content_type) . ' update' . ($content_id ? ' (ID: ' . esc_html($content_id) . ')' : '') . '</p></div>';
                 });
             }
             return true;
