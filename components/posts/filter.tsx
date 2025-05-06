@@ -57,14 +57,18 @@ export function FilterPosts({
     router.push("/posts");
   };
 
+  const hasTags = tags.length > 0;
+  const hasCategories = categories.length > 0;
+  const hasAuthors = authors.length > 0;
+
   return (
     <div className="grid md:grid-cols-[1fr_1fr_1fr_0.5fr] gap-2 my-4 !z-10">
       <Select
         value={selectedTag || "all"}
         onValueChange={(value) => handleFilterChange("tag", value)}
       >
-        <SelectTrigger>
-          <SelectValue placeholder="All Tags" />
+        <SelectTrigger disabled={!hasTags}>
+          {hasTags ? <SelectValue placeholder="All Tags" /> : "No tags found"}
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Tags</SelectItem>
@@ -80,8 +84,12 @@ export function FilterPosts({
         value={selectedCategory || "all"}
         onValueChange={(value) => handleFilterChange("category", value)}
       >
-        <SelectTrigger>
-          <SelectValue placeholder="All Categories" />
+        <SelectTrigger disabled={!hasCategories}>
+          {hasCategories ? (
+            <SelectValue placeholder="All Categories" />
+          ) : (
+            "No categories found"
+          )}
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Categories</SelectItem>
@@ -97,8 +105,12 @@ export function FilterPosts({
         value={selectedAuthor || "all"}
         onValueChange={(value) => handleFilterChange("author", value)}
       >
-        <SelectTrigger>
-          <SelectValue placeholder="All Authors" />
+        <SelectTrigger disabled={!hasAuthors} className="text-center">
+          {hasAuthors ? (
+            <SelectValue placeholder="All Authors" />
+          ) : (
+            "No authors found"
+          )}
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Authors</SelectItem>
