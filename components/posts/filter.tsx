@@ -47,11 +47,9 @@ export function FilterPosts({
   const handleFilterChange = (type: string, value: string) => {
     console.log(`Filter changed: ${type} -> ${value}`);
     const newParams = new URLSearchParams(window.location.search);
-    if (value === "all") {
-      newParams.delete(type);
-    } else {
-      newParams.set(type, value);
-    }
+    newParams.delete("page");
+    value === "all" ? newParams.delete(type) : newParams.set(type, value);
+
     router.push(`/posts?${newParams.toString()}`);
   };
 
