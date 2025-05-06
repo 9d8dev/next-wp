@@ -1,6 +1,8 @@
 # Next.js Starter for WordPress Headless CMS
 
 > [Watch the Demo Video](https://www.youtube.com/watch?v=JZc1-BcOvYw)
+>
+> [Need a headless theme? Use 761](https://github.com/9d8dev/761)
 
 ![CleanShot 2025-01-07 at 23 18 41@2x](https://github.com/user-attachments/assets/8b268c36-eb0d-459f-b9f1-b5f129bd29bc)
 
@@ -29,6 +31,7 @@ This is a starter template for building a Next.js application that fetches data 
 ### What's included?
 
 ✅ Type-safe data layer with the WordPress RestAPI<br>
+✅ WordPress Plugin for revalidation<br>
 ✅ Granular access to revalidation and cache tags<br>
 ✅ Setup for all basic WordPress options: Posts, Pages, Authors, Categories, Tags<br>
 ✅ Easy integration with custom post types and ACF<br>
