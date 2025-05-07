@@ -18,22 +18,10 @@ if (!baseUrl) {
   throw new Error("WORDPRESS_URL environment variable is not defined");
 }
 
-interface FetchOptions {
-  next?: {
-    revalidate?: number | false;
-  };
-}
-
 function getUrl(path: string, query?: Record<string, any>) {
   const params = query ? querystring.stringify(query) : null;
   return `${baseUrl}${path}${params ? `?${params}` : ""}`;
 }
-
-const defaultFetchOptions: FetchOptions = {
-  next: {
-    revalidate: 3600,
-  },
-};
 
 class WordPressAPIError extends Error {
   constructor(message: string, public status: number, public endpoint: string) {
@@ -42,15 +30,10 @@ class WordPressAPIError extends Error {
   }
 }
 
-async function wordpressFetch<T>(
-  url: string,
-  options: FetchOptions = {}
-): Promise<T> {
+async function wordpressFetch<T>(url: string): Promise<T> {
   const userAgent = "Next.js WordPress Client";
 
   const response = await fetch(url, {
-    ...defaultFetchOptions,
-    ...options,
     headers: {
       "User-Agent": userAgent,
     },
