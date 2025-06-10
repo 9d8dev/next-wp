@@ -25,6 +25,7 @@ This is a starter template for building a Next.js application that fetches data 
   - [Dynamic OG Images](#dynamic-og-images)
   - [Revalidation Setup](#revalidation-setup)
   - [Search Functionality](#search-functionality)
+  - [AI Assistant Guidelines](#ai-assistant-guidelines)
 
 ## Overview
 
@@ -482,5 +483,17 @@ await revalidateWordPressData(["category-456"]);
 ```
 
 This system ensures your content stays fresh while maintaining optimal performance through intelligent caching.
+
+## AI Assistant Guidelines
+
+This codebase includes a [CLAUDE.md](./CLAUDE.md) file that provides guidance to AI assistants (like Claude) when working with code in this repository. It contains:
+
+- Project architecture overview
+- Code style guidelines
+- Build and development commands
+- TypeScript and component patterns
+- Environment variable configuration
+
+This ensures AI assistants maintain consistency and follow project conventions when helping with development tasks.
 
 Built by [Bridger Tower](https://twitter.com/bridgertower) and [Cameron Youngblood](https://twitter.com/youngbloodcyb) at [9d8](https://9d8.dev)
