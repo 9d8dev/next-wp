@@ -31,12 +31,12 @@
     "react-wrap-balancer": "^1.1.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
-    "use-debounce": "^10.0.4",
-    "zod": "^3.25.48"
+    "use-debounce": "^10.0.5",
+    "zod": "^3.25.57"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.16",
-    "@types/node": "^20.17.57",
+    "@types/node": "^20.19.0",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
     "autoprefixer": "^10.4.21",
