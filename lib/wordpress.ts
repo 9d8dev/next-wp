@@ -140,8 +140,8 @@ export async function getPageById(id: number): Promise<Page> {
 }
 
 export async function getPageBySlug(slug: string): Promise<Page> {
-  const response = await wordpressFetch<Page[]>("/wp-json/wp/v2/pages", { slug });
-  return response[0];
+  return wordpressFetch<Page[]>("/wp-json/wp/v2/pages", { slug })
+    .then(pages => pages[0]);
 }
 
 export async function getAllAuthors(): Promise<Author[]> {
