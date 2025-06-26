@@ -50,6 +50,10 @@ async function wordpressFetch<T>(
     headers: {
       "User-Agent": userAgent,
     },
+    next: {
+      tags: ["wordpress"],
+      revalidate: 3600, // 1 hour cache
+    },
   });
 
   if (!response.ok) {
@@ -76,6 +80,10 @@ async function wordpressFetchWithPagination<T>(
   const response = await fetch(url, {
     headers: {
       "User-Agent": userAgent,
+    },
+    next: {
+      tags: ["wordpress"],
+      revalidate: 3600, // 1 hour cache
     },
   });
 
@@ -115,20 +123,61 @@ export async function getPostsPaginated(
     page,
   };
 
+  // Build cache tags based on filters
+  const cacheTags = ["wordpress", "posts"];
+
   if (filterParams?.search) {
     query.search = filterParams.search;
+    cacheTags.push("posts-search");
   }
   if (filterParams?.author) {
     query.author = filterParams.author;
+    cacheTags.push(`posts-author-${filterParams.author}`);
   }
   if (filterParams?.tag) {
     query.tags = filterParams.tag;
+    cacheTags.push(`posts-tag-${filterParams.tag}`);
   }
   if (filterParams?.category) {
     query.categories = filterParams.category;
+    cacheTags.push(`posts-category-${filterParams.category}`);
   }
 
-  return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query);
+  // Add page-specific cache tag for granular invalidation
+  cacheTags.push(`posts-page-${page}`);
+
+  const url = `${baseUrl}/wp-json/wp/v2/posts${
+    query ? `?${querystring.stringify(query)}` : ""
+  }`;
+  const userAgent = "Next.js WordPress Client";
+
+  const response = await fetch(url, {
+    headers: {
+      "User-Agent": userAgent,
+    },
+    next: {
+      tags: cacheTags,
+      revalidate: 3600, // 1 hour cache
+    },
+  });
+
+  if (!response.ok) {
+    throw new WordPressAPIError(
+      `WordPress API request failed: ${response.statusText}`,
+      response.status,
+      url
+    );
+  }
+
+  const data = await response.json();
+
+  return {
+    data,
+    headers: {
+      total: parseInt(response.headers.get("X-WP-Total") || "0", 10),
+      totalPages: parseInt(response.headers.get("X-WP-TotalPages") || "0", 10),
+    },
+  };
 }
 
 export async function getAllPosts(filterParams?: {
