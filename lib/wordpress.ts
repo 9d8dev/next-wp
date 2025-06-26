@@ -299,4 +299,76 @@ export async function searchAuthors(query: string): Promise<Author[]> {
   });
 }
 
+// Function specifically for generateStaticParams - fetches ALL posts
+export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
+  const allSlugs: { slug: string }[] = [];
+  let page = 1;
+  let hasMore = true;
+
+  while (hasMore) {
+    const response = await wordpressFetchWithPagination<Post[]>(
+      "/wp-json/wp/v2/posts",
+      {
+        per_page: 100,
+        page,
+        _fields: "slug", // Only fetch slug field for performance
+      }
+    );
+
+    const posts = response.data;
+    allSlugs.push(...posts.map((post) => ({ slug: post.slug })));
+
+    hasMore = page < response.headers.totalPages;
+    page++;
+  }
+
+  return allSlugs;
+}
+
+// Enhanced pagination functions for specific queries
+export async function getPostsByCategoryPaginated(
+  categoryId: number,
+  page: number = 1,
+  perPage: number = 9
+): Promise<WordPressResponse<Post[]>> {
+  const query = {
+    _embed: true,
+    per_page: perPage,
+    page,
+    categories: categoryId,
+  };
+
+  return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query);
+}
+
+export async function getPostsByTagPaginated(
+  tagId: number,
+  page: number = 1,
+  perPage: number = 9
+): Promise<WordPressResponse<Post[]>> {
+  const query = {
+    _embed: true,
+    per_page: perPage,
+    page,
+    tags: tagId,
+  };
+
+  return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query);
+}
+
+export async function getPostsByAuthorPaginated(
+  authorId: number,
+  page: number = 1,
+  perPage: number = 9
+): Promise<WordPressResponse<Post[]>> {
+  const query = {
+    _embed: true,
+    per_page: perPage,
+    page,
+    author: authorId,
+  };
+
+  return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query);
+}
+
 export { WordPressAPIError };
