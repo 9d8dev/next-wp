@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export const maxDuration = 30;
@@ -32,14 +32,50 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      console.log("Revalidating entire site");
+      console.log(
+        `Revalidating content: ${contentType}${
+          contentId ? ` (ID: ${contentId})` : ""
+        }`
+      );
+
+      // Revalidate specific content type tags
+      revalidateTag("wordpress");
+
+      if (contentType === "post") {
+        revalidateTag("posts");
+        if (contentId) {
+          revalidateTag(`post-${contentId}`);
+        }
+        // Clear all post pages when any post changes
+        revalidateTag("posts-page-1");
+      } else if (contentType === "category") {
+        revalidateTag("categories");
+        if (contentId) {
+          revalidateTag(`posts-category-${contentId}`);
+          revalidateTag(`category-${contentId}`);
+        }
+      } else if (contentType === "tag") {
+        revalidateTag("tags");
+        if (contentId) {
+          revalidateTag(`posts-tag-${contentId}`);
+          revalidateTag(`tag-${contentId}`);
+        }
+      } else if (contentType === "author" || contentType === "user") {
+        revalidateTag("authors");
+        if (contentId) {
+          revalidateTag(`posts-author-${contentId}`);
+          revalidateTag(`author-${contentId}`);
+        }
+      }
+
+      // Also revalidate the entire layout for safety
       revalidatePath("/", "layout");
 
       return NextResponse.json({
         revalidated: true,
-        message: `Revalidated entire site due to ${contentType} update${
+        message: `Revalidated ${contentType}${
           contentId ? ` (ID: ${contentId})` : ""
-        }`,
+        } and related content`,
         timestamp: new Date().toISOString(),
       });
     } catch (error) {
