@@ -3,7 +3,7 @@ import {
   getFeaturedMediaById,
   getAuthorById,
   getCategoryById,
-  getAllPosts,
+  getAllPostSlugs,
 } from "@/lib/wordpress";
 
 import { Section, Container, Article, Prose } from "@/components/craft";
@@ -17,11 +17,7 @@ import Balancer from "react-wrap-balancer";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
-  const posts = await getAllPosts();
-
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+  return await getAllPostSlugs();
 }
 
 export async function generateMetadata({
