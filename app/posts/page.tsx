@@ -1,5 +1,5 @@
 import {
-  getAllPosts,
+  getPostsPaginated,
   getAllAuthors,
   getAllTags,
   getAllCategories,
@@ -46,22 +46,20 @@ export default async function Page({
   const params = await searchParams;
   const { author, tag, category, page: pageParam, search } = params;
 
-  // Fetch data based on search parameters
-  const [posts, authors, tags, categories] = await Promise.all([
-    getAllPosts({ author, tag, category, search }),
+  // Handle pagination
+  const page = pageParam ? parseInt(pageParam, 10) : 1;
+  const postsPerPage = 9;
+
+  // Fetch data based on search parameters using efficient pagination
+  const [postsResponse, authors, tags, categories] = await Promise.all([
+    getPostsPaginated(page, postsPerPage, { author, tag, category, search }),
     search ? searchAuthors(search) : getAllAuthors(),
     search ? searchTags(search) : getAllTags(),
     search ? searchCategories(search) : getAllCategories(),
   ]);
 
-  // Handle pagination
-  const page = pageParam ? parseInt(pageParam, 10) : 1;
-  const postsPerPage = 9;
-  const totalPages = Math.ceil(posts.length / postsPerPage);
-  const paginatedPosts = posts.slice(
-    (page - 1) * postsPerPage,
-    page * postsPerPage
-  );
+  const { data: posts, headers } = postsResponse;
+  const { total, totalPages } = headers;
 
   // Create pagination URL helper
   const createPaginationUrl = (newPage: number) => {
@@ -81,7 +79,7 @@ export default async function Page({
           <Prose>
             <h2>All Posts</h2>
             <p className="text-muted-foreground">
-              {posts.length} {posts.length === 1 ? "post" : "posts"} found
+              {total} {total === 1 ? "post" : "posts"} found
               {search && " matching your search"}
             </p>
           </Prose>
@@ -99,9 +97,9 @@ export default async function Page({
             />
           </div>
 
-          {paginatedPosts.length > 0 ? (
+          {posts.length > 0 ? (
             <div className="grid md:grid-cols-3 gap-4">
-              {paginatedPosts.map((post) => (
+              {posts.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
             </div>
@@ -112,31 +110,52 @@ export default async function Page({
           )}
 
           {totalPages > 1 && (
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    className={
-                      page <= 1 ? "pointer-events-none opacity-50" : ""
-                    }
-                    href={createPaginationUrl(page - 1)}
-                  />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href={createPaginationUrl(page)}>
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext
-                    className={
-                      page >= totalPages ? "pointer-events-none opacity-50" : ""
-                    }
-                    href={createPaginationUrl(page + 1)}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+            <div className="flex justify-center items-center py-8">
+              <Pagination>
+                <PaginationContent>
+                  {page > 1 && (
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href={createPaginationUrl(page - 1)}
+                      />
+                    </PaginationItem>
+                  )}
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter((pageNum) => {
+                      // Show current page, first page, last page, and 2 pages around current
+                      return (
+                        pageNum === 1 ||
+                        pageNum === totalPages ||
+                        Math.abs(pageNum - page) <= 1
+                      );
+                    })
+                    .map((pageNum, index, array) => {
+                      const showEllipsis =
+                        index > 0 && pageNum - array[index - 1] > 1;
+                      return (
+                        <div key={pageNum} className="flex items-center">
+                          {showEllipsis && <span className="px-2">...</span>}
+                          <PaginationItem>
+                            <PaginationLink
+                              href={createPaginationUrl(pageNum)}
+                              isActive={pageNum === page}
+                            >
+                              {pageNum}
+                            </PaginationLink>
+                          </PaginationItem>
+                        </div>
+                      );
+                    })}
+
+                  {page < totalPages && (
+                    <PaginationItem>
+                      <PaginationNext href={createPaginationUrl(page + 1)} />
+                    </PaginationItem>
+                  )}
+                </PaginationContent>
+              </Pagination>
+            </div>
           )}
         </div>
       </Container>
