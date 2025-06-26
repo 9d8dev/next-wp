@@ -18,6 +18,7 @@ This is a starter template for building a Next.js application that fetches data 
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
   - [WordPress Functions](#wordpress-functions)
+  - [Pagination System](#pagination-system)
   - [WordPress Types](#wordpress-types)
   - [Post Card Component](#post-card-component)
   - [Filter Component](#filter-component)
@@ -32,6 +33,7 @@ This is a starter template for building a Next.js application that fetches data 
 ### What's included?
 
 ✅ Type-safe data layer with the WordPress RestAPI<br>
+✅ Efficient server-side pagination system<br>
 ✅ WordPress Plugin for revalidation<br>
 ✅ Granular access to revalidation and cache tags<br>
 ✅ Setup for all basic WordPress options: Posts, Pages, Authors, Categories, Tags<br>
@@ -95,7 +97,8 @@ const defaultFetchOptions = {
 
 #### Posts
 
-- `getAllPosts(filterParams?: { author?: string; tag?: string; category?: string; })`: Fetches posts with optional filtering by author, tag, or category. Uses cache tags for efficient revalidation.
+- `getAllPosts(filterParams?: { author?: string; tag?: string; category?: string; search?: string; })`: Fetches posts with optional filtering by author, tag, category, or search query. Uses cache tags for efficient revalidation. **Note:** Limited to 100 posts for performance.
+- `getPostsPaginated(page?: number, perPage?: number, filterParams?: { author?: string; tag?: string; category?: string; search?: string; })`: **Recommended** - Fetches posts with server-side pagination and filtering. Returns both data and pagination headers for efficient large-scale post handling.
 - `getPostById(id: number)`: Retrieves a specific post by ID with proper error handling.
 - `getPostBySlug(slug: string)`: Fetches a post using its URL-friendly slug.
 
@@ -183,6 +186,119 @@ try {
 
 These functions are designed to work seamlessly with Next.js 15's App Router and provide proper TypeScript support through the types defined in `wordpress.d.ts`.
 
+## Pagination System
+
+The starter includes an efficient pagination system designed for high-performance WordPress sites with large amounts of content.
+
+### Server-Side Pagination
+
+Instead of fetching all posts and paginating client-side, the `getPostsPaginated` function implements true server-side pagination:
+
+```typescript
+// Fetch page 2 with 10 posts per page
+const response = await getPostsPaginated(2, 10, {
+  author: "123",
+  category: "news",
+  search: "nextjs"
+});
+
+const { data: posts, headers } = response;
+const { total, totalPages } = headers;
+```
+
+### Pagination Response Structure
+
+The `getPostsPaginated` function returns a `WordPressResponse<Post[]>` object:
+
+```typescript
+interface WordPressResponse<T> {
+  data: T;                    // The actual posts array
+  headers: {
+    total: number;            // Total number of posts matching the query
+    totalPages: number;       // Total number of pages
+  };
+}
+```
+
+### Benefits of Server-Side Pagination
+
+1. **Performance**: Only fetch the posts you need (e.g., 9 posts instead of 100+)
+2. **Memory Efficiency**: Reduced memory usage, especially for sites with many posts
+3. **Network Optimization**: Smaller response payloads (up to 90% reduction)
+4. **Scalability**: Handles thousands of posts without performance degradation
+5. **Real Pagination Info**: Access to total count without processing all data
+
+### Migration from getAllPosts
+
+For existing implementations using `getAllPosts`, you can migrate to the more efficient pagination:
+
+```typescript
+// Before: Client-side pagination
+const allPosts = await getAllPosts({ author, category });
+const page = 1;
+const postsPerPage = 9;
+const paginatedPosts = allPosts.slice((page - 1) * postsPerPage, page * postsPerPage);
+const totalPages = Math.ceil(allPosts.length / postsPerPage);
+
+// After: Server-side pagination
+const { data: posts, headers } = await getPostsPaginated(page, postsPerPage, { author, category });
+const { total, totalPages } = headers;
+```
+
+### Example Implementation
+
+The main posts page (`app/posts/page.tsx`) demonstrates the pagination system:
+
+```typescript
+export default async function PostsPage({ searchParams }) {
+  const params = await searchParams;
+  const page = params.page ? parseInt(params.page, 10) : 1;
+  const postsPerPage = 9;
+
+  // Efficient server-side pagination
+  const { data: posts, headers } = await getPostsPaginated(
+    page,
+    postsPerPage,
+    {
+      author: params.author,
+      category: params.category,
+      tag: params.tag,
+      search: params.search
+    }
+  );
+
+  const { total, totalPages } = headers;
+
+  return (
+    <div>
+      <p>{total} posts found</p>
+      {posts.map(post => <PostCard key={post.id} post={post} />)}
+      {totalPages > 1 && <PaginationComponent />}
+    </div>
+  );
+}
+```
+
+### WordPress API Headers
+
+The pagination system leverages WordPress REST API headers:
+
+- `X-WP-Total`: Total number of posts matching the query
+- `X-WP-TotalPages`: Total number of pages based on `per_page` parameter
+
+These headers are automatically parsed and included in the response for easy access to pagination metadata.
+
+### Cache Tags Integration
+
+The pagination system includes sophisticated cache tags for optimal performance:
+
+```typescript
+// Dynamic cache tags based on query parameters
+["wordpress", "posts", "posts-page-1", "posts-category-123"]
+```
+
+This ensures that when content changes, only the relevant pagination pages are revalidated, maintaining excellent performance even with large content sets.
+
 ## WordPress Types
 
 The `lib/wordpress.d.ts` file contains comprehensive TypeScript type definitions for WordPress entities. The type system is built around a core `WPEntity` interface that provides common properties for WordPress content:
@@ -213,6 +329,11 @@ Key type definitions include:
 - `Category`: Post categories (extends `Taxonomy`)
 - `Tag`: Post tags (extends `Taxonomy`)
 - `FeaturedMedia`: Media attachments (extends `WPEntity`)
+
+### Pagination Types
+
+- `WordPressResponse<T>`: Wrapper for paginated responses containing data and headers
+- `WordPressPaginationHeaders`: Contains pagination metadata (`total`, `totalPages`)
 
 ### Shared Interfaces
 
@@ -427,11 +548,31 @@ This starter implements an intelligent caching and revalidation system using Nex
 
 ### Cache Tags System
 
-The WordPress API functions use a hierarchical cache tag system:
+The WordPress API functions use a sophisticated hierarchical cache tag system for granular revalidation:
 
-- Global tag: `wordpress` (affects all content)
-- Content type tags: `posts`, `pages`, `categories`, etc.
-- Individual item tags: `post-123`, `category-456`, etc.
+#### Global Tags
+- `wordpress` - Affects all WordPress content
+
+#### Content Type Tags
+- `posts` - All post content
+- `categories` - All category content
+- `tags` - All tag content
+- `authors` - All author content
+
+#### Pagination-Specific Tags
+- `posts-page-1`, `posts-page-2`, etc. - Individual pagination pages
+- `posts-search` - Search result pages
+- `posts-author-123` - Posts filtered by specific author
+- `posts-category-456` - Posts filtered by specific category
+- `posts-tag-789` - Posts filtered by specific tag
+
+#### Individual Item Tags
+- `post-123` - Specific post content
+- `category-456` - Specific category content
+- `tag-789` - Specific tag content
+- `author-123` - Specific author content
+
+This granular system ensures that when content changes, only the relevant cached data is invalidated, providing optimal performance.
 
 ### Automatic Revalidation
 
@@ -452,8 +593,12 @@ The WordPress API functions use a hierarchical cache tag system:
 3. **How it Works:**
    - When content is updated in WordPress, the plugin sends a webhook
    - The webhook includes content type and ID information
-   - Next.js automatically revalidates the appropriate cache tags
-   - Only affected content is updated, maintaining performance
+   - Next.js intelligently revalidates specific cache tags based on the change:
+     - **Post changes**: Revalidates `posts`, `post-{id}`, and `posts-page-1`
+     - **Category changes**: Revalidates `categories`, `category-{id}`, and `posts-category-{id}`
+     - **Tag changes**: Revalidates `tags`, `tag-{id}`, and `posts-tag-{id}`
+     - **Author changes**: Revalidates `authors`, `author-{id}`, and `posts-author-{id}`
+   - Only affected cached content is updated, maintaining optimal performance
 
 ### Plugin Features
 
@@ -467,19 +612,28 @@ The Next.js Revalidation plugin includes:
 
 ### Manual Revalidation
 
-You can also manually revalidate content using the `revalidateWordPressData` function:
+You can manually revalidate content using Next.js cache functions:
 
 ```typescript
+import { revalidateTag } from "next/cache";
+
 // Revalidate all WordPress content
-await revalidateWordPressData();
+revalidateTag("wordpress");
 
 // Revalidate specific content types
-await revalidateWordPressData(["posts"]);
-await revalidateWordPressData(["categories"]);
+revalidateTag("posts");
+revalidateTag("categories");
+revalidateTag("tags");
+revalidateTag("authors");
 
 // Revalidate specific items
-await revalidateWordPressData(["post-123"]);
-await revalidateWordPressData(["category-456"]);
+revalidateTag("post-123");
+revalidateTag("category-456");
+
+// Revalidate pagination-specific content
+revalidateTag("posts-page-1");
+revalidateTag("posts-category-123");
+revalidateTag("posts-search");
 ```
 
 This system ensures your content stays fresh while maintaining optimal performance through intelligent caching.
