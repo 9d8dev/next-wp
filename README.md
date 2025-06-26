@@ -288,6 +288,17 @@ The pagination system leverages WordPress REST API headers:
 
 These headers are automatically parsed and included in the response for easy access to pagination metadata.
 
+### Cache Tags Integration
+
+The pagination system includes sophisticated cache tags for optimal performance:
+
+```typescript
+// Dynamic cache tags based on query parameters
+["wordpress", "posts", "posts-page-1", "posts-category-123"]
+```
+
+This ensures that when content changes, only the relevant pagination pages are revalidated, maintaining excellent performance even with large content sets.
+
 ## WordPress Types
 
 The `lib/wordpress.d.ts` file contains comprehensive TypeScript type definitions for WordPress entities. The type system is built around a core `WPEntity` interface that provides common properties for WordPress content:
@@ -537,11 +548,31 @@ This starter implements an intelligent caching and revalidation system using Nex
 
 ### Cache Tags System
 
-The WordPress API functions use a hierarchical cache tag system:
+The WordPress API functions use a sophisticated hierarchical cache tag system for granular revalidation:
 
-- Global tag: `wordpress` (affects all content)
-- Content type tags: `posts`, `pages`, `categories`, etc.
-- Individual item tags: `post-123`, `category-456`, etc.
+#### Global Tags
+- `wordpress` - Affects all WordPress content
+
+#### Content Type Tags
+- `posts` - All post content
+- `categories` - All category content
+- `tags` - All tag content
+- `authors` - All author content
+
+#### Pagination-Specific Tags
+- `posts-page-1`, `posts-page-2`, etc. - Individual pagination pages
+- `posts-search` - Search result pages
+- `posts-author-123` - Posts filtered by specific author
+- `posts-category-456` - Posts filtered by specific category
+- `posts-tag-789` - Posts filtered by specific tag
+
+#### Individual Item Tags
+- `post-123` - Specific post content
+- `category-456` - Specific category content
+- `tag-789` - Specific tag content
+- `author-123` - Specific author content
+
+This granular system ensures that when content changes, only the relevant cached data is invalidated, providing optimal performance.
 
 ### Automatic Revalidation
 
@@ -562,8 +593,12 @@ The WordPress API functions use a hierarchical cache tag system:
 3. **How it Works:**
    - When content is updated in WordPress, the plugin sends a webhook
    - The webhook includes content type and ID information
-   - Next.js automatically revalidates the appropriate cache tags
-   - Only affected content is updated, maintaining performance
+   - Next.js intelligently revalidates specific cache tags based on the change:
+     - **Post changes**: Revalidates `posts`, `post-{id}`, and `posts-page-1`
+     - **Category changes**: Revalidates `categories`, `category-{id}`, and `posts-category-{id}`
+     - **Tag changes**: Revalidates `tags`, `tag-{id}`, and `posts-tag-{id}`
+     - **Author changes**: Revalidates `authors`, `author-{id}`, and `posts-author-{id}`
+   - Only affected cached content is updated, maintaining optimal performance
 
 ### Plugin Features
 
@@ -577,19 +612,28 @@ The Next.js Revalidation plugin includes:
 
 ### Manual Revalidation
 
-You can also manually revalidate content using the `revalidateWordPressData` function:
+You can manually revalidate content using Next.js cache functions:
 
 ```typescript
+import { revalidateTag } from "next/cache";
+
 // Revalidate all WordPress content
-await revalidateWordPressData();
+revalidateTag("wordpress");
 
 // Revalidate specific content types
-await revalidateWordPressData(["posts"]);
-await revalidateWordPressData(["categories"]);
+revalidateTag("posts");
+revalidateTag("categories");
+revalidateTag("tags");
+revalidateTag("authors");
 
 // Revalidate specific items
-await revalidateWordPressData(["post-123"]);
-await revalidateWordPressData(["category-456"]);
+revalidateTag("post-123");
+revalidateTag("category-456");
+
+// Revalidate pagination-specific content
+revalidateTag("posts-page-1");
+revalidateTag("posts-category-123");
+revalidateTag("posts-search");
 ```
 
 This system ensures your content stays fresh while maintaining optimal performance through intelligent caching.
