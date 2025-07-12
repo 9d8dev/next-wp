@@ -7,6 +7,9 @@ import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { MobileNav } from "@/components/nav/mobile-nav";
 import { Analytics } from "@vercel/analytics/react";
 import { Button } from "@/components/ui/button";
+import AuthProvider from "@/components/auth-provider";
+import AuthButton from "@/components/auth-button";
+import { getLoggedInUser } from "@/lib/auth";
 
 import { mainMenu, contentMenu } from "@/menu.config";
 import { siteConfig } from "@/site.config";
@@ -34,11 +37,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+interface NavProps {
+    className?: string;
+    children?: React.ReactNode;
+    id?: string;
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const user = await getLoggedInUser();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
@@ -49,9 +60,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Nav />
-          {children}
-          <Footer />
+          <AuthProvider user={user}>
+            <Nav />
+            {children}
+            <Footer />
+          </AuthProvider>
         </ThemeProvider>
         <Analytics />
       </body>
@@ -94,9 +107,7 @@ const Nav = ({ className, children, id }: NavProps) => {
               </Button>
             ))}
           </div>
-          <Button asChild className="hidden sm:flex">
-            <Link href="https://github.com/9d8dev/next-wp">Get Started</Link>
-          </Button>
+          <AuthButton />
           <MobileNav />
         </div>
       </div>
