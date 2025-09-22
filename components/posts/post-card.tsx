@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 
 import {
   getFeaturedMediaById,
-  getAuthorById,
   getCategoryById,
 } from "@/lib/wordpress";
 
@@ -14,7 +13,6 @@ export async function PostCard({ post }: { post: Post }) {
   const media = post.featured_media
     ? await getFeaturedMediaById(post.featured_media)
     : null;
-  const author = post.author ? await getAuthorById(post.author) : null;
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",

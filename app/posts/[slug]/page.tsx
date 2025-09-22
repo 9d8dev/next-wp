@@ -74,7 +74,11 @@ export default async function Page({
   const featuredMedia = post.featured_media
     ? await getFeaturedMediaById(post.featured_media)
     : null;
-  const author = await getAuthorById(post.author);
+  let author;
+  // TODO: Add coauthor fetch
+  try {
+    author = await getAuthorById(post.author);
+  } catch {}
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
@@ -95,12 +99,13 @@ export default async function Page({
           </h1>
           <div className="flex justify-between items-center gap-4 text-sm mb-4">
             <h5>
-              Published {date} by{" "}
-              {author.name && (
+              Published {date}
+              {author?.name && <>
+                {" by "}
                 <span>
                   <a href={`/posts/?author=${author.id}`}>{author.name}</a>{" "}
                 </span>
-              )}
+              </>}
             </h5>
 
             <Link
