@@ -60,13 +60,15 @@ export function MobileNav() {
                 {key.charAt(0).toUpperCase() + key.slice(1)}
               </MobileLink>
             ))}
-            <h3 className="text-small pt-6">Blog Menu</h3>
-            <Separator />
-            {Object.entries(contentMenu).map(([key, href]) => (
-              <MobileLink key={key} href={href} onOpenChange={setOpen}>
-                {key.charAt(0).toUpperCase() + key.slice(1)}
-              </MobileLink>
-            ))}
+            {Object.entries(contentMenu).length > 0 && <>
+              <h3 className="text-small pt-6">Blog Menu</h3>
+              <Separator />
+              {Object.entries(contentMenu).map(([key, href]) => (
+                <MobileLink key={key} href={href} onOpenChange={setOpen}>
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                </MobileLink>
+              ))}
+            </>}
           </div>
         </ScrollArea>
       </SheetContent>

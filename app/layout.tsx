@@ -25,9 +25,8 @@ const font = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "WordPress & Next.js Starter by 9d8",
-  description:
-    "A starter template for Next.js with WordPress as a headless CMS.",
+  title: "Системный Блокъ - Онлайн-журнал о влиянии цифровых технологий на культуру, человека и общество",
+  description: "Онлайн-журнал о влиянии цифровых технологий на культуру, человека и общество",
   metadataBase: new URL(siteConfig.site_domain),
   alternates: {
     canonical: "/",
@@ -72,14 +71,6 @@ const Nav = ({ className, children, id }: NavProps) => {
           className="hover:opacity-75 transition-all flex gap-4 items-center"
           href="/"
         >
-          <Image
-            src={Logo}
-            alt="Logo"
-            loading="eager"
-            className="dark:invert"
-            width={42}
-            height={26.44}
-          ></Image>
           <h2 className="text-sm">{siteConfig.site_name}</h2>
         </Link>
         {children}
@@ -93,9 +84,6 @@ const Nav = ({ className, children, id }: NavProps) => {
               </Button>
             ))}
           </div>
-          <Button asChild className="hidden sm:flex">
-            <Link href="https://github.com/9d8dev/next-wp">Get Started</Link>
-          </Button>
           <MobileNav />
         </div>
       </div>
@@ -107,23 +95,16 @@ const Footer = () => {
   return (
     <footer>
       <Section>
-        <Container className="grid md:grid-cols-[1.5fr_0.5fr_0.5fr] gap-12">
+        <Container className="flex">
           <div className="flex flex-col gap-6 not-prose">
             <Link href="/">
               <h3 className="sr-only">{siteConfig.site_name}</h3>
-              <Image
-                src={Logo}
-                alt="Logo"
-                className="dark:invert"
-                width={42}
-                height={26.44}
-              ></Image>
             </Link>
             <p>
               <Balancer>{siteConfig.site_description}</Balancer>
             </p>
           </div>
-          <div className="flex flex-col gap-2 text-sm">
+          <div className="flex flex-col gap-2 text-sm ml-6">
             <h5 className="font-medium text-base">Website</h5>
             {Object.entries(mainMenu).map(([key, href]) => (
               <Link
@@ -135,7 +116,7 @@ const Footer = () => {
               </Link>
             ))}
           </div>
-          <div className="flex flex-col gap-2 text-sm">
+          {Object.entries(contentMenu).length > 0 && <div className="flex flex-col gap-2 text-sm">
             <h5 className="font-medium text-base">Blog</h5>
             {Object.entries(contentMenu).map(([key, href]) => (
               <Link
@@ -146,7 +127,7 @@ const Footer = () => {
                 {key.charAt(0).toUpperCase() + key.slice(1)}
               </Link>
             ))}
-          </div>
+          </div>}
         </Container>
         <Container className="border-t not-prose flex flex-col md:flex-row md:gap-2 gap-6 justify-between md:items-center">
           <ThemeToggle />
