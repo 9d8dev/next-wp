@@ -74,19 +74,21 @@ export default async function Page({
   const page = await getPageBySlug(slug);
 
   return (
-    <Section>
-      <Container>
-        {page.blocks && page.blocks.length > 0 ? (
-          // Render blocks if available
-          <BlockRenderer blocks={page.blocks} />
-        ) : (
-          // Fallback to HTML rendering for backward compatibility
-          <Prose>
-            <h2>{page.title.rendered}</h2>
-            <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
-          </Prose>
-        )}
-      </Container>
-    </Section>
+    <>
+      {page.blocks && page.blocks.length > 0 ? (
+        // Render all blocks (both custom and core) with React components
+        <BlockRenderer blocks={page.blocks} />
+      ) : (
+        // Fallback for pages without block data
+        <Section>
+          <Container>
+            <Prose>
+              <h1>{page.title.rendered}</h1>
+              <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
+            </Prose>
+          </Container>
+        </Section>
+      )}
+    </>
   );
 }
