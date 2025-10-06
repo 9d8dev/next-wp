@@ -1,5 +1,6 @@
 import { getPageBySlug, getAllPages } from "@/lib/wordpress";
 import { Section, Container, Prose } from "@/components/craft";
+import { BlockRenderer } from "@/lib/blocks/block-renderer";
 import { siteConfig } from "@/site.config";
 
 import type { Metadata } from "next";
@@ -75,10 +76,16 @@ export default async function Page({
   return (
     <Section>
       <Container>
-        <Prose>
-          <h2>{page.title.rendered}</h2>
-          <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
-        </Prose>
+        {page.blocks && page.blocks.length > 0 ? (
+          // Render blocks if available
+          <BlockRenderer blocks={page.blocks} />
+        ) : (
+          // Fallback to HTML rendering for backward compatibility
+          <Prose>
+            <h2>{page.title.rendered}</h2>
+            <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
+          </Prose>
+        )}
       </Container>
     </Section>
   );
