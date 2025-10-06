@@ -9,6 +9,9 @@ import type { ComponentType } from 'react';
 
 // Import block components
 import { Hero } from '@/components/blocks/Hero';
+import { HeroBasic } from '@/components/blocks/HeroBasic';
+import { HeroUltraSimple } from '@/components/blocks/HeroUltraSimple';
+import { TestMinimal } from '@/components/blocks/TestMinimal';
 // import { CTA } from '@/components/blocks/CTA';
 // import { Features } from '@/components/blocks/Features';
 
@@ -19,7 +22,11 @@ import { Hero } from '@/components/blocks/Hero';
  */
 export const BLOCK_COMPONENTS: Record<string, ComponentType<any>> = {
   // DapFlow custom blocks
+  'dapflow/test-minimal': TestMinimal,
+  'dapflow/hero-ultra-simple': HeroUltraSimple,
+  'dapflow/hero-basic': HeroBasic,
   'dapflow/hero': Hero,
+  'dapflow/hero-simple': Hero, // Hero Simple uses same component
   // 'dapflow/cta': CTA,
   // 'dapflow/features': Features,
 };

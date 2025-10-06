@@ -1,0 +1,34 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "dapflow/hero-simple",
+  "title": "Hero Section (Simple)",
+  "category": "dapflow",
+  "icon": "cover-image",
+  "description": "Simplified hero section for testing",
+  "keywords": ["hero", "header", "banner"],
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Welcome to DapFlow"
+    },
+    "subtitle": {
+      "type": "string",
+      "default": "Build amazing experiences"
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Get Started"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    }
+  },
+  "editorScript": "file:./index.js"
+}
+

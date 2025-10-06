@@ -1,0 +1,136 @@
+/**
+ * Hero Block Editor Styles
+ */
+
+.wp-block-dapflow-hero {
+  .dapflow-block-preview {
+    border: 2px dashed #e0e0e0;
+    border-radius: 12px;
+    padding: 0;
+    overflow: hidden;
+    background: #ffffff;
+    
+    &:hover {
+      border-color: #6366f1;
+    }
+  }
+
+  .hero-preview {
+    .hero-content {
+      padding: 60px 40px;
+      text-align: center;
+      position: relative;
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      
+      &.bg-gray-900,
+      &.bg-black,
+      &.bg-slate-900,
+      &.bg-primary {
+        color: white;
+      }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.8);
+      
+      .badge-link {
+        color: #a5b4fc;
+        font-weight: 600;
+      }
+    }
+
+    .hero-title {
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin: 0;
+      max-width: 800px;
+    }
+
+    .hero-subtitle {
+      font-size: 20px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 600px;
+      margin: 0;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      
+      .hero-cta-primary {
+        background: #6366f1;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        
+        &:hover {
+          background: #5558e3;
+        }
+      }
+      
+      .hero-cta-secondary {
+        font-weight: 600;
+        font-size: 14px;
+        opacity: 0.9;
+      }
+    }
+
+    .hero-decorations {
+      .decoration {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff80b5, #9089fc);
+        opacity: 0.2;
+        filter: blur(60px);
+        pointer-events: none;
+        
+        &.decoration-top {
+          top: -200px;
+          left: -100px;
+        }
+        
+        &.decoration-bottom {
+          bottom: -200px;
+          right: -100px;
+        }
+      }
+    }
+
+    .editor-note {
+      background: #f3f4f6;
+      padding: 16px;
+      margin: 0;
+      border-top: 1px solid #e5e7eb;
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.5;
+      
+      strong {
+        color: #374151;
+      }
+    }
+  }
+}
+

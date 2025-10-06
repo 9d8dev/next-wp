@@ -1,0 +1,17 @@
+{
+  "apiVersion": 2,
+  "name": "dapflow/hero-ultra-simple",
+  "title": "Hero Ultra Simple",
+  "category": "text",
+  "icon": "editor-aligncenter",
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    }
+  },
+  "editorScript": "file:./index.js"
+}
+
