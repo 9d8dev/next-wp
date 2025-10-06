@@ -76,7 +76,12 @@ export interface Post extends WPEntity {
   categories: number[];
   tags: number[];
   meta: Record<string, unknown>;
-  blocks?: EditorBlock[]; // NEW: Structured block data from WordPress
+  blocks?: Array<{
+    blockName: string;
+    attrs: Record<string, any>;
+    innerBlocks?: any[];
+    innerHTML?: string;
+  }>; // NEW: Structured block data from WordPress
 }
 
 export interface Page extends WPEntity {
@@ -91,7 +96,12 @@ export interface Page extends WPEntity {
   ping_status: "open" | "closed";
   template: string;
   meta: Record<string, unknown>;
-  blocks?: EditorBlock[]; // NEW: Structured block data from WordPress
+  blocks?: Array<{
+    blockName: string;
+    attrs: Record<string, any>;
+    innerBlocks?: any[];
+    innerHTML?: string;
+  }>; // NEW: Structured block data from WordPress
 }
 
 // Taxonomy types
