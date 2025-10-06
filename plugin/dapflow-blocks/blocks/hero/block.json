@@ -1,0 +1,85 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "dapflow/hero",
+  "title": "Hero Section",
+  "category": "dapflow",
+  "icon": "cover-image",
+  "description": "Large hero section with title, subtitle, CTAs, and background decorations",
+  "keywords": ["hero", "header", "banner", "cta", "landing"],
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"],
+    "anchor": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Data to enrich your online business"
+    },
+    "subtitle": {
+      "type": "string",
+      "default": "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat."
+    },
+    "primaryCtaText": {
+      "type": "string",
+      "default": "Get started"
+    },
+    "primaryCtaHref": {
+      "type": "string",
+      "default": "#"
+    },
+    "secondaryCtaText": {
+      "type": "string",
+      "default": "Learn more"
+    },
+    "secondaryCtaHref": {
+      "type": "string",
+      "default": "#"
+    },
+    "badgeText": {
+      "type": "string",
+      "default": "Announcing our next round of funding."
+    },
+    "badgeLinkText": {
+      "type": "string",
+      "default": "Read more"
+    },
+    "badgeLinkHref": {
+      "type": "string",
+      "default": "#"
+    },
+    "logoUrl": {
+      "type": "string",
+      "default": "https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+    },
+    "logoAlt": {
+      "type": "string",
+      "default": "Your Company"
+    },
+    "bgColor": {
+      "type": "string",
+      "default": "bg-gray-900"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "text-white"
+    },
+    "showDecorations": {
+      "type": "boolean",
+      "default": true
+    },
+    "navigation": {
+      "type": "array",
+      "default": [
+        { "name": "Product", "href": "#" },
+        { "name": "Features", "href": "#" },
+        { "name": "Marketplace", "href": "#" },
+        { "name": "Company", "href": "#" }
+      ]
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./style.css"
+}
+

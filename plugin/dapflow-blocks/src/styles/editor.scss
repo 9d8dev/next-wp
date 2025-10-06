@@ -1,0 +1,46 @@
+/**
+ * DapFlow Blocks Editor Styles
+ * 
+ * These styles apply in the WordPress block editor only
+ */
+
+.wp-block[data-type^="dapflow/"] {
+  // Base block styles
+  margin: 1.5em 0;
+  
+  // Preview container
+  .dapflow-block-preview {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    background: #f9f9f9;
+    
+    &:hover {
+      border-color: #007cba;
+    }
+  }
+  
+  // Block controls message
+  .dapflow-block-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #757575;
+    font-size: 14px;
+    
+    .dashicons {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 10px;
+      opacity: 0.5;
+    }
+  }
+}
+
+// DapFlow block category icon
+.block-editor-block-types-list__item[data-id^="dapflow/"] {
+  .block-editor-block-icon {
+    color: #6366f1; // Primary brand color
+  }
+}
+
