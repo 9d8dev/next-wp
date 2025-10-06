@@ -6,7 +6,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-block": "node scripts/generate-block.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
