@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "dapflow/hero-basic",
+  "title": "Hero Basic",
+  "category": "dapflow",
+  "icon": "cover-image",
+  "description": "Basic hero section with title, subtitle, and buttons",
+  "keywords": ["hero", "header", "banner"],
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Data to enrich your online business"
+    },
+    "subtitle": {
+      "type": "string",
+      "default": "Anim aute id magna aliqua ad ad non deserunt sunt."
+    },
+    "primaryCtaText": {
+      "type": "string",
+      "default": "Get started"
+    },
+    "primaryCtaHref": {
+      "type": "string",
+      "default": "#"
+    },
+    "secondaryCtaText": {
+      "type": "string",
+      "default": "Learn more"
+    },
+    "secondaryCtaHref": {
+      "type": "string",
+      "default": "#"
+    },
+    "bgColor": {
+      "type": "string",
+      "default": "bg-gray-900"
+    }
+  },
+  "editorScript": "file:./index.js"
+}
+

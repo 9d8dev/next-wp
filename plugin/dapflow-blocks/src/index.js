@@ -7,7 +7,8 @@
 import './styles/editor.scss';
 
 // Import block registrations
-import '../blocks/hero/index.js';
+import '../blocks/hero-ultra-simple/index.js';
+import '../blocks/hero-basic/index.js';
 
 console.log('DapFlow Blocks loaded');
 

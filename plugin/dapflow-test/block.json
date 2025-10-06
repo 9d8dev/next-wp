@@ -1,0 +1,12 @@
+{
+  "apiVersion": 2,
+  "name": "dapflow/simple-test",
+  "title": "DapFlow Simple Test",
+  "category": "text",
+  "attributes": {
+    "content": {
+      "type": "string",
+      "default": "Hello!"
+    }
+  }
+}

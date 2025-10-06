@@ -16,14 +16,16 @@ import { Prose } from '@/components/craft';
 export function CoreBlockRenderer({ block }: { block: WordPressBlock }) {
   const { blockName, attrs, innerHTML, innerBlocks } = block;
 
+  // Handle blocks with inner blocks (like columns, groups)
+  if (innerBlocks && innerBlocks.length > 0) {
+    const { BlockRenderer } = require('./block-renderer');
+    return <BlockRenderer blocks={innerBlocks} />;
+  }
+
   // For most core blocks, we can safely render the HTML
   // WordPress already sanitizes this content
-  if (innerHTML) {
-    return (
-      <Prose>
-        <div dangerouslySetInnerHTML={{ __html: innerHTML }} />
-      </Prose>
-    );
+  if (innerHTML && innerHTML.trim()) {
+    return <div dangerouslySetInnerHTML={{ __html: innerHTML }} />;
   }
 
   // Handle blocks without HTML (empty blocks, etc.)
