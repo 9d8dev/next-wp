@@ -232,16 +232,16 @@ export function CoreAudio({ block }: { block: WordPressBlock }) {
  */
 export function CoreButtons({ block }: { block: WordPressBlock }) {
   const { innerBlocks = [], attrs } = block;
-  const align = attrs?.align || 'left';
+  const align = (attrs?.align as 'left' | 'center' | 'right') || 'left';
   
-  const alignClasses = {
+  const alignClasses: Record<'left' | 'center' | 'right', string> = {
     left: 'justify-start',
     center: 'justify-center',
     right: 'justify-end',
-  }[align] || 'justify-start';
+  };
   
   return (
-    <div className={`flex flex-wrap gap-4 my-6 ${alignClasses}`}>
+    <div className={`flex flex-wrap gap-4 my-6 ${alignClasses[align]}`}>
       {innerBlocks.map((button, index) => (
         <CoreButton key={index} block={button} />
       ))}
