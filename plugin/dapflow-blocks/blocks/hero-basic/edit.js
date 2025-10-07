@@ -69,7 +69,10 @@ export default function Edit({ attributes, setAttributes }) {
                     color: 'white',
                     padding: '60px 40px',
                     textAlign: 'center',
-                    borderRadius: '8px'
+                    borderRadius: '8px',
+                    width: '100%',
+                    marginLeft: 'auto',
+                    marginRight: 'auto'
                 }}>
                     <h1 style={{ fontSize: '48px', fontWeight: '700', marginBottom: '16px' }}>
                         {attributes.title}

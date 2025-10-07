@@ -26,6 +26,7 @@ define('DAPFLOW_BLOCKS_URL', plugin_dir_url(__FILE__));
 require_once DAPFLOW_BLOCKS_PATH . 'includes/class-block-registry.php';
 require_once DAPFLOW_BLOCKS_PATH . 'includes/class-rest-api.php';
 require_once DAPFLOW_BLOCKS_PATH . 'includes/class-admin.php';
+require_once DAPFLOW_BLOCKS_PATH . 'includes/class-menu-api.php';
 
 /**
  * Initialize plugin
@@ -34,8 +35,11 @@ function dapflow_blocks_init() {
     // Register blocks
     DapFlow_Block_Registry::init();
     
-    // Extend REST API (fixed - only in view context)
+    // Extend REST API (with error handling)
     DapFlow_REST_API::init();
+    
+    // Menu API
+    DapFlow_Menu_API::init();
     
     // Admin interface
     if (is_admin()) {
