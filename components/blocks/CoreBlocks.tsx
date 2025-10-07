@@ -25,13 +25,13 @@ export function CoreColumns({ block }: { block: WordPressBlock }) {
 
   return (
     <Section>
-      <Container>
+      <div className="mx-auto px-6 lg:px-8" style={{ maxWidth: '85rem' }}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {innerBlocks.map((column, index) => (
             <CoreColumn key={index} block={column} />
           ))}
         </div>
-      </Container>
+      </div>
     </Section>
   );
 }
@@ -62,13 +62,13 @@ export function CoreGroup({ block }: { block: WordPressBlock }) {
   
   return (
     <Section className={backgroundColor ? `bg-${backgroundColor}` : ''}>
-      <Container>
+      <div className="mx-auto px-6 lg:px-8" style={{ maxWidth: '85rem' }}>
         <div className="flex flex-col gap-6">
           {innerBlocks.map((innerBlock, index) => (
             <CoreBlockRenderer key={index} block={innerBlock} />
           ))}
         </div>
-      </Container>
+      </div>
     </Section>
   );
 }
@@ -171,9 +171,9 @@ export function CoreImage({ block }: { block: WordPressBlock }) {
   
   return (
     <Section>
-      <Container>
+      <div className="mx-auto px-6 lg:px-8" style={{ maxWidth: '85rem' }}>
         <div dangerouslySetInnerHTML={{ __html: innerHTML }} />
-      </Container>
+      </div>
     </Section>
   );
 }
@@ -186,9 +186,9 @@ export function CoreGallery({ block }: { block: WordPressBlock }) {
   
   return (
     <Section>
-      <Container>
+      <div className="mx-auto px-6 lg:px-8" style={{ maxWidth: '85rem' }}>
         <div dangerouslySetInnerHTML={{ __html: innerHTML }} />
-      </Container>
+      </div>
     </Section>
   );
 }
@@ -201,9 +201,9 @@ export function CoreVideo({ block }: { block: WordPressBlock }) {
   
   return (
     <Section>
-      <Container>
+      <div className="mx-auto px-6 lg:px-8" style={{ maxWidth: '85rem' }}>
         <div dangerouslySetInnerHTML={{ __html: innerHTML }} />
-      </Container>
+      </div>
     </Section>
   );
 }
@@ -216,9 +216,9 @@ export function CoreAudio({ block }: { block: WordPressBlock }) {
   
   return (
     <Section>
-      <Container>
+      <div className="mx-auto px-6 lg:px-8" style={{ maxWidth: '85rem' }}>
         <div dangerouslySetInnerHTML={{ __html: innerHTML }} />
-      </Container>
+      </div>
     </Section>
   );
 }
@@ -292,9 +292,9 @@ export function CoreButton({ block }: { block: WordPressBlock }) {
 export function CoreSeparator({ block }: { block: WordPressBlock }) {
   return (
     <Section>
-      <Container>
+      <div className="mx-auto px-6 lg:px-8" style={{ maxWidth: '85rem' }}>
         <hr className="my-12 border-border" />
-      </Container>
+      </div>
     </Section>
   );
 }
@@ -322,9 +322,9 @@ export function CoreEmbed({ block }: { block: WordPressBlock }) {
   
   return (
     <Section>
-      <Container>
+      <div className="mx-auto px-6 lg:px-8" style={{ maxWidth: '85rem' }}>
         <div dangerouslySetInnerHTML={{ __html: innerHTML }} />
-      </Container>
+      </div>
     </Section>
   );
 }
@@ -341,9 +341,9 @@ export function CoreTable({ block }: { block: WordPressBlock }) {
   
   return (
     <Section>
-      <Container>
+      <div className="mx-auto px-6 lg:px-8" style={{ maxWidth: '85rem' }}>
         <div dangerouslySetInnerHTML={{ __html: innerHTML }} />
-      </Container>
+      </div>
     </Section>
   );
 }
@@ -397,11 +397,11 @@ export function CoreBlockRenderer({ block }: { block: WordPressBlock }) {
   if (block.innerHTML) {
     return (
       <Section>
-        <Container>
+        <div className="mx-auto px-6 lg:px-8" style={{ maxWidth: '85rem' }}>
           <Prose>
             <div dangerouslySetInnerHTML={{ __html: block.innerHTML }} />
           </Prose>
-        </Container>
+        </div>
       </Section>
     );
   }

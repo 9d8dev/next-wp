@@ -6,7 +6,7 @@ export default function Edit({ attributes, setAttributes }) {
 
     return (
         <div {...blockProps}>
-            <div style={{ padding: '20px', border: '1px solid #ccc' }}>
+            <div style={{ padding: '20px', border: '1px solid #ccc', width: '100%' }}>
                 <TextControl
                     label="Content"
                     value={attributes.content}

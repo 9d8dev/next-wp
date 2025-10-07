@@ -46,10 +46,10 @@ export function Hero({
   logoUrl = 'https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500',
   logoAlt = 'Your Company',
   badge,
-  title,
-  subtitle,
-  primaryCta,
-  secondaryCta,
+  title = 'Data to enrich your online business',
+  subtitle = 'Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.',
+  primaryCta = { text: 'Get started', href: '#' },
+  secondaryCta = { text: 'Learn more', href: '#' },
   bgColor = 'bg-gray-900',
   textColor = 'text-white',
   showDecorations = true,
@@ -58,7 +58,7 @@ export function Hero({
 
   return (
     <div className={bgColor}>
-      <header className="absolute inset-x-0 top-0 z-50">
+      <div className="absolute inset-x-0 top-0 z-10">
         <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5">
@@ -143,7 +143,7 @@ export function Hero({
             </div>
           </DialogPanel>
         </Dialog>
-      </header>
+      </div>
 
       <div className="relative isolate px-6 pt-14 lg:px-8">
         {showDecorations && (
@@ -198,23 +198,21 @@ export function Hero({
               {subtitle}
             </p>
             
-            {(primaryCta || secondaryCta) && (
-              <div className="mt-10 flex items-center justify-center gap-x-6">
-                {primaryCta && (
-                  <a
-                    href={primaryCta.href}
-                    className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                  >
-                    {primaryCta.text}
-                  </a>
-                )}
-                {secondaryCta && (
-                  <a href={secondaryCta.href} className={`text-sm/6 font-semibold ${textColor}`}>
-                    {secondaryCta.text} <span aria-hidden="true">→</span>
-                  </a>
-                )}
-              </div>
-            )}
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              {primaryCta && primaryCta.text && (
+                <a
+                  href={primaryCta.href || '#'}
+                  className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                >
+                  {primaryCta.text}
+                </a>
+              )}
+              {secondaryCta && secondaryCta.text && (
+                <a href={secondaryCta.href || '#'} className={`text-sm/6 font-semibold ${textColor}`}>
+                  {secondaryCta.text} <span aria-hidden="true">→</span>
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>
