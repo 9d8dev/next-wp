@@ -3,12 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: `${process.env.WORDPRESS_HOSTNAME}`,
-        port: "",
-        pathname: "/**",
-      },
+      new URL(`${process.env.WORDPRESS_URL}/wp-content/**`),
+      new URL(`https://sysblok.ru/wp-content/**`),
     ],
   },
   async redirects() {

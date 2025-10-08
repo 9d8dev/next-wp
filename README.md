@@ -67,7 +67,6 @@ The following environment variables are required in your `.env.local` file:
 
 ```bash
 WORDPRESS_URL="https://wordpress.com"
-WORDPRESS_HOSTNAME="wordpress.com"
 WORDPRESS_WEBHOOK_SECRET="your-secret-key-here"
 ```
 
