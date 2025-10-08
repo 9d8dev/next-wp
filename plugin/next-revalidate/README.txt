@@ -34,7 +34,7 @@ The plugin sends webhooks to your Next.js site's revalidation API endpoint, ensu
 
 1. Visit Settings > Next.js Revalidation in your WordPress admin
 2. Enter your Next.js site URL without a trailing slash (e.g., https://your-site.com)
-3. Enter the webhook secret which should match the WORDPRESS_WEBHOOK_SECRET in your Next.js environment
+3. Enter the webhook secret which should match the NEXT_WORDPRESS_WEBHOOK_SECRET in your Next.js environment
 4. Optionally enable admin notifications for revalidation events
 5. Click "Save Settings"
 

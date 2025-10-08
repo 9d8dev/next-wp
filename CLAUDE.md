@@ -59,8 +59,8 @@ This is a headless WordPress starter using Next.js 15 App Router with TypeScript
 
 ## Environment Variables
 Required environment variables (see `.env.example`):
-- `WORDPRESS_URL` - Full URL of WordPress site
-- `WORDPRESS_WEBHOOK_SECRET` - Secret for webhook validation
+- `NEXT_WORDPRESS_URL` - Full URL of WordPress site
+- `NEXT_WORDPRESS_WEBHOOK_SECRET` - Secret for webhook validation
 
 ## Key Dependencies
 - Next.js 15.3.3 with React 19.1.0

@@ -12,10 +12,10 @@ import type {
   FeaturedMedia,
 } from "./wordpress.d";
 
-const baseUrl = process.env.WORDPRESS_URL;
+const baseUrl = process.env.NEXT_WORDPRESS_URL;
 
 if (!baseUrl) {
-  throw new Error("WORDPRESS_URL environment variable is not defined");
+  throw new Error("NEXT_WORDPRESS_URL environment variable is not defined");
 }
 
 class WordPressAPIError extends Error {

@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      new URL(`${process.env.WORDPRESS_URL}/wp-content/**`),
+      new URL(`${process.env.NEXT_WORDPRESS_URL}/wp-content/**`),
       new URL(`https://sysblok.ru/wp-content/**`),
     ],
   },
@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/admin",
-        destination: `${process.env.WORDPRESS_URL}/wp-admin`,
+        destination: `${process.env.NEXT_WORDPRESS_URL}/wp-admin`,
         permanent: true,
       },
     ];

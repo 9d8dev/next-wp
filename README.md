@@ -67,7 +67,7 @@ The following environment variables are required in your `.env.local` file:
 
 ```bash
 WORDPRESS_URL="https://wordpress.com"
-WORDPRESS_WEBHOOK_SECRET="your-secret-key-here"
+NEXT_WORDPRESS_WEBHOOK_SECRET="your-secret-key-here"
 ```
 
 You can find the example of `.env.local` file in the `.env.example` file (and in Vercel).
@@ -585,7 +585,7 @@ This granular system ensures that when content changes, only the relevant cached
 
 2. **Configure Next.js:**
 
-   - Add `WORDPRESS_WEBHOOK_SECRET` to your environment variables (same secret as in WordPress plugin)
+   - Add `NEXT_WORDPRESS_WEBHOOK_SECRET` to your environment variables (same secret as in WordPress plugin)
    - The webhook endpoint at `/api/revalidate` is already set up
    - No additional configuration needed
 
