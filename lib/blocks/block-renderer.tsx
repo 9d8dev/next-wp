@@ -47,15 +47,21 @@ function BlockComponent({
 }) {
   // Get the component for this block type
   const Component = BLOCK_COMPONENTS[block.blockName];
+  // Blocks that expect the full WordPressBlock via `block` prop
+  const PRIMITIVE_BLOCKS = new Set([
+    'dap/grid',
+    'dap/box',
+    'dap/row',
+    'dap/stack',
+  ]);
 
   // If we have a custom component, use it
   if (Component) {
-    return (
-      <Component 
-        {...block.attrs} 
-        innerBlocks={block.innerBlocks}
-      />
-    );
+    if (PRIMITIVE_BLOCKS.has(block.blockName)) {
+      return <Component block={block} />;
+    }
+    // Default: pass attributes for presentation components (e.g., Hero blocks)
+    return <Component {...block.attrs} innerBlocks={block.innerBlocks} />;
   }
 
   // Try core WordPress block renderer

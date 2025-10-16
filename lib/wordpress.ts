@@ -12,11 +12,11 @@ import type {
   FeaturedMedia,
 } from "./wordpress.d";
 
-const baseUrl = process.env.WORDPRESS_URL;
-
-if (!baseUrl) {
-  throw new Error("WORDPRESS_URL environment variable is not defined");
-}
+// Prefer server-side WORDPRESS_URL, fall back to public URL or default demo CMS
+const baseUrl =
+  process.env.WORDPRESS_URL ||
+  process.env.NEXT_PUBLIC_WP_API_URL?.replace(/\/?wp-json$/, "") ||
+  "https://cms.dapflow.com";
 
 class WordPressAPIError extends Error {
   constructor(message: string, public status: number, public endpoint: string) {
@@ -57,8 +57,15 @@ async function wordpressFetch<T>(
   });
 
   if (!response.ok) {
+    let bodyText = '';
+    try {
+      bodyText = await response.text();
+    } catch (_) {
+      // ignore body parse errors
+    }
+    const snippet = bodyText ? ` | body: ${bodyText.slice(0, 300)}` : '';
     throw new WordPressAPIError(
-      `WordPress API request failed: ${response.statusText}`,
+      `WordPress API request failed: ${response.status} ${response.statusText}${snippet}`,
       response.status,
       url
     );
@@ -88,8 +95,15 @@ async function wordpressFetchWithPagination<T>(
   });
 
   if (!response.ok) {
+    let bodyText = '';
+    try {
+      bodyText = await response.text();
+    } catch (_) {
+      // ignore body parse errors
+    }
+    const snippet = bodyText ? ` | body: ${bodyText.slice(0, 300)}` : '';
     throw new WordPressAPIError(
-      `WordPress API request failed: ${response.statusText}`,
+      `WordPress API request failed: ${response.status} ${response.statusText}${snippet}`,
       response.status,
       url
     );
