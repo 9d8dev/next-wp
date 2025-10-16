@@ -1,0 +1,46 @@
+/**
+ * DapFlow Stack Block - Editor Styles
+ */
+
+.dap-stack-block {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dap-stack {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Item alignment */
+.dap-stack.items-stretch { align-items: stretch; }
+.dap-stack.items-start { align-items: flex-start; }
+.dap-stack.items-center { align-items: center; }
+.dap-stack.items-end { align-items: flex-end; }
+
+/* Responsive gaps */
+.dap-stack.gap-0 { gap: 0; }
+.dap-stack.gap-2 { gap: 0.5rem; }
+.dap-stack.gap-4 { gap: 1rem; }
+.dap-stack.gap-6 { gap: 1.5rem; }
+.dap-stack.gap-8 { gap: 2rem; }
+
+/* Tablet breakpoint */
+@media (min-width: 768px) {
+  .dap-stack.md\\:gap-0 { gap: 0; }
+  .dap-stack.md\\:gap-2 { gap: 0.5rem; }
+  .dap-stack.md\\:gap-4 { gap: 1rem; }
+  .dap-stack.md\\:gap-6 { gap: 1.5rem; }
+  .dap-stack.md\\:gap-8 { gap: 2rem; }
+}
+
+/* Desktop breakpoint */
+@media (min-width: 1024px) {
+  .dap-stack.lg\\:gap-0 { gap: 0; }
+  .dap-stack.lg\\:gap-2 { gap: 0.5rem; }
+  .dap-stack.lg\\:gap-4 { gap: 1rem; }
+  .dap-stack.lg\\:gap-6 { gap: 1.5rem; }
+  .dap-stack.lg\\:gap-8 { gap: 2rem; }
+}

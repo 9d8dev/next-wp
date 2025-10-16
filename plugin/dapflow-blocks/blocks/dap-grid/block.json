@@ -1,0 +1,51 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "dap/grid",
+  "title": "Grid",
+  "category": "dapflow",
+  "icon": "grid-view",
+  "description": "Responsive grid layout with customizable columns and spacing",
+  "keywords": ["grid", "layout", "columns", "responsive"],
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"],
+    "anchor": true,
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "attributes": {
+    "columns": {
+      "type": "object",
+      "default": {
+        "mobile": 1,
+        "tablet": 2,
+        "desktop": 3
+      }
+    },
+    "gap": {
+      "type": "object",
+      "default": {
+        "mobile": "gap-4",
+        "tablet": "gap-6",
+        "desktop": "gap-8"
+      }
+    },
+    "align": {
+      "type": "string",
+      "default": "stretch"
+    },
+    "maxWidth": {
+      "type": "string",
+      "default": "85rem"
+    }
+  },
+  "providesContext": {
+    "dap/gridColumns": "columns",
+    "dap/gridGap": "gap"
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./style.css"
+}

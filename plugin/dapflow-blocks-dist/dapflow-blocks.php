@@ -45,8 +45,43 @@ function dapflow_blocks_init() {
     if (is_admin()) {
         DapFlow_Admin::init();
     }
+    
+    // Enqueue styles
+    add_action('enqueue_block_editor_assets', 'dapflow_blocks_enqueue_editor_styles');
+    add_action('wp_enqueue_scripts', 'dapflow_blocks_enqueue_frontend_styles');
 }
 add_action('plugins_loaded', 'dapflow_blocks_init');
+
+/**
+ * Enqueue editor styles
+ */
+function dapflow_blocks_enqueue_editor_styles() {
+    wp_enqueue_style(
+        'dapflow-blocks-tokens',
+        DAPFLOW_BLOCKS_URL . 'assets/tokens.css',
+        array(),
+        DAPFLOW_BLOCKS_VERSION
+    );
+    
+    wp_enqueue_style(
+        'dapflow-blocks-editor',
+        DAPFLOW_BLOCKS_URL . 'assets/editor.css',
+        array('dapflow-blocks-tokens'),
+        DAPFLOW_BLOCKS_VERSION
+    );
+}
+
+/**
+ * Enqueue frontend styles
+ */
+function dapflow_blocks_enqueue_frontend_styles() {
+    wp_enqueue_style(
+        'dapflow-blocks-tokens',
+        DAPFLOW_BLOCKS_URL . 'assets/tokens.css',
+        array(),
+        DAPFLOW_BLOCKS_VERSION
+    );
+}
 
 /**
  * Activation hook

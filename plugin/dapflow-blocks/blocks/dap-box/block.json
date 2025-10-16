@@ -1,0 +1,51 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "dap/box",
+  "title": "Box",
+  "category": "dapflow",
+  "icon": "align-center",
+  "description": "Flexible container with variants for cards, content boxes, and sections",
+  "keywords": ["box", "container", "card", "wrapper"],
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"],
+    "anchor": true,
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "attributes": {
+    "variant": {
+      "type": "string",
+      "default": "default"
+    },
+    "padding": {
+      "type": "object",
+      "default": {
+        "mobile": "p-4",
+        "tablet": "p-6",
+        "desktop": "p-8"
+      }
+    },
+    "bgColor": {
+      "type": "string",
+      "default": "bg-transparent"
+    },
+    "borderRadius": {
+      "type": "string",
+      "default": "rounded-lg"
+    },
+    "border": {
+      "type": "boolean",
+      "default": false
+    },
+    "shadow": {
+      "type": "string",
+      "default": "none"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./style.css"
+}
