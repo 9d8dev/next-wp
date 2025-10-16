@@ -17,7 +17,12 @@ import Balancer from "react-wrap-balancer";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
-  return await getAllPostSlugs();
+  try {
+    return await getAllPostSlugs();
+  } catch (_err) {
+    // Avoid build failure when WP is unavailable
+    return [];
+  }
 }
 
 export async function generateMetadata({
@@ -26,42 +31,46 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  try {
+    const post = await getPostBySlug(slug);
 
-  if (!post) {
+    if (!post) {
+      return {};
+    }
+
+    const ogUrl = new URL(`${siteConfig.site_domain}/api/og`);
+    ogUrl.searchParams.append("title", post.title.rendered);
+    // Strip HTML tags for description
+    const description = post.excerpt.rendered.replace(/<[^>]*>/g, "").trim();
+    ogUrl.searchParams.append("description", description);
+
+    return {
+      title: post.title.rendered,
+      description: description,
+      openGraph: {
+        title: post.title.rendered,
+        description: description,
+        type: "article",
+        url: `${siteConfig.site_domain}/posts/${post.slug}`,
+        images: [
+          {
+            url: ogUrl.toString(),
+            width: 1200,
+            height: 630,
+            alt: post.title.rendered,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: post.title.rendered,
+        description: description,
+        images: [ogUrl.toString()],
+      },
+    };
+  } catch (_err) {
     return {};
   }
-
-  const ogUrl = new URL(`${siteConfig.site_domain}/api/og`);
-  ogUrl.searchParams.append("title", post.title.rendered);
-  // Strip HTML tags for description
-  const description = post.excerpt.rendered.replace(/<[^>]*>/g, "").trim();
-  ogUrl.searchParams.append("description", description);
-
-  return {
-    title: post.title.rendered,
-    description: description,
-    openGraph: {
-      title: post.title.rendered,
-      description: description,
-      type: "article",
-      url: `${siteConfig.site_domain}/posts/${post.slug}`,
-      images: [
-        {
-          url: ogUrl.toString(),
-          width: 1200,
-          height: 630,
-          alt: post.title.rendered,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: post.title.rendered,
-      description: description,
-      images: [ogUrl.toString()],
-    },
-  };
 }
 
 export default async function Page({
@@ -70,10 +79,27 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
-  const featuredMedia = post.featured_media
-    ? await getFeaturedMediaById(post.featured_media)
-    : null;
+  let post: any | null = null;
+  try {
+    post = await getPostBySlug(slug);
+  } catch (err) {
+    console.warn('Post fetch failed, rendering fallback:', err instanceof Error ? err.message : err);
+  }
+
+  if (!post) {
+    return (
+      <Section>
+        <Container>
+          <Prose>
+            <h1>{slug}</h1>
+            <p>Content is currently unavailable.</p>
+          </Prose>
+        </Container>
+      </Section>
+    );
+  }
+
+  const featuredMedia = post.featured_media ? await getFeaturedMediaById(post.featured_media) : null;
   const author = await getAuthorById(post.author);
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
