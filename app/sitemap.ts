@@ -3,7 +3,13 @@ import { getAllPosts } from "@/lib/wordpress";
 import { siteConfig } from "@/site.config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await getAllPosts();
+  let posts: Array<{ slug: string; modified: string }> = [];
+  try {
+    posts = await getAllPosts();
+  } catch (_err) {
+    // If WP is unavailable at build or runtime, return only static URLs
+    posts = [];
+  }
 
   const staticUrls: MetadataRoute.Sitemap = [
     {
