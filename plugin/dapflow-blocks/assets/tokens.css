@@ -1,0 +1,145 @@
+/**
+ * DapFlow Design Tokens
+ * 
+ * CSS variables for consistent responsive design
+ */
+
+:root {
+  /* Container and Layout */
+  --dap-container: 85rem;
+  --dap-gutter: 1.5rem;
+  --dap-radius: 0.5rem;
+  
+  /* Colors */
+  --dap-bg: #ffffff;
+  --dap-card: #f8fafc;
+  --dap-foreground: #0f172a;
+  --dap-primary: #3b82f6;
+  --dap-muted: #64748b;
+  --dap-border: #e2e8f0;
+  
+  /* Spacing Scale */
+  --dap-space-0: 0;
+  --dap-space-1: 0.25rem;
+  --dap-space-2: 0.5rem;
+  --dap-space-3: 0.75rem;
+  --dap-space-4: 1rem;
+  --dap-space-5: 1.25rem;
+  --dap-space-6: 1.5rem;
+  --dap-space-8: 2rem;
+  --dap-space-10: 2.5rem;
+  --dap-space-12: 3rem;
+  --dap-space-16: 4rem;
+  --dap-space-20: 5rem;
+  --dap-space-24: 6rem;
+  
+  /* Responsive Spacing */
+  --dap-section-pad-base: var(--dap-space-8);
+  --dap-section-pad-md: var(--dap-space-12);
+  --dap-section-pad-lg: var(--dap-space-16);
+  
+  /* Grid System */
+  --dap-grid-cols-1: 1;
+  --dap-grid-cols-2: 2;
+  --dap-grid-cols-3: 3;
+  --dap-grid-cols-4: 4;
+  --dap-grid-cols-5: 5;
+  --dap-grid-cols-6: 6;
+  --dap-grid-cols-7: 7;
+  --dap-grid-cols-8: 8;
+  
+  /* Responsive Grid Columns */
+  --dap-grid-cols-md: var(--dap-grid-cols-2);
+  --dap-grid-cols-lg: var(--dap-grid-cols-3);
+  --dap-grid-cols-xl: var(--dap-grid-cols-4);
+  
+  /* Shadows */
+  --dap-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --dap-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --dap-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --dap-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  
+  /* Typography */
+  --dap-font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --dap-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  
+  /* Breakpoints */
+  --dap-bp-sm: 640px;
+  --dap-bp-md: 768px;
+  --dap-bp-lg: 1024px;
+  --dap-bp-xl: 1280px;
+  --dap-bp-2xl: 1536px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --dap-bg: #0f172a;
+    --dap-card: #1e293b;
+    --dap-foreground: #f8fafc;
+    --dap-muted: #94a3b8;
+    --dap-border: #334155;
+  }
+}
+
+/* Utility classes using CSS variables */
+.dap-container {
+  max-width: var(--dap-container);
+  margin: 0 auto;
+  padding: 0 var(--dap-gutter);
+}
+
+.dap-section {
+  padding: var(--dap-section-pad-base) 0;
+}
+
+@media (min-width: 768px) {
+  .dap-section {
+    padding: var(--dap-section-pad-md) 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .dap-section {
+    padding: var(--dap-section-pad-lg) 0;
+  }
+}
+
+.dap-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--dap-grid-cols-1), 1fr);
+  gap: var(--dap-space-4);
+}
+
+@media (min-width: 768px) {
+  .dap-grid {
+    grid-template-columns: repeat(var(--dap-grid-cols-md), 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .dap-grid {
+    grid-template-columns: repeat(var(--dap-grid-cols-lg), 1fr);
+  }
+}
+
+.dap-box {
+  background-color: var(--dap-card);
+  border-radius: var(--dap-radius);
+  padding: var(--dap-space-6);
+  border: 1px solid var(--dap-border);
+}
+
+.dap-box-elevated {
+  background-color: var(--dap-bg);
+  border-radius: var(--dap-radius);
+  padding: var(--dap-space-6);
+  box-shadow: var(--dap-shadow-lg);
+}
+
+.dap-box-bordered {
+  background-color: var(--dap-bg);
+  border-radius: var(--dap-radius);
+  padding: var(--dap-space-6);
+  border: 1px solid var(--dap-border);
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "dap/stack",
+  "title": "Stack",
+  "category": "dapflow",
+  "icon": "align-full-width",
+  "description": "Vertical stacking of blocks with responsive spacing",
+  "keywords": ["stack", "vertical", "layout", "column"],
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"],
+    "anchor": true,
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "attributes": {
+    "gap": {
+      "type": "object",
+      "default": {
+        "mobile": "gap-4",
+        "tablet": "gap-6",
+        "desktop": "gap-8"
+      }
+    },
+    "align": {
+      "type": "string",
+      "default": "stretch"
+    },
+    "maxWidth": {
+      "type": "string",
+      "default": "85rem"
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./style.css"
+}

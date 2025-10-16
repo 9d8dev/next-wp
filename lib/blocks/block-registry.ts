@@ -15,6 +15,12 @@ import { TestMinimal } from '@/components/blocks/TestMinimal';
 // import { CTA } from '@/components/blocks/CTA';
 // import { Features } from '@/components/blocks/Features';
 
+// Import primitive layout blocks
+import { DapGrid } from '@/components/blocks/DapGrid';
+import { DapBox } from '@/components/blocks/DapBox';
+import { DapRow } from '@/components/blocks/DapRow';
+import { DapStack } from '@/components/blocks/DapStack';
+
 /**
  * Registry mapping block names to React components
  * 
@@ -29,6 +35,12 @@ export const BLOCK_COMPONENTS: Record<string, ComponentType<any>> = {
   'dapflow/hero-simple': Hero, // Hero Simple uses same component
   // 'dapflow/cta': CTA,
   // 'dapflow/features': Features,
+  
+  // DapFlow primitive layout blocks
+  'dap/grid': DapGrid,
+  'dap/box': DapBox,
+  'dap/row': DapRow,
+  'dap/stack': DapStack,
 };
 
 /**

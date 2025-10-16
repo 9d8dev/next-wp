@@ -1,0 +1,71 @@
+/**
+ * DapFlow Grid Block - Editor Styles
+ */
+
+.dap-grid-block {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dap-grid {
+  display: grid;
+  width: 100%;
+}
+
+/* Responsive grid columns */
+.dap-grid.grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+.dap-grid.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.dap-grid.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.dap-grid.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+.dap-grid.grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
+.dap-grid.grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
+.dap-grid.grid-cols-7 { grid-template-columns: repeat(7, 1fr); }
+.dap-grid.grid-cols-8 { grid-template-columns: repeat(8, 1fr); }
+
+/* Responsive gaps */
+.dap-grid.gap-0 { gap: 0; }
+.dap-grid.gap-2 { gap: 0.5rem; }
+.dap-grid.gap-4 { gap: 1rem; }
+.dap-grid.gap-6 { gap: 1.5rem; }
+.dap-grid.gap-8 { gap: 2rem; }
+
+/* Item alignment */
+.dap-grid.items-stretch { align-items: stretch; }
+.dap-grid.items-start { align-items: flex-start; }
+.dap-grid.items-center { align-items: center; }
+.dap-grid.items-end { align-items: flex-end; }
+
+/* Tablet breakpoint */
+@media (min-width: 768px) {
+  .dap-grid.md\\:grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+  .dap-grid.md\\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .dap-grid.md\\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .dap-grid.md\\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .dap-grid.md\\:grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
+  .dap-grid.md\\:grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
+  
+  .dap-grid.md\\:gap-0 { gap: 0; }
+  .dap-grid.md\\:gap-2 { gap: 0.5rem; }
+  .dap-grid.md\\:gap-4 { gap: 1rem; }
+  .dap-grid.md\\:gap-6 { gap: 1.5rem; }
+  .dap-grid.md\\:gap-8 { gap: 2rem; }
+}
+
+/* Desktop breakpoint */
+@media (min-width: 1024px) {
+  .dap-grid.lg\\:grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+  .dap-grid.lg\\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .dap-grid.lg\\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .dap-grid.lg\\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .dap-grid.lg\\:grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
+  .dap-grid.lg\\:grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
+  .dap-grid.lg\\:grid-cols-7 { grid-template-columns: repeat(7, 1fr); }
+  .dap-grid.lg\\:grid-cols-8 { grid-template-columns: repeat(8, 1fr); }
+  
+  .dap-grid.lg\\:gap-0 { gap: 0; }
+  .dap-grid.lg\\:gap-2 { gap: 0.5rem; }
+  .dap-grid.lg\\:gap-4 { gap: 1rem; }
+  .dap-grid.lg\\:gap-6 { gap: 1.5rem; }
+  .dap-grid.lg\\:gap-8 { gap: 2rem; }
+}
