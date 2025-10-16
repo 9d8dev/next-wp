@@ -15,18 +15,65 @@ import type { WordPressBlock } from '@/lib/blocks/types';
 // ====================
 
 /**
+ * Cover Block
+ * Background media with nested content
+ */
+export function CoreCover({ block }: { block: WordPressBlock }) {
+  const { innerBlocks = [], attrs } = block;
+  const backgroundImageUrl: string | undefined = attrs?.url || attrs?.background?.url;
+  const minHeight: number | string = attrs?.minHeight || 480;
+  const dimRatio: number = typeof attrs?.dimRatio === 'number' ? attrs.dimRatio : 50; // 0-100
+  const overlayColor: string = attrs?.overlayColor || 'black';
+
+  const overlayOpacity = Math.max(0, Math.min(1, dimRatio / 100));
+
+  return (
+    <Section>
+      <div
+        className="relative overflow-hidden rounded-xl"
+        style={{ minHeight: typeof minHeight === 'number' ? `${minHeight}px` : minHeight }}
+      >
+        {backgroundImageUrl && (
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${backgroundImageUrl})` }}
+            aria-hidden="true"
+          />
+        )}
+        <div
+          className="absolute inset-0"
+          style={{ backgroundColor: overlayColor, opacity: overlayOpacity }}
+          aria-hidden="true"
+        />
+        <div className="relative mx-auto px-6 lg:px-8 py-16" style={{ maxWidth: '85rem' }}>
+          <div className="grid gap-6">
+            {innerBlocks.map((innerBlock, index) => (
+              <CoreBlockRenderer key={index} block={innerBlock} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+/**
  * Columns Block
  * Responsive multi-column layout
  */
 export function CoreColumns({ block }: { block: WordPressBlock }) {
-  const { innerBlocks = [] } = block;
+  const { innerBlocks = [], attrs } = block;
+  const declaredColumns: number | undefined = attrs?.columns;
+  const isStackedOnMobile: boolean = !!attrs?.isStackedOnMobile;
+  const numColumns = Math.max(1, Math.min(6, declaredColumns || innerBlocks.length || 2));
+  const mobileCols = isStackedOnMobile ? 1 : Math.min(2, numColumns);
   
   if (!innerBlocks.length) return null;
 
   return (
     <Section>
       <div className="mx-auto px-6 lg:px-8" style={{ maxWidth: '85rem' }}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className={`grid grid-cols-${mobileCols} md:grid-cols-${numColumns} lg:grid-cols-${numColumns} gap-8`}>
           {innerBlocks.map((column, index) => (
             <CoreColumn key={index} block={column} />
           ))}
@@ -360,6 +407,7 @@ export function CoreBlockRenderer({ block }: { block: WordPressBlock }) {
   const { blockName } = block;
 
   // Layout blocks
+  if (blockName === 'core/cover') return <CoreCover block={block} />;
   if (blockName === 'core/columns') return <CoreColumns block={block} />;
   if (blockName === 'core/column') return <CoreColumn block={block} />;
   if (blockName === 'core/group') return <CoreGroup block={block} />;

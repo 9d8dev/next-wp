@@ -40,7 +40,8 @@ export async function getMenu(slug: string = 'primary'): Promise<Menu | null> {
       if (res.status === 404) {
         console.warn(`Menu API not available or menu '${slug}' not found. Using fallback menu.`);
       } else {
-        console.error(`Failed to fetch menu: ${res.status} ${res.statusText}`);
+        // Downgrade to warn to avoid noisy server errors during local dev
+        console.warn(`[Menu] Failed to fetch menu '${slug}': ${res.status} ${res.statusText}`);
       }
       return null;
     }
@@ -49,7 +50,7 @@ export async function getMenu(slug: string = 'primary'): Promise<Menu | null> {
     return menu;
   } catch (error) {
     // Network error or API not available - fail gracefully
-    console.warn('Menu API not available, using fallback menu:', error instanceof Error ? error.message : error);
+    console.warn('[Menu] API not available, using fallback menu:', error instanceof Error ? error.message : error);
     return null;
   }
 }
@@ -58,14 +59,25 @@ export async function getMenu(slug: string = 'primary'): Promise<Menu | null> {
  * Fetch primary navigation menu
  */
 export async function getPrimaryMenu(): Promise<Menu | null> {
-  return getMenu('primary-menu');
+  // Try common slugs/locations in order
+  const attempts = ['primary-menu', 'primary', 'main', 'menu-1'];
+  for (const slug of attempts) {
+    const menu = await getMenu(slug);
+    if (menu && Array.isArray(menu.items)) return menu;
+  }
+  return null;
 }
 
 /**
  * Fetch footer menu
  */
 export async function getFooterMenu(): Promise<Menu | null> {
-  return getMenu('footer');
+  const attempts = ['footer', 'footer-menu', 'menu-2'];
+  for (const slug of attempts) {
+    const menu = await getMenu(slug);
+    if (menu && Array.isArray(menu.items)) return menu;
+  }
+  return null;
 }
 
 /**
