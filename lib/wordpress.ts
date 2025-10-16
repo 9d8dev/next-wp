@@ -229,7 +229,12 @@ export async function getAllPosts(filterParams?: {
     }
   }
 
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", query);
+  try {
+    return await wordpressFetch<Post[]>("/wp-json/wp/v2/posts", query);
+  } catch (error) {
+    console.warn('Failed to fetch posts from WordPress, returning empty array:', error instanceof Error ? error.message : error);
+    return [];
+  }
 }
 
 export async function getPostById(id: number): Promise<Post> {
@@ -243,7 +248,12 @@ export async function getPostBySlug(slug: string): Promise<Post> {
 }
 
 export async function getAllCategories(): Promise<Category[]> {
-  return wordpressFetch<Category[]>("/wp-json/wp/v2/categories");
+  try {
+    return await wordpressFetch<Category[]>("/wp-json/wp/v2/categories");
+  } catch (error) {
+    console.warn('Failed to fetch categories from WordPress, returning empty array:', error instanceof Error ? error.message : error);
+    return [];
+  }
 }
 
 export async function getCategoryById(id: number): Promise<Category> {
@@ -271,7 +281,12 @@ export async function getTagsByPost(postId: number): Promise<Tag[]> {
 }
 
 export async function getAllTags(): Promise<Tag[]> {
-  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags");
+  try {
+    return await wordpressFetch<Tag[]>("/wp-json/wp/v2/tags");
+  } catch (error) {
+    console.warn('Failed to fetch tags from WordPress, returning empty array:', error instanceof Error ? error.message : error);
+    return [];
+  }
 }
 
 export async function getTagById(id: number): Promise<Tag> {
@@ -285,21 +300,35 @@ export async function getTagBySlug(slug: string): Promise<Tag> {
 }
 
 export async function getAllPages(): Promise<Page[]> {
-  return wordpressFetch<Page[]>("/wp-json/wp/v2/pages");
+  try {
+    return await wordpressFetch<Page[]>("/wp-json/wp/v2/pages");
+  } catch (error) {
+    console.warn('Failed to fetch pages from WordPress, returning empty array:', error instanceof Error ? error.message : error);
+    return [];
+  }
 }
 
 export async function getPageById(id: number): Promise<Page> {
   return wordpressFetch<Page>(`/wp-json/wp/v2/pages/${id}`);
 }
 
-export async function getPageBySlug(slug: string): Promise<Page> {
-  return wordpressFetch<Page[]>("/wp-json/wp/v2/pages", { slug }).then(
-    (pages) => pages[0]
-  );
+export async function getPageBySlug(slug: string): Promise<Page | null> {
+  try {
+    const pages = await wordpressFetch<Page[]>("/wp-json/wp/v2/pages", { slug });
+    return pages[0] || null;
+  } catch (error) {
+    console.warn(`Failed to fetch page '${slug}' from WordPress:`, error instanceof Error ? error.message : error);
+    return null;
+  }
 }
 
 export async function getAllAuthors(): Promise<Author[]> {
-  return wordpressFetch<Author[]>("/wp-json/wp/v2/users");
+  try {
+    return await wordpressFetch<Author[]>("/wp-json/wp/v2/users");
+  } catch (error) {
+    console.warn('Failed to fetch authors from WordPress, returning empty array:', error instanceof Error ? error.message : error);
+    return [];
+  }
 }
 
 export async function getAuthorById(id: number): Promise<Author> {

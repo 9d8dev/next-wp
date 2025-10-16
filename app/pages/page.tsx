@@ -20,13 +20,17 @@ export default async function Page() {
       <Container className="space-y-6">
         <Prose className="mb-8">
           <h2>All Pages</h2>
-          <ul className="grid">
-            {pages.map((page: any) => (
-              <li key={page.id}>
-                <Link href={`/pages/${page.slug}`}>{page.title.rendered}</Link>
-              </li>
-            ))}
-          </ul>
+          {pages.length > 0 ? (
+            <ul className="grid">
+              {pages.map((page: any) => (
+                <li key={page.id}>
+                  <Link href={`/pages/${page.slug}`}>{page.title.rendered}</Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No pages available at the moment.</p>
+          )}
         </Prose>
         <BackButton />
       </Container>
