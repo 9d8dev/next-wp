@@ -1,11 +1,10 @@
-import "./globals.css";
+import "../globals.css"
 
 import { Section, Container } from "@/components/craft";
 import { Inter as FontSans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Analytics } from "@vercel/analytics/react";
-import { DynamicHeader } from "@/components/nav/dynamic-header";
 
 import { mainMenu, contentMenu } from "@/menu.config";
 import { siteConfig } from "@/site.config";
@@ -17,6 +16,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { Metadata } from "next";
+import { Header } from "@/components/elementor/nav/header";
+import Script from "next/script";
 
 const font = FontSans({
   subsets: ["latin"],
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default function ElementorLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -48,11 +49,73 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <DynamicHeader />
+          <Header />
           {children}
           <Footer />
         </ThemeProvider>
         <Analytics />
+        <Script id="elementor-pro-frontend-js-before" strategy="beforeInteractive">
+          {`
+          var ElementorProFrontendConfig = {
+            ajaxurl: "https://cms.dapflow.com/wp-admin/admin-ajax.php",
+            nonce: "af73986408",
+            urls: {
+              assets: "https://cms.dapflow.com/wp-content/plugins/pro-elements/assets/",
+              rest: "https://cms.dapflow.com/wp-json/"
+            },
+            settings: {
+              lazy_load_background_images: true
+            },
+            popup: {
+              hasPopUps: false
+            },
+            shareButtonsNetworks: {
+              facebook: { title: "Facebook", has_counter: true },
+              twitter: { title: "Twitter" },
+              linkedin: { title: "LinkedIn", has_counter: true },
+              pinterest: { title: "Pinterest", has_counter: true },
+              reddit: { title: "Reddit", has_counter: true },
+              vk: { title: "VK", has_counter: true },
+              odnoklassniki: { title: "OK", has_counter: true },
+              tumblr: { title: "Tumblr" },
+              digg: { title: "Digg" },
+              skype: { title: "Skype" },
+              stumbleupon: { title: "StumbleUpon", has_counter: true },
+              mix: { title: "Mix" },
+              telegram: { title: "Telegram" },
+              pocket: { title: "Pocket", has_counter: true },
+              xing: { title: "XING", has_counter: true },
+              whatsapp: { title: "WhatsApp" },
+              email: { title: "Email" },
+              print: { title: "Print" },
+              "x-twitter": { title: "X" },
+              threads: { title: "Threads" }
+            },
+            facebook_sdk: {
+              lang: "en_US",
+              app_id: ""
+            },
+            lottie: {
+              defaultAnimationUrl:
+                "https://cms.dapflow.com/wp-content/plugins/pro-elements/modules/lottie/assets/animations/default.json"
+            }
+          };
+        `}
+        </Script>
+
+        {/* 2️⃣ Elementor Pro Core Frontend */}
+        <Script
+          id="elementor-pro-frontend-js"
+          src="https://cms.dapflow.com/wp-content/plugins/pro-elements/assets/js/frontend.min.js?ver=3.32.1"
+          strategy="afterInteractive"
+        />
+
+        {/* 3️⃣ Elementor Pro Handlers */}
+        <Script
+          id="pro-elements-handlers-js"
+          src="https://cms.dapflow.com/wp-content/plugins/pro-elements/assets/js/elements-handlers.min.js?ver=3.32.1"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
