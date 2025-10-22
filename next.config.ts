@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       new URL(`${process.env.NEXT_WORDPRESS_URL}/wp-content/**`),
-      new URL(`https://sysblok.ru/wp-content/**`),
+      new URL(`${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-content/**`),
     ],
   },
   async redirects() {
