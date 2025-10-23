@@ -95,7 +95,7 @@ export default function ElementorRendererImproved({ page }: ElementorRendererPro
   return (
     <div className="elementor-renderer">
       {/* Elementor Configuration */}
-      <Script id="elementor-config" strategy="beforeInteractive">
+      <Script id="elementor-config" strategy="afterInteractive">
         {`
           window.elementorFrontendConfig = {
             "environmentMode": { "edit": false, "wpPreview": false, "isScriptDebug": false },

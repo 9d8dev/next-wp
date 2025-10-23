@@ -53,6 +53,7 @@ export default function ElementorRendererImprove({
       {
         assets.jsFiles.map((item: string, idx: number) => (
           <Script
+            key={idx}
             src={`${item}`}
             strategy="afterInteractive"
           />

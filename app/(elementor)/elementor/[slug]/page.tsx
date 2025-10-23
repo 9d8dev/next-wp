@@ -1,17 +1,16 @@
 // app/elementor/[slug]/page.tsx
 import { getPageBySlug } from "@/lib/wordpress";
-import ElementorRendererImproved from "@/components/elementor/ElementorRendererImproved";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ElementorRenderer from "@/components/elementor/ElementorRenderer";
 import { getNormalizedElementorAssets } from "@/lib/elementorfiles";
-import { Header } from "@/components/elementor/nav/header";
 
-interface Props {
-  params: { slug: string };
-}
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } =  await params;
   try {
     const page = await getPageBySlug(slug);
@@ -51,8 +50,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function ElementorPage({ params }: Props) {
-  const { slug } = await params;
+export default async function ElementorPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } =  await params;
   console.log(slug)
 
   try {

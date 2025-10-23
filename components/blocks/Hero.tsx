@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Section, Container } from '@/components/craft'
+import Image from 'next/image'
 
 // TypeScript interface for Hero props
 export interface HeroProps {
@@ -63,7 +64,7 @@ export function Hero({
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">{logoAlt}</span>
-              <img
+              <Image
                 alt={logoAlt}
                 src={logoUrl}
                 className="h-8 w-auto"
@@ -103,7 +104,7 @@ export function Hero({
             <div className="flex items-center justify-between">
               <a href="#" className="-m-1.5 p-1.5">
                 <span className="sr-only">{logoAlt}</span>
-                <img
+                <Image
                   alt={logoAlt}
                   src={logoUrl}
                   className="h-8 w-auto"

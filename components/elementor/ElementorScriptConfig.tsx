@@ -9,7 +9,7 @@ interface Propstype {
 export default function ElementorScriptConfig({ wpBaseUrl, page }: Propstype) {
   return (
     <>
-      <Script id="elementor-pro-frontend-js-before" strategy="beforeInteractive">
+      <Script id="elementor-pro-frontend-js-before" strategy="afterInteractive">
         {`
         var ElementorProFrontendConfig = {
           "ajaxurl": "${wpBaseUrl}/wp-admin/admin-ajax.php",
@@ -61,7 +61,7 @@ export default function ElementorScriptConfig({ wpBaseUrl, page }: Propstype) {
         wp.i18n.setLocaleData({ 'text direction\\u0004ltr': ['ltr'] });
       `}
       </Script>
-      <Script id="elementor-frontend-js-before" strategy="beforeInteractive">
+      <Script id="elementor-frontend-js-before" strategy="afterInteractive">
         {`
         var elementorFrontendConfig = {
           "environmentMode": { "edit": false, "wpPreview": false, "isScriptDebug": false },
