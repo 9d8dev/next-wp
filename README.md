@@ -1,16 +1,27 @@
-# Next.js Starter for WordPress Headless CMS
+# Next.js frontend for sysblok
 
-> [Watch the Demo Video](https://www.youtube.com/watch?v=JZc1-BcOvYw)
->
-> [Need a headless theme? Use 761](https://github.com/9d8dev/761)
+This is Next.js application that fetches data from a WordPress site using the WordPress REST API. It includes functions for fetching posts, categories, tags, authors, and featured media from a WordPress site and rendering them in a Next.js application.
 
-![CleanShot 2025-01-07 at 23 18 41@2x](https://github.com/user-attachments/assets/8b268c36-eb0d-459f-b9f1-b5f129bd29bc)
+`sysblok-next` is built with [Next.js 15](https://nextjs.org/docs), [React](https://react.dev/), [Typescript](https://www.typescriptlang.org/docs/), [Tailwind](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/docs), and [brijr/craft](https://github.com/brijr/craft). It pairs nicely with [brijr/components](https://components.bridger.to/) for a rapid development experience. Built by Cameron and Bridger at [9d8](https://9d8.dev).
 
-[![Deploy with Vercel](https://vercel.com/button)](<https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F9d8dev%2Fnext-wp&env=WORDPRESS_URL,WORDPRESS_HOSTNAME,WORDPRESS_WEBHOOK_SECRET&envDescription=Add%20WordPress%20URL%20with%20Rest%20API%20enabled%20(ie.%20https%3A%2F%2Fwp.example.com)%2C%20the%20hostname%20for%20Image%20rendering%20in%20Next%20JS%20(ie.%20wp.example.com)%2C%20and%20a%20secret%20key%20for%20secure%20revalidation&project-name=next-wp&repository-name=next-wp&demo-title=Next%20JS%20and%20WordPress%20Starter&demo-url=https%3A%2F%2Fwp.9d8.dev>)
+## Make usage
 
-This is a starter template for building a Next.js application that fetches data from a WordPress site using the WordPress REST API. The template includes functions for fetching posts, categories, tags, authors, and featured media from a WordPress site and rendering them in a Next.js application.
+ * `make build`          - Build the production Docker image
+ * `make build-dev`      - Build the development Docker image and create container
+ * `make run`            - Run the production Docker container
+ * `make run-dev`        - Build and run the development Docker container
+ * `make start-dev`      - Start the development Docker container
+ * `make build-run`      - Build and run the production Docker container
+ * `make stop`           - Stop the production Docker container
+ * `make stop-dev`       - Stop the development Docker container
+ * `make down-dev`       - Stop and remove the development Docker container
+ * `make restart`        - Restart the production Docker container
+ * `make restart-dev`    - Restart the development Docker container
+ * `make logs`           - Show production container logs
+ * `make clean`          - Remove production Docker image and container
 
-`next-wp` is built with [Next.js 15](https://nextjs.org/docs), [React](https://react.dev/), [Typescript](https://www.typescriptlang.org/docs/), [Tailwind](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/docs), and [brijr/craft](https://github.com/brijr/craft). It pairs nicely with [brijr/components](https://components.bridger.to/) for a rapid development experience. Built by Cameron and Bridger at [9d8](https://9d8.dev).
+ To start dev server without docker - `npm run dev`
+
 
 ## Table of Contents
 
@@ -67,8 +78,7 @@ The following environment variables are required in your `.env.local` file:
 
 ```bash
 WORDPRESS_URL="https://wordpress.com"
-WORDPRESS_HOSTNAME="wordpress.com"
-WORDPRESS_WEBHOOK_SECRET="your-secret-key-here"
+NEXT_WORDPRESS_WEBHOOK_SECRET="your-secret-key-here"
 ```
 
 You can find the example of `.env.local` file in the `.env.example` file (and in Vercel).
@@ -586,7 +596,7 @@ This granular system ensures that when content changes, only the relevant cached
 
 2. **Configure Next.js:**
 
-   - Add `WORDPRESS_WEBHOOK_SECRET` to your environment variables (same secret as in WordPress plugin)
+   - Add `NEXT_WORDPRESS_WEBHOOK_SECRET` to your environment variables (same secret as in WordPress plugin)
    - The webhook endpoint at `/api/revalidate` is already set up
    - No additional configuration needed
 

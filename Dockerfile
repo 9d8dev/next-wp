@@ -1,66 +1,75 @@
 # syntax=docker.io/docker/dockerfile:1
+# ============================================
+# Base Stage: Use a Lightweight Node.js Image
+# ============================================
 
-FROM node:20-alpine AS base
+# Use an official Node.js Alpine image
+ARG NODE_VERSION=22.14.0-alpine
+FROM node:${NODE_VERSION} AS base
 
-# Install dependencies only when needed
+# Set the working directory
+WORKDIR /app
+
+# ============================================
+# Stage 2: Install dependencies
+# ============================================
 FROM base AS deps
+
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
-WORKDIR /app
 
-# Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+# Copy package related files
+COPY package.json pnpm-lock.yaml ./
 
+# Enable pnpm
+RUN corepack enable pnpm
 
-# Rebuild the source code only when needed
+# Install dependencies 
+RUN pnpm i --frozen-lockfile --prod
+
+# ============================================
+# Stage 3: Build Next.js app
+# ============================================
 FROM base AS builder
-WORKDIR /app
+
+# Copy node modules from dependencies
 COPY --from=deps /app/node_modules ./node_modules
+
+# Copy source code into the container
 COPY . .
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
+# Following line disables telemetry.
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+# Build the application 
+RUN npm run build
 
-# Production image, copy all the files and run next
+# ============================================
+# Stage 4: Create Production Image
+# ============================================
 FROM base AS runner
-WORKDIR /app
 
 ENV NODE_ENV=production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
 
-COPY --from=builder /app/public ./public
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
+# Copy standalone build files
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Set the port and hostname for the Next.js standalone server
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Use nextjs user for security best practices
 USER nextjs
 
+# Expose port 3000
 EXPOSE 3000
 
-ENV PORT=3000
-
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
-ENV HOSTNAME="0.0.0.0"
 CMD ["node", "server.js"]

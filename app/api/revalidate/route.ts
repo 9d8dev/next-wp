@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     const requestBody = await request.json();
     const secret = request.headers.get("x-webhook-secret");
 
-    if (secret !== process.env.WORDPRESS_WEBHOOK_SECRET) {
+    if (secret !== process.env.NEXT_WORDPRESS_WEBHOOK_SECRET) {
       console.error("Invalid webhook secret");
       return NextResponse.json(
         { message: "Invalid webhook secret" },

@@ -3,19 +3,14 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: `${process.env.WORDPRESS_HOSTNAME}`,
-        port: "",
-        pathname: "/**",
-      },
+      new URL(`${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-content/**`),
     ],
   },
   async redirects() {
     return [
       {
         source: "/admin",
-        destination: `${process.env.WORDPRESS_URL}/wp-admin`,
+        destination: `${process.env.NEXT_WORDPRESS_URL}/wp-admin`,
         permanent: true,
       },
     ];

@@ -152,7 +152,7 @@ class Next_Revalidation {
     public function webhook_secret_callback() {
         $value = isset($this->options['webhook_secret']) ? esc_attr($this->options['webhook_secret']) : '';
         echo '<input type="text" id="webhook_secret" name="' . $this->option_name . '[webhook_secret]" value="' . $value . '" class="regular-text" />';
-        echo '<p class="description">This should match the WORDPRESS_WEBHOOK_SECRET in your Next.js environment.</p>';
+        echo '<p class="description">This should match the NEXT_WORDPRESS_WEBHOOK_SECRET in your Next.js environment.</p>';
     }
 
     public function enable_notifications_callback() {

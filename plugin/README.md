@@ -26,7 +26,7 @@ Add the webhook secret to your Next.js environment variables:
 
 ```bash
 # .env.local
-WORDPRESS_WEBHOOK_SECRET="your-secret-key-here"
+NEXT_WORDPRESS_WEBHOOK_SECRET="your-secret-key-here"
 ```
 
 ## How It Works
