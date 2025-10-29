@@ -6,14 +6,8 @@ FROM node:${NODE_VERSION} AS base
 # Set the working directory
 WORKDIR /app
 
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
-
 # Copy package related files
 COPY package.json pnpm-lock.yaml ./
-
-# Ensure the correct permissions for the nextjs user
-RUN chown -R nextjs:nodejs /app
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
@@ -21,14 +15,11 @@ RUN apk add --no-cache libc6-compat
 # Enable pnpm
 RUN corepack enable pnpm
 
-# Use nextjs user for security best practices
-USER nextjs
-
 # Install dependencies 
 RUN pnpm i --frozen-lockfile
 
 # Copy source code into the container
-COPY --chown=nextjs:nodejs . .
+COPY . .
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
