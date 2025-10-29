@@ -3,7 +3,6 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      new URL(`${process.env.NEXT_WORDPRESS_URL}/wp-content/**`),
       new URL(`${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-content/**`),
     ],
   },
@@ -16,6 +15,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  output: "standalone",
 };
 
 export default nextConfig;
