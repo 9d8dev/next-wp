@@ -25,7 +25,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN corepack enable pnpm
 
 # Install dependencies 
-RUN pnpm i --frozen-lockfile --prod
+RUN pnpm i --frozen-lockfile
 
 # ============================================
 # Stage 3: Build Next.js app
