@@ -1,98 +1,136 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+@custom-variant dark (&:is(.dark *));
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+@layer utilities {
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+        display:none;
+    }
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+        -ms-overflow-style:none;
+        /* IE and Edge */
+        scrollbar-width:none;
+        /* Firefox */
+    }
+}
 
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
+@theme inline {
+    /* Container */
+    --container-center:true;
+    --container-padding:2rem;
+    --container-2xl:1400px;
 
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
+    /* Border Radius */
+    --radius-sm:calc(var(--radius) - 4px);
+    --radius-md:calc(var(--radius) - 2px);
+    --radius-lg:var(--radius);
 
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
+    /* Color mappings */
+    --color-background:var(--background);
+    --color-foreground:var(--foreground);
+    --color-card:var(--card);
+    --color-card-foreground:var(--card-foreground);
+    --color-popover:var(--popover);
+    --color-popover-foreground:var(--popover-foreground);
+    --color-primary:var(--primary);
+    --color-primary-foreground:var(--primary-foreground);
+    --color-secondary:var(--secondary);
+    --color-secondary-foreground:var(--secondary-foreground);
+    --color-muted:var(--muted);
+    --color-muted-foreground:var(--muted-foreground);
+    --color-accent:var(--accent);
+    --color-accent-foreground:var(--accent-foreground);
+    --color-destructive:var(--destructive);
+    --color-destructive-foreground:var(--destructive-foreground);
+    --color-border:var(--border);
+    --color-input:var(--input);
+    --color-ring:var(--ring);
 
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    /* Animations */
+    --animate-accordion-down:accordion-down 0.2s ease-out;
+    --animate-accordion-up:accordion-up 0.2s ease-out;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    @keyframes accordion-down {
+        from {
+            height:0;
+        }
+        to {
+            height:var(--radix-accordion-content-height);
+        }
+    }
 
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
+    @keyframes accordion-up {
+        from {
+            height:var(--radix-accordion-content-height);
+        }
+        to {
+            height:0;
+        }
+    }
+}
 
-    --radius: 0.5rem;
-  }
+:root {
+    --radius:0.5rem;
+    --background:#fff;
+    --foreground:#0a0a0a;
+    --card:#fff;
+    --card-foreground:#0a0a0a;
+    --popover:#fff;
+    --popover-foreground:#0a0a0a;
+    --primary:#171717;
+    --primary-foreground:#fafafa;
+    --secondary:#f5f5f5;
+    --secondary-foreground:#171717;
+    --muted:#f5f5f5;
+    --muted-foreground:#737373;
+    --accent:#f5f5f5;
+    --accent-foreground:#171717;
+    --destructive:#dc2626;
+    --destructive-foreground:#fafafa;
+    --border:#e5e5e5;
+    --input:#e5e5e5;
+    --ring:#0a0a0a;
+}
 
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-  }
+.dark {
+    --background:#0a0a0a;
+    --foreground:#fafafa;
+    --card:#0a0a0a;
+    --card-foreground:#fafafa;
+    --popover:#0a0a0a;
+    --popover-foreground:#fafafa;
+    --primary:#fafafa;
+    --primary-foreground:#171717;
+    --secondary:#262626;
+    --secondary-foreground:#fafafa;
+    --muted:#262626;
+    --muted-foreground:#a3a3a3;
+    --accent:#262626;
+    --accent-foreground:#fafafa;
+    --destructive:#7f1d1d;
+    --destructive-foreground:#fafafa;
+    --border:#262626;
+    --input:#262626;
+    --ring:#d4d4d4;
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+    * {
+        @apply border-border;
+    }
 
-  body {
-    @apply bg-background text-foreground;
-  }
+    body {
+        @apply bg-background text-foreground;
+    }
 }
 
 @layer prose-m-none {
-  * {
-    @apply prose-headings:m-0;
-  }
-}
-
-@layer utilities {
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    /* IE and Edge */
-    scrollbar-width: none;
-    /* Firefox */
-  }
+    * {
+        @apply prose-headings:m-0;
+    }
 }
