@@ -1,5 +1,5 @@
-import { revalidatePath, revalidateTag } from "next/cache";
-import { NextRequest, NextResponse } from "next/server";
+import {revalidatePath, revalidateTag} from "next/cache";
+import {NextRequest, NextResponse} from "next/server";
 
 export const maxDuration = 30;
 
@@ -39,32 +39,32 @@ export async function POST(request: NextRequest) {
       );
 
       // Revalidate specific content type tags
-      revalidateTag("wordpress");
+        revalidateTag("wordpress", "max");
 
       if (contentType === "post") {
-        revalidateTag("posts");
+          revalidateTag("posts", "max");
         if (contentId) {
-          revalidateTag(`post-${contentId}`);
+            revalidateTag(`post-${contentId}`, "max");
         }
         // Clear all post pages when any post changes
-        revalidateTag("posts-page-1");
+          revalidateTag("posts-page-1", "max");
       } else if (contentType === "category") {
-        revalidateTag("categories");
+          revalidateTag("categories", "max");
         if (contentId) {
-          revalidateTag(`posts-category-${contentId}`);
-          revalidateTag(`category-${contentId}`);
+            revalidateTag(`posts-category-${contentId}`, "max");
+            revalidateTag(`category-${contentId}`, "max");
         }
       } else if (contentType === "tag") {
-        revalidateTag("tags");
+          revalidateTag("tags", "max");
         if (contentId) {
-          revalidateTag(`posts-tag-${contentId}`);
-          revalidateTag(`tag-${contentId}`);
+            revalidateTag(`posts-tag-${contentId}`, "max");
+            revalidateTag(`tag-${contentId}`, "max");
         }
       } else if (contentType === "author" || contentType === "user") {
-        revalidateTag("authors");
+          revalidateTag("authors", "max");
         if (contentId) {
-          revalidateTag(`posts-author-${contentId}`);
-          revalidateTag(`author-${contentId}`);
+            revalidateTag(`posts-author-${contentId}`, "max");
+            revalidateTag(`author-${contentId}`, "max");
         }
       }
 
