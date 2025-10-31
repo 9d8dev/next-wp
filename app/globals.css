@@ -4,21 +4,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@layer utilities {
-    /* Hide scrollbar for Chrome, Safari and Opera */
-    .no-scrollbar::-webkit-scrollbar {
-        display:none;
-    }
-
-    /* Hide scrollbar for IE, Edge and Firefox */
-    .no-scrollbar {
-        -ms-overflow-style:none;
-        /* IE and Edge */
-        scrollbar-width:none;
-        /* Firefox */
-    }
-}
-
 @theme inline {
     /* Container */
     --container-center:true;
@@ -120,17 +105,32 @@
 }
 
 @layer base {
-    * {
-        @apply border-border;
-    }
+  * {
+    @apply border-border;
+  }
 
-    body {
-        @apply bg-background text-foreground;
-    }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 @layer prose-m-none {
-    * {
-        @apply prose-headings:m-0;
-    }
+  * {
+    @apply prose-headings:m-0;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
 }
