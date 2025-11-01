@@ -106,6 +106,37 @@ async function wordpressFetchWithPagination<T>(
   };
 }
 
+function createGetAllPaginated<T>(
+  path: string,
+  queryParams?: Record<string, any>
+): (query?: Record<string, any>) => Promise<T[]> {
+  return async (query?: Record<string, any>) => {
+    const getPage = (page: number) => wordpressFetchWithPagination<T[]>(
+      path,
+      {
+        ...queryParams,
+        ...query,
+        per_page: 100,
+        page,
+      }
+    );
+
+    const { headers, data } = await getPage(1);
+
+    if (headers.totalPages > 1) {
+      const promiseArray: Promise<T[]>[] = [];
+
+      for (let i = 2; i <= headers.totalPages; i++) {
+        promiseArray.push(getPage(i).then((response) => response.data));
+      }
+
+      return data.concat(...(await Promise.all(promiseArray)));
+    }
+
+    return data;
+  }
+}
+
 // New function for paginated posts
 export async function getPostsPaginated(
   page: number = 1,
