@@ -100,7 +100,7 @@ interface Taxonomy {
   link: string;
   name: string;
   slug: string;
-  meta: Record<string, unknown>;
+  meta?: Record<string, unknown>;
 }
 
 export interface Category extends Taxonomy {
@@ -109,10 +109,6 @@ export interface Category extends Taxonomy {
 }
 
 export interface Tag extends Taxonomy {
-  id: number,
-  count: number,
-  name: string,
-  slug: string,
   taxonomy: "post_tag";
 }
 

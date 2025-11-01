@@ -259,20 +259,6 @@ export async function getPostBySlug(slug: string): Promise<Post> {
   );
 }
 
-export async function getAllCategories(): Promise<Category[]> {
-  return wordpressFetch<Category[]>("/wp-json/wp/v2/categories", { per_page: 100 });
-}
-
-export async function getCategoryById(id: number): Promise<Category> {
-  return wordpressFetch<Category>(`/wp-json/wp/v2/categories/${id}`);
-}
-
-export async function getCategoryBySlug(slug: string): Promise<Category> {
-  return wordpressFetch<Category[]>("/wp-json/wp/v2/categories", { slug }).then(
-    (categories) => categories[0]
-  );
-}
-
 export async function getPostsByCategory(categoryId: number): Promise<Post[]> {
   return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", {
     categories: categoryId,
@@ -283,26 +269,43 @@ export async function getPostsByTag(tagId: number): Promise<Post[]> {
   return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { tags: tagId });
 }
 
-const TagFields = [ "id", "count", "name", "slug", "taxonomy" ];
+const categoryFields: Array<keyof Category> = [ "id", "count", "description", "link", "name", "slug", "taxonomy", "parent" ];
+
+export const getAllCategories = createGetAll<Category>("/wp-json/wp/v2/categories", {
+  hide_empty: true,
+  _fields: categoryFields,
+});
+
+export async function getCategoryById(id: number): Promise<Category> {
+  return wordpressFetch<Category>(`/wp-json/wp/v2/categories/${id}`, { _fields: categoryFields });
+}
+
+export async function getCategoryBySlug(slug: string): Promise<Category> {
+  return wordpressFetch<Category[]>("/wp-json/wp/v2/categories", { slug, _fields: categoryFields }).then(
+    (categories) => categories[0]
+  );
+}
+
+const tagFields: Array<keyof Tag> = [ "id", "count", "description", "link", "name", "slug", "taxonomy" ];
 
 export async function getTagsByPost(postId: number): Promise<Tag[]> {
   return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { 
     post: postId, 
-    _fields: TagFields, 
+    _fields: tagFields, 
   });
 }
 
 export const getAllTags = createGetAll<Tag>("/wp-json/wp/v2/tags", {
   hide_empty: true,
-  _fields: TagFields,
+  _fields: tagFields,
 });
 
 export async function getTagById(id: number): Promise<Tag> {
-  return wordpressFetch<Tag>(`/wp-json/wp/v2/tags/${id}`, { _fields: TagFields });
+  return wordpressFetch<Tag>(`/wp-json/wp/v2/tags/${id}`, { _fields: tagFields });
 }
 
 export async function getTagBySlug(slug: string): Promise<Tag> {
-  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { slug, _fields: TagFields }).then(
+  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { slug, _fields: tagFields }).then(
     (tags) => tags[0]
   );
 }
