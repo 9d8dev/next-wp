@@ -352,7 +352,7 @@ const authorFields: Array<keyof Author> = [
   "id", "name", "url", "description", "link", "slug", "avatar_urls",
 ];
 
-export const getAllAuthors = createGetAll("/wp-json/wp/v2/users", {
+export const getAllAuthors = createGetAll<Author>("/wp-json/wp/v2/users", {
   has_published_posts: true,
   _fields: authorFields,
 });
@@ -402,8 +402,16 @@ export async function getPostsByTagSlug(tagSlug: string): Promise<Post[]> {
   });
 }
 
+const mediaFields: Array<keyof FeaturedMedia> = [
+  "id", "date", "date_gmt", "modified", "modified_gmt", "slug", "status", "link",
+  "guid", "title", "author", "caption", "alt_text", "media_type", "mime_type",
+  "media_details", "source_url",
+];
+
 export async function getFeaturedMediaById(id: number): Promise<FeaturedMedia> {
-  return wordpressFetch<FeaturedMedia>(`/wp-json/wp/v2/media/${id}`);
+  return wordpressFetch<FeaturedMedia>(`/wp-json/wp/v2/media/${id}`, {
+    _fields: mediaFields,
+  });
 }
 
 export async function searchCategories(query: string): Promise<Category[]> {
