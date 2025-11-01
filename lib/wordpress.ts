@@ -269,7 +269,9 @@ export async function getPostsByTag(tagId: number): Promise<Post[]> {
   return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { tags: tagId });
 }
 
-const categoryFields: Array<keyof Category> = [ "id", "count", "description", "link", "name", "slug", "taxonomy", "parent" ];
+const categoryFields: Array<keyof Category> = [ 
+  "id", "count", "description", "link", "name", "slug", "taxonomy", "parent",
+];
 
 export const getAllCategories = createGetAll<Category>("/wp-json/wp/v2/categories", {
   hide_empty: true,
@@ -286,7 +288,9 @@ export async function getCategoryBySlug(slug: string): Promise<Category> {
   );
 }
 
-const tagFields: Array<keyof Tag> = [ "id", "count", "description", "link", "name", "slug", "taxonomy" ];
+const tagFields: Array<keyof Tag> = [ 
+  "id", "count", "description", "link", "name", "slug", "taxonomy",
+];
 
 export async function getTagsByPost(postId: number): Promise<Tag[]> {
   return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { 
@@ -310,30 +314,39 @@ export async function getTagBySlug(slug: string): Promise<Tag> {
   );
 }
 
-export async function getAllPages(): Promise<Page[]> {
-  return wordpressFetch<Page[]>("/wp-json/wp/v2/pages", { per_page: 100 });
-}
+const pageFields: Array<keyof Page> = [ 
+  "id", "date", "date_gmt", "modified", "modified_gmt", "slug", "status", "link", 
+  "guid", "title", "content", "excerpt", "author", "featured_media", "parent", 
+  "menu_order", "comment_status", "ping_status", "template", "meta",
+];
+
+export const getAllPages = createGetAll<Page>("/wp-json/wp/v2/pages", { _fields: pageFields })
 
 export async function getPageById(id: number): Promise<Page> {
-  return wordpressFetch<Page>(`/wp-json/wp/v2/pages/${id}`);
+  return wordpressFetch<Page>(`/wp-json/wp/v2/pages/${id}`, { _fields: pageFields });
 }
 
 export async function getPageBySlug(slug: string): Promise<Page> {
-  return wordpressFetch<Page[]>("/wp-json/wp/v2/pages", { slug }).then(
+  return wordpressFetch<Page[]>("/wp-json/wp/v2/pages", { slug, _fields: pageFields }).then(
     (pages) => pages[0]
   );
 }
 
-export async function getAllAuthors(): Promise<Author[]> {
-  return wordpressFetch<Author[]>("/wp-json/wp/v2/users", { per_page: 100 });
-}
+const authorFields: Array<keyof Author> = [ 
+  "id", "name", "url", "description", "link", "slug", "avatar_urls",
+];
+
+export const getAllAuthors = createGetAll("/wp-json/wp/v2/users", {
+  has_published_posts: true,
+  _fields: authorFields,
+});
 
 export async function getAuthorById(id: number): Promise<Author> {
-  return wordpressFetch<Author>(`/wp-json/wp/v2/users/${id}`);
+  return wordpressFetch<Author>(`/wp-json/wp/v2/users/${id}`, { _fields: authorFields });
 }
 
 export async function getAuthorBySlug(slug: string): Promise<Author> {
-  return wordpressFetch<Author[]>("/wp-json/wp/v2/users", { slug }).then(
+  return wordpressFetch<Author[]>("/wp-json/wp/v2/users", { slug, _fields: authorFields }).then(
     (users) => users[0]
   );
 }

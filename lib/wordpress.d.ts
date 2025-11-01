@@ -119,8 +119,8 @@ export interface Author {
   description: string;
   link: string;
   slug: string;
-  avatar_urls: Record<string, string>;
-  meta: Record<string, unknown>;
+  avatar_urls?: Record<string, string>;
+  meta?: Record<string, unknown>;
 }
 
 // Block types
