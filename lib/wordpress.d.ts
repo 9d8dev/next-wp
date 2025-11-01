@@ -53,6 +53,7 @@ export interface FeaturedMedia extends WPEntity {
 
 // Content types
 export interface Post extends WPEntity {
+  type: string;
   title: RenderedTitle;
   content: RenderedContent;
   excerpt: RenderedContent;
@@ -76,6 +77,12 @@ export interface Post extends WPEntity {
   categories: number[];
   tags: number[];
   meta: Record<string, unknown>;
+  author_meta: {
+    display_name: string;
+    author_link: string;
+  },
+  featured_img: string | null;
+  featured_img_caption: string;
 }
 
 export interface Page extends WPEntity {
