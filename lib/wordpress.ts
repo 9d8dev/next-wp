@@ -36,6 +36,37 @@ export interface WordPressResponse<T> {
   headers: WordPressPaginationHeaders;
 }
 
+export interface WordPressQuery {
+  _fields?: string | Array<string>; // Return only a subset of the fields in a response
+  _embed?: boolean; // Include embedded resources
+}
+
+export interface PostQuery extends WordPressQuery{
+  context?: "view" | "embed" | "edit"; // Scope under which the request is made; determines fields present in response.
+  page?: number; // Current page of the collection.
+  per_page?: number; // Maximum number of items to be returned in result set.
+  search?: string; // Limit results to those matching a string.
+  after?: string; // Limit response to posts published after a given ISO8601 compliant date.
+  modified_after?: string; // Limit response to posts modified after a given ISO8601 compliant date.
+  author?: string; // Limit result set to posts assigned to specific authors.
+  author_exclude?: string; // Ensure result set excludes posts assigned to specific authors.
+  before?: string; // Limit response to posts published before a given ISO8601 compliant date.
+  modified_before?: string; // Limit response to posts modified before a given ISO8601 compliant date.
+  exclude?: Array<number>; // Ensure result set excludes specific IDs.
+  include?: Array<number>; // Limit result set to specific IDs.
+  offset?: number; // Offset the result set by a specific number of items.
+  order?: "asc" | "desc"; // Order sort attribute ascending or descending.
+  orderby?: "author" | "date" | "id" | "include" | "modified" | "parent" | "relevance" | "slug" | "include_slugs" | "title";
+  slug?: string | Array<string>; // Limit result set to posts with one or more specific slugs.
+  status?: "publish" | "future" | "draft" | "pending" | "private"; // Limit result set to posts assigned one or more statuses.
+  tax_relation?: "AND" | "OR"; // Limit result set based on relationship between multiple taxonomies.
+  categories?: string | Array<string>; // Limit result set to items with specific terms assigned in the categories
+  categories_exclude?: string | Array<string>; // Limit result set to items except those with specific terms assigned in the categories taxonomy.
+  tags?: string | Array<string>; // Limit result set to items with specific terms assigned in the tags taxonomy.
+  tags_exclude?: string | Array<string>; // Limit result set to items except those with specific terms assigned in the tags taxonomy.
+  sticky?: boolean; // Limit result set to items that are sticky.
+}
+
 // Keep original function for backward compatibility
 async function wordpressFetch<T>(
   path: string,
@@ -106,12 +137,12 @@ async function wordpressFetchWithPagination<T>(
   };
 }
 
-function createGetAll<T>(
+function createGetAll<Type, Query = Record<string, any>>(
   path: string,
-  queryParams?: Record<string, any>
-): (query?: Record<string, any>) => Promise<T[]> {
-  return async (query?: Record<string, any>) => {
-    const getPage = (page: number) => wordpressFetchWithPagination<T[]>(
+  queryParams?: Query
+): (query?: Query) => Promise<Type[]> {
+  return async (query?: Query) => {
+    const getPage = (page: number) => wordpressFetchWithPagination<Type[]>(
       path,
       {
         ...queryParams,
@@ -124,7 +155,7 @@ function createGetAll<T>(
     const { headers, data } = await getPage(1);
 
     if (headers.totalPages > 1) {
-      const promiseArray: Promise<T[]>[] = [];
+      const promiseArray: Promise<Type[]>[] = [];
 
       for (let i = 2; i <= headers.totalPages; i++) {
         promiseArray.push(getPage(i).then((response) => response.data));
@@ -144,22 +175,19 @@ const postFields: Array<keyof Post> = [
   "author_meta", "featured_img", "featured_img_caption",
 ];
 
+const postFieldsWithEmbed: Array<keyof Post> = [...postFields, "_links", "_embedded"];
+
 // New function for paginated posts
 export async function getPostsPaginated(
   page: number = 1,
   perPage: number = 9,
-  filterParams?: {
-    author?: string;
-    tag?: string;
-    category?: string;
-    search?: string;
-  }
+  filterParams?: PostQuery,
 ): Promise<WordPressResponse<Post[]>> {
   const query: Record<string, any> = {
     _embed: true,
     per_page: perPage,
     page,
-    _fields: postFields,
+    _fields: postFieldsWithEmbed,
   };
 
   // Build cache tags based on filters
@@ -173,13 +201,13 @@ export async function getPostsPaginated(
     query.author = filterParams.author;
     cacheTags.push(`posts-author-${filterParams.author}`);
   }
-  if (filterParams?.tag) {
-    query.tags = filterParams.tag;
-    cacheTags.push(`posts-tag-${filterParams.tag}`);
+  if (filterParams?.tags) {
+    query.tags = filterParams.tags;
+    cacheTags.push(`posts-tag-${filterParams.tags}`);
   }
-  if (filterParams?.category) {
-    query.categories = filterParams.category;
-    cacheTags.push(`posts-category-${filterParams.category}`);
+  if (filterParams?.categories) {
+    query.categories = filterParams.categories;
+    cacheTags.push(`posts-category-${filterParams.categories}`);
   }
 
   // Add page-specific cache tag for granular invalidation
@@ -219,44 +247,9 @@ export async function getPostsPaginated(
   };
 }
 
-export async function getAllPosts(filterParams?: {
-  author?: string;
-  tag?: string;
-  category?: string;
-  search?: string;
-}): Promise<Post[]> {
-  const query: Record<string, any> = {
-    _embed: true,
-    per_page: 100,
-    _fields: postFields,
-  };
-
-  if (filterParams?.search) {
-    query.search = filterParams.search;
-
-    if (filterParams?.author) {
-      query.author = filterParams.author;
-    }
-    if (filterParams?.tag) {
-      query.tags = filterParams.tag;
-    }
-    if (filterParams?.category) {
-      query.categories = filterParams.category;
-    }
-  } else {
-    if (filterParams?.author) {
-      query.author = filterParams.author;
-    }
-    if (filterParams?.tag) {
-      query.tags = filterParams.tag;
-    }
-    if (filterParams?.category) {
-      query.categories = filterParams.category;
-    }
-  }
-
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", query);
-}
+export const getAllPosts = createGetAll<Post, PostQuery>("/wp-json/wp/v2/posts", {
+  _fields: postFields,
+})
 
 export async function getPostById(id: number): Promise<Post> {
   return wordpressFetch<Post>(`/wp-json/wp/v2/posts/${id}`, { _fields: postFields });
@@ -442,30 +435,7 @@ export async function searchAuthors(query: string): Promise<Author[]> {
 }
 
 // Function specifically for generateStaticParams - fetches ALL posts
-export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
-  const allSlugs: { slug: string }[] = [];
-  let page = 1;
-  let hasMore = true;
-
-  while (hasMore) {
-    const response = await wordpressFetchWithPagination<Post[]>(
-      "/wp-json/wp/v2/posts",
-      {
-        per_page: 100,
-        page,
-        _fields: "slug", // Only fetch slug field for performance
-      }
-    );
-
-    const posts = response.data;
-    allSlugs.push(...posts.map((post) => ({ slug: post.slug })));
-
-    hasMore = page < response.headers.totalPages;
-    page++;
-  }
-
-  return allSlugs;
-}
+export const getAllPostSlugs = () => getAllPosts({ _fields: [ "slug" ] })
 
 // Enhanced pagination functions for specific queries
 export async function getPostsByCategoryPaginated(

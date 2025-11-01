@@ -80,9 +80,14 @@ export interface Post extends WPEntity {
   author_meta: {
     display_name: string;
     author_link: string;
-  },
+  };
   featured_img: string | null;
   featured_img_caption: string;
+  _links?: Record<string, Array<Record<string, any>>>;
+  _embedded?: {
+    author: Author;
+    "wp:term": Array<Array<Category | Tag>>; 
+  };
 }
 
 export interface Page extends WPEntity {

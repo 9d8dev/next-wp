@@ -8,11 +8,7 @@ import type { Metadata } from "next";
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const pages = await getAllPages();
-
-  return pages.map((page) => ({
-    slug: page.slug,
-  }));
+  return getAllPages({ _fields: [ "slug" ] });
 }
 
 export async function generateMetadata({
