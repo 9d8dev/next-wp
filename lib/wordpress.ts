@@ -106,7 +106,7 @@ async function wordpressFetchWithPagination<T>(
   };
 }
 
-function createGetAllPaginated<T>(
+function createGetAll<T>(
   path: string,
   queryParams?: Record<string, any>
 ): (query?: Record<string, any>) => Promise<T[]> {
@@ -287,9 +287,7 @@ export async function getTagsByPost(postId: number): Promise<Tag[]> {
   return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { post: postId });
 }
 
-export async function getAllTags(): Promise<Tag[]> {
-  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { per_page: 100 });
-}
+export const getAllTags = createGetAll<Tag>("/wp-json/wp/v2/tags");
 
 export async function getTagById(id: number): Promise<Tag> {
   return wordpressFetch<Tag>(`/wp-json/wp/v2/tags/${id}`);

@@ -109,6 +109,10 @@ export interface Category extends Taxonomy {
 }
 
 export interface Tag extends Taxonomy {
+  id: number,
+  count: number,
+  name: string,
+  slug: string,
   taxonomy: "post_tag";
 }
 
