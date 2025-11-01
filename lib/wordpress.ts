@@ -76,7 +76,7 @@ async function wordpressFetchWithPagination<T>(
     query ? `?${querystring.stringify(query, { arrayFormat: "comma" })}` : ""
   }`;
   const userAgent = "Next.js WordPress Client";
-
+  
   const response = await fetch(url, {
     headers: {
       "User-Agent": userAgent,
@@ -283,18 +283,26 @@ export async function getPostsByTag(tagId: number): Promise<Post[]> {
   return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { tags: tagId });
 }
 
+const TagFields = [ "id", "count", "name", "slug", "taxonomy" ];
+
 export async function getTagsByPost(postId: number): Promise<Tag[]> {
-  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { post: postId });
+  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { 
+    post: postId, 
+    _fields: TagFields, 
+  });
 }
 
-export const getAllTags = createGetAll<Tag>("/wp-json/wp/v2/tags");
+export const getAllTags = createGetAll<Tag>("/wp-json/wp/v2/tags", {
+  hide_empty: true,
+  _fields: TagFields,
+});
 
 export async function getTagById(id: number): Promise<Tag> {
-  return wordpressFetch<Tag>(`/wp-json/wp/v2/tags/${id}`);
+  return wordpressFetch<Tag>(`/wp-json/wp/v2/tags/${id}`, { _fields: TagFields });
 }
 
 export async function getTagBySlug(slug: string): Promise<Tag> {
-  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { slug }).then(
+  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { slug, _fields: TagFields }).then(
     (tags) => tags[0]
   );
 }
@@ -360,6 +368,7 @@ export async function searchCategories(query: string): Promise<Category[]> {
   return wordpressFetch<Category[]>("/wp-json/wp/v2/categories", {
     search: query,
     per_page: 100,
+    hide_empty: true,
   });
 }
 
@@ -367,6 +376,7 @@ export async function searchTags(query: string): Promise<Tag[]> {
   return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", {
     search: query,
     per_page: 100,
+    hide_empty: true,
   });
 }
 
@@ -374,6 +384,7 @@ export async function searchAuthors(query: string): Promise<Author[]> {
   return wordpressFetch<Author[]>("/wp-json/wp/v2/users", {
     search: query,
     per_page: 100,
+    hide_empty: true,
   });
 }
 
