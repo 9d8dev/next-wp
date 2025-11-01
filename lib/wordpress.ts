@@ -42,7 +42,7 @@ async function wordpressFetch<T>(
   query?: Record<string, any>
 ): Promise<T> {
   const url = `${baseUrl}${path}${
-    query ? `?${querystring.stringify(query)}` : ""
+    query ? `?${querystring.stringify(query, { arrayFormat: "comma" })}` : ""
   }`;
   const userAgent = "Next.js WordPress Client";
 
@@ -73,7 +73,7 @@ async function wordpressFetchWithPagination<T>(
   query?: Record<string, any>
 ): Promise<WordPressResponse<T>> {
   const url = `${baseUrl}${path}${
-    query ? `?${querystring.stringify(query)}` : ""
+    query ? `?${querystring.stringify(query, { arrayFormat: "comma" })}` : ""
   }`;
   const userAgent = "Next.js WordPress Client";
 
@@ -178,7 +178,7 @@ export async function getPostsPaginated(
   cacheTags.push(`posts-page-${page}`);
 
   const url = `${baseUrl}/wp-json/wp/v2/posts${
-    query ? `?${querystring.stringify(query)}` : ""
+    query ? `?${querystring.stringify(query , { arrayFormat: "comma" })}` : ""
   }`;
   const userAgent = "Next.js WordPress Client";
 
