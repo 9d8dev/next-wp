@@ -45,7 +45,7 @@ async function wordpressFetch<T>(
     },
     next: {
       tags: ["wordpress", ...cacheTags],
-      revalidate: 3600, // 1 hour cache
+      revalidate: 86400, // 1 day cache
     },
   });
 
@@ -77,7 +77,7 @@ async function wordpressFetchWithPagination<T>(
     },
     next: {
       tags: ["wordpress", ...cacheTags],
-      revalidate: 3600, // 1 hour cache
+      revalidate: 86400, // 1 day cache
     },
   });
 
