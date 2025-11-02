@@ -38,10 +38,10 @@ export async function POST(request: NextRequest) {
         }`
       );
 
-      // Revalidate specific content type tags
-      revalidateTag("wordpress");
-
-      if (contentType === "post") {
+      if (contentType === "all") {
+        // revalidate all wordpress requests
+        revalidateTag("wordpress");
+      } else if (contentType === "post") {
         revalidateTag("posts");
         if (contentId) {
           revalidateTag(`post-${contentId}`);
@@ -64,6 +64,9 @@ export async function POST(request: NextRequest) {
           revalidateTag(`posts-author-${contentId}`);
           revalidateTag(`author-${contentId}`);
         }
+      } else if (contentType === "media") {
+        if (contentId) revalidateTag(`media-${contentId}`);
+        else revalidateTag(`media`);
       }
 
       // Also revalidate the entire layout for safety

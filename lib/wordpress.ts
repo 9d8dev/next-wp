@@ -32,7 +32,7 @@ class WordPressAPIError extends Error {
 async function wordpressFetch<T>(
   path: string,
   query?: WordPressQuery<T>,
-  cacheTags: CacheTag[] = ["wordpress"],
+  cacheTags: CacheTag[] = [],
 ): Promise<T> {
   const url = `${baseUrl}${path}${
     query ? `?${querystring.stringify(query, { arrayFormat: "comma" })}` : ""
@@ -44,7 +44,7 @@ async function wordpressFetch<T>(
       "User-Agent": userAgent,
     },
     next: {
-      tags: cacheTags,
+      tags: ["wordpress", ...cacheTags],
       revalidate: 3600, // 1 hour cache
     },
   });
@@ -64,7 +64,7 @@ async function wordpressFetch<T>(
 async function wordpressFetchWithPagination<T>(
   path: string,
   query?: WordPressQuery<T>,
-  cacheTags: CacheTag[] = ["wordpress"],
+  cacheTags: CacheTag[] = [],
 ): Promise<WordPressResponse<T>> {
   const url = `${baseUrl}${path}${
     query ? `?${querystring.stringify(query, { arrayFormat: "comma" })}` : ""
@@ -76,7 +76,7 @@ async function wordpressFetchWithPagination<T>(
       "User-Agent": userAgent,
     },
     next: {
-      tags: cacheTags,
+      tags: ["wordpress", ...cacheTags],
       revalidate: 3600, // 1 hour cache
     },
   });
@@ -103,9 +103,9 @@ async function wordpressFetchWithPagination<T>(
 function createGetAll<T>(
   path: string,
   queryParams?: WordPressQuery<T>,
-  cacheTags: CacheTag[] = ["wordpress"],
-): (query?: WordPressQuery<T>) => Promise<T[]> {
-  return async (query?: WordPressQuery<T>) => {
+  cacheTags: CacheTag[] = [],
+): (query?: WordPressQuery<T>, cacheTags?: CacheTag[]) => Promise<T[]> {
+  return async (query?: WordPressQuery<T>, cTags: CacheTag[] = cacheTags) => {
     const getPage = (page: number) => wordpressFetchWithPagination<T[]>(
       path,
       <WordPressQuery<T[]>> {
@@ -114,7 +114,7 @@ function createGetAll<T>(
         per_page: 100,
         page,
       },
-      cacheTags,
+      cTags,
     );
 
     const { headers, data } = await getPage(1);
@@ -221,17 +221,29 @@ const categoryFields: Array<keyof Category> = [
   "id", "count", "description", "link", "name", "slug", "taxonomy", "parent",
 ];
 
-export const getAllCategories = createGetAll<Category>("/wp-json/wp/v2/categories", {
-  hide_empty: true,
-  _fields: categoryFields,
-}, ["categories"]);
+export const getAllCategories = createGetAll<Category>(
+  "/wp-json/wp/v2/categories",
+  {
+    hide_empty: true,
+    _fields: categoryFields,
+  },
+  ["categories"]
+);
 
 export async function getCategoryById(id: number): Promise<Category> {
-  return wordpressFetch<Category>(`/wp-json/wp/v2/categories/${id}`, { _fields: categoryFields }, [`category-${id}`]);
+  return wordpressFetch<Category>(
+    `/wp-json/wp/v2/categories/${id}`, 
+    { _fields: categoryFields }, 
+    [`category-${id}`]
+  );
 }
 
 export async function getCategoryBySlug(slug: string): Promise<Category> {
-  return wordpressFetch<Category[]>("/wp-json/wp/v2/categories", { slug, _fields: categoryFields }, ["categories"]).then(
+  return wordpressFetch<Category[]>(
+    "/wp-json/wp/v2/categories",
+    { slug, _fields: categoryFields },
+    ["categories"]
+  ).then(
     (categories) => categories[0]
   );
 }
@@ -241,23 +253,39 @@ const tagFields: Array<keyof Tag> = [
 ];
 
 export async function getTagsByPost(postId: number): Promise<Tag[]> {
-  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { 
-    post: postId, 
-    _fields: tagFields, 
-  }, ["tags"]);
+  return wordpressFetch<Tag[]>(
+    "/wp-json/wp/v2/tags",
+    { 
+      post: postId, 
+      _fields: tagFields, 
+    },
+    ["tags"]
+  );
 }
 
-export const getAllTags = createGetAll<Tag>("/wp-json/wp/v2/tags", {
-  hide_empty: true,
-  _fields: tagFields,
-}, ["tags"]);
+export const getAllTags = createGetAll<Tag>(
+  "/wp-json/wp/v2/tags", 
+  {
+    hide_empty: true,
+    _fields: tagFields,
+  }, 
+  ["tags"],
+);
 
 export async function getTagById(id: number): Promise<Tag> {
-  return wordpressFetch<Tag>(`/wp-json/wp/v2/tags/${id}`, { _fields: tagFields }, [`tag-${id}`]);
+  return wordpressFetch<Tag>(
+    `/wp-json/wp/v2/tags/${id}`, 
+    { _fields: tagFields }, 
+    [`tag-${id}`],
+  );
 }
 
 export async function getTagBySlug(slug: string): Promise<Tag> {
-  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { slug, _fields: tagFields }, ["tags"]).then(
+  return wordpressFetch<Tag[]>(
+    "/wp-json/wp/v2/tags",
+    { slug, _fields: tagFields },
+    ["tags"],
+  ).then(
     (tags) => tags[0]
   );
 }
@@ -268,14 +296,26 @@ const pageFields: Array<keyof Page> = [
   "menu_order", "comment_status", "ping_status", "template", "meta",
 ];
 
-export const getAllPages = createGetAll<Page>("/wp-json/wp/v2/pages", { _fields: pageFields })
+export const getAllPages = createGetAll<Page>(
+  "/wp-json/wp/v2/pages",
+  { _fields: pageFields },
+  [],
+);
 
 export async function getPageById(id: number): Promise<Page> {
-  return wordpressFetch<Page>(`/wp-json/wp/v2/pages/${id}`, { _fields: pageFields });
+  return wordpressFetch<Page>(
+    `/wp-json/wp/v2/pages/${id}`,
+    { _fields: pageFields },
+    [],
+  );
 }
 
 export async function getPageBySlug(slug: string): Promise<Page> {
-  return wordpressFetch<Page[]>("/wp-json/wp/v2/pages", { slug, _fields: pageFields }).then(
+  return wordpressFetch<Page[]>(
+    "/wp-json/wp/v2/pages",
+    { slug, _fields: pageFields },
+    [],
+  ).then(
     (pages) => pages[0]
   );
 }
@@ -284,10 +324,14 @@ const authorFields: Array<keyof Author> = [
   "id", "name", "url", "description", "link", "slug", "avatar_urls",
 ];
 
-export const getAllAuthors = createGetAll<Author>("/wp-json/wp/v2/users", {
-  has_published_posts: true,
-  _fields: authorFields,
-}, ["authors"]);
+export const getAllAuthors = createGetAll<Author>(
+  "/wp-json/wp/v2/users",
+  {
+    has_published_posts: true,
+    _fields: authorFields,
+  },
+  ["authors"],
+);
 
 export async function getAuthorById(id: number): Promise<Author> {
   return wordpressFetch<Author>(`/wp-json/wp/v2/users/${id}`, { _fields: authorFields }, [`author-${id}`]);
@@ -333,10 +377,10 @@ const mediaFields: Array<keyof Media> = [
   "media_details", "source_url",
 ];
 
-export async function getFeaturedMediaById(id: number): Promise<Media> {
+export async function getMediaById(id: number): Promise<Media> {
   return wordpressFetch<Media>(`/wp-json/wp/v2/media/${id}`, {
     _fields: mediaFields,
-  });
+  }, ["media", `media-${id}`]);
 }
 
 export async function searchCategories(query: string): Promise<Category[]> {
@@ -367,7 +411,7 @@ export async function searchAuthors(query: string): Promise<Author[]> {
 }
 
 // Function specifically for generateStaticParams - fetches ALL posts
-export const getAllPostSlugs = () => getAllPosts({ _fields: [ "slug" ] })
+export const getAllPostSlugs = () => getAllPosts({ _fields: [ "slug" ] }, ["posts"])
 
 // Enhanced pagination functions for specific queries
 export async function getPostsByCategoryPaginated(

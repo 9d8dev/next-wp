@@ -342,4 +342,6 @@ export type CacheTag = "wordpress"
   | "tags"
   | `tag-${number | string}`
   | "authors"
-  | `author-${number | string}`;
+  | `author-${number | string}`
+  | "media"
+  | `media-${number | string}`;

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { cn, extractExcerptText } from "@/lib/utils";
 
 import {
-  getFeaturedMediaById,
+  getMediaById,
   getCategoryById,
   CardPost,
 } from "@/lib/wordpress";
@@ -13,7 +13,7 @@ export async function PostCard({ post }: { post: CardPost }) {
   const media = post._embedded?.["wp:featuredmedia"] ?
     post._embedded?.["wp:featuredmedia"][0]
     : post.featured_media
-    ? await getFeaturedMediaById(post.featured_media)
+    ? await getMediaById(post.featured_media)
     : null;
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
