@@ -1,16 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Post } from "@/lib/wordpress.d";
 import { cn } from "@/lib/utils";
 
 import {
   getFeaturedMediaById,
   getCategoryById,
+  CardPost,
 } from "@/lib/wordpress";
 
-export async function PostCard({ post }: { post: Post }) {
-  const media = post.featured_media
+export async function PostCard({ post }: { post: CardPost }) {
+  const media = post._embedded?.["wp:featuredmedia"] ?
+    post._embedded?.["wp:featuredmedia"][0]
+    : post.featured_media
     ? await getFeaturedMediaById(post.featured_media)
     : null;
   const date = new Date(post.date).toLocaleDateString("en-US", {
@@ -18,7 +20,9 @@ export async function PostCard({ post }: { post: Post }) {
     day: "numeric",
     year: "numeric",
   });
-  const category = post.categories?.[0]
+  const category = post._embedded?.["wp:term"][0] && post._embedded?.["wp:term"][0][0].taxonomy === "category" ?
+    post._embedded?.["wp:term"][0][0]
+    : post.categories?.[0]
     ? await getCategoryById(post.categories[0])
     : null;
 
@@ -36,7 +40,7 @@ export async function PostCard({ post }: { post: Post }) {
             <Image
               className="h-full w-full object-cover"
               src={media.source_url}
-              alt={post.title?.rendered || "Post thumbnail"}
+              alt={media.alt_text || post.title?.rendered || "Post thumbnail"}
               width={400}
               height={200}
             />

@@ -86,6 +86,7 @@ export interface Post extends WPEntity {
   _links?: Record<string, Array<Record<string, any>>>;
   _embedded?: {
     author: Author;
+    "wp:featuredmedia": Media[];
     "wp:term": Array<Array<Category | Tag>>; 
   };
 }

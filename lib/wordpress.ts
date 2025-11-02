@@ -135,16 +135,23 @@ const postFields: Array<keyof Post> = [
   "author_meta", "featured_img", "featured_img_caption",
 ];
 
-const postFieldsWithEmbed: Array<keyof Post> = [...postFields, "_links", "_embedded"];
+const postCardFields: Array<keyof Post> = [
+  "id", "date", "slug", "title", "excerpt", "author", "featured_media",
+  "categories", "tags", "_links", "_embedded",
+];
+
+export type CardPost = Pick<Post, "id" | "date" | "slug" | "title" | "excerpt" | "author" | "featured_media" |
+  "categories" | "tags" | "_links" | "_embedded">;
 
 // New function for paginated posts
 export async function getPostsPaginated(
   page: number = 1,
   perPage: number = 9,
   filterParams?: WordPressQuery<Post>,
-): Promise<WordPressResponse<Post[]>> {
+): Promise<WordPressResponse<CardPost[]>> {
   const query: WordPressQuery<Post> = {
-    _fields: postFieldsWithEmbed,
+    _fields: postCardFields,
+    context: "embed",
     ...filterParams,
     _embed: true,
     per_page: perPage,
