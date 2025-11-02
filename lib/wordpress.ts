@@ -14,10 +14,10 @@ import type {
   WordPressQuery,
 } from "./wordpress.d";
 
-const baseUrl = process.env.NEXT_WORDPRESS_URL;
+const baseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
 
 if (!baseUrl) {
-  throw new Error("NEXT_WORDPRESS_URL environment variable is not defined");
+  throw new Error("NEXT_PUBLIC_WORDPRESS_URL environment variable is not defined");
 }
 
 class WordPressAPIError extends Error {

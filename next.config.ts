@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/admin",
-        destination: `${process.env.NEXT_WORDPRESS_URL}/wp-admin`,
+        destination: `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-admin`,
         permanent: true,
       },
     ];
