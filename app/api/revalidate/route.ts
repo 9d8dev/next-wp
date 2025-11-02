@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { contentType, contentId } = requestBody;
+    const { contentType, contentId, contentSlug } = requestBody;
 
     if (!contentType) {
       return NextResponse.json(
@@ -38,14 +38,14 @@ export async function POST(request: NextRequest) {
         }`
       );
 
-      if (contentType === "all") {
-        // revalidate all wordpress requests
-        revalidateTag("wordpress");
-      } else if (contentType === "post") {
+      if (contentType === "post") {
         revalidateTag("posts");
-        if (contentId) {
-          revalidateTag(`post-${contentId}`);
-        }
+        if (contentId) revalidateTag(`post-${contentId}`);
+        if (contentSlug) revalidateTag(`post-${contentSlug}`);
+      }  else if (contentType === "page") {
+        revalidateTag("pages");
+        if (contentSlug) revalidateTag(`page-${contentSlug}`);
+        if (contentId) revalidateTag(`page-${contentId}`);
       } else if (contentType === "category") {
         revalidateTag("categories");
         if (contentId) {
@@ -67,6 +67,9 @@ export async function POST(request: NextRequest) {
       } else if (contentType === "media") {
         if (contentId) revalidateTag(`media-${contentId}`);
         else revalidateTag(`media`);
+      } else if (contentType !== "menu") {
+        // revalidate all wordpress requests
+        revalidateTag("wordpress");
       }
 
       // Also revalidate the entire layout for safety

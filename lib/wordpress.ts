@@ -191,7 +191,7 @@ export async function getPostBySlug(slug: string): Promise<Post> {
   return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", {
     slug,
     _fields: postFields,
-  }, ["posts"]).then(
+  }, [`post-${slug}`]).then(
     (posts) => posts[0]
   );
 }
@@ -299,14 +299,14 @@ const pageFields: Array<keyof Page> = [
 export const getAllPages = createGetAll<Page>(
   "/wp-json/wp/v2/pages",
   { _fields: pageFields },
-  [],
+  ["pages"],
 );
 
 export async function getPageById(id: number): Promise<Page> {
   return wordpressFetch<Page>(
     `/wp-json/wp/v2/pages/${id}`,
     { _fields: pageFields },
-    [],
+    [`page-${id}`],
   );
 }
 
@@ -314,7 +314,7 @@ export async function getPageBySlug(slug: string): Promise<Page> {
   return wordpressFetch<Page[]>(
     "/wp-json/wp/v2/pages",
     { slug, _fields: pageFields },
-    [],
+    [`page-${slug}`],
   ).then(
     (pages) => pages[0]
   );
