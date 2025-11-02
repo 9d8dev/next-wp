@@ -9,7 +9,9 @@ import type {
   Tag,
   Page,
   Author,
-  FeaturedMedia,
+  Media,
+  WordPressResponse,
+  WordPressQuery,
 } from "./wordpress.d";
 
 const baseUrl = process.env.NEXT_WORDPRESS_URL;
@@ -25,52 +27,10 @@ class WordPressAPIError extends Error {
   }
 }
 
-// New types for pagination support
-export interface WordPressPaginationHeaders {
-  total: number;
-  totalPages: number;
-}
-
-export interface WordPressResponse<T> {
-  data: T;
-  headers: WordPressPaginationHeaders;
-}
-
-export interface WordPressQuery {
-  _fields?: string | Array<string>; // Return only a subset of the fields in a response
-  _embed?: boolean; // Include embedded resources
-}
-
-export interface PostQuery extends WordPressQuery{
-  context?: "view" | "embed" | "edit"; // Scope under which the request is made; determines fields present in response.
-  page?: number; // Current page of the collection.
-  per_page?: number; // Maximum number of items to be returned in result set.
-  search?: string; // Limit results to those matching a string.
-  after?: string; // Limit response to posts published after a given ISO8601 compliant date.
-  modified_after?: string; // Limit response to posts modified after a given ISO8601 compliant date.
-  author?: string; // Limit result set to posts assigned to specific authors.
-  author_exclude?: string; // Ensure result set excludes posts assigned to specific authors.
-  before?: string; // Limit response to posts published before a given ISO8601 compliant date.
-  modified_before?: string; // Limit response to posts modified before a given ISO8601 compliant date.
-  exclude?: Array<number>; // Ensure result set excludes specific IDs.
-  include?: Array<number>; // Limit result set to specific IDs.
-  offset?: number; // Offset the result set by a specific number of items.
-  order?: "asc" | "desc"; // Order sort attribute ascending or descending.
-  orderby?: "author" | "date" | "id" | "include" | "modified" | "parent" | "relevance" | "slug" | "include_slugs" | "title";
-  slug?: string | Array<string>; // Limit result set to posts with one or more specific slugs.
-  status?: "publish" | "future" | "draft" | "pending" | "private"; // Limit result set to posts assigned one or more statuses.
-  tax_relation?: "AND" | "OR"; // Limit result set based on relationship between multiple taxonomies.
-  categories?: string | Array<string>; // Limit result set to items with specific terms assigned in the categories
-  categories_exclude?: string | Array<string>; // Limit result set to items except those with specific terms assigned in the categories taxonomy.
-  tags?: string | Array<string>; // Limit result set to items with specific terms assigned in the tags taxonomy.
-  tags_exclude?: string | Array<string>; // Limit result set to items except those with specific terms assigned in the tags taxonomy.
-  sticky?: boolean; // Limit result set to items that are sticky.
-}
-
 // Keep original function for backward compatibility
 async function wordpressFetch<T>(
   path: string,
-  query?: Record<string, any>
+  query?: WordPressQuery<T>
 ): Promise<T> {
   const url = `${baseUrl}${path}${
     query ? `?${querystring.stringify(query, { arrayFormat: "comma" })}` : ""
@@ -101,7 +61,7 @@ async function wordpressFetch<T>(
 // New function for paginated requests
 async function wordpressFetchWithPagination<T>(
   path: string,
-  query?: Record<string, any>
+  query?: WordPressQuery<T>
 ): Promise<WordPressResponse<T>> {
   const url = `${baseUrl}${path}${
     query ? `?${querystring.stringify(query, { arrayFormat: "comma" })}` : ""
@@ -137,14 +97,14 @@ async function wordpressFetchWithPagination<T>(
   };
 }
 
-function createGetAll<Type, Query = Record<string, any>>(
+function createGetAll<T>(
   path: string,
-  queryParams?: Query
-): (query?: Query) => Promise<Type[]> {
-  return async (query?: Query) => {
-    const getPage = (page: number) => wordpressFetchWithPagination<Type[]>(
+  queryParams?: WordPressQuery<T>
+): (query?: WordPressQuery<T>) => Promise<T[]> {
+  return async (query?: WordPressQuery<T>) => {
+    const getPage = (page: number) => wordpressFetchWithPagination<T[]>(
       path,
-      {
+      <WordPressQuery<T[]>> {
         ...queryParams,
         ...query,
         per_page: 100,
@@ -155,7 +115,7 @@ function createGetAll<Type, Query = Record<string, any>>(
     const { headers, data } = await getPage(1);
 
     if (headers.totalPages > 1) {
-      const promiseArray: Promise<Type[]>[] = [];
+      const promiseArray: Promise<T[]>[] = [];
 
       for (let i = 2; i <= headers.totalPages; i++) {
         promiseArray.push(getPage(i).then((response) => response.data));
@@ -181,32 +141,29 @@ const postFieldsWithEmbed: Array<keyof Post> = [...postFields, "_links", "_embed
 export async function getPostsPaginated(
   page: number = 1,
   perPage: number = 9,
-  filterParams?: PostQuery,
+  filterParams?: WordPressQuery<Post>,
 ): Promise<WordPressResponse<Post[]>> {
-  const query: Record<string, any> = {
+  const query: WordPressQuery<Post> = {
+    _fields: postFieldsWithEmbed,
+    ...filterParams,
     _embed: true,
     per_page: perPage,
     page,
-    _fields: postFieldsWithEmbed,
   };
 
   // Build cache tags based on filters
   const cacheTags = ["wordpress", "posts"];
 
   if (filterParams?.search) {
-    query.search = filterParams.search;
     cacheTags.push("posts-search");
   }
   if (filterParams?.author) {
-    query.author = filterParams.author;
     cacheTags.push(`posts-author-${filterParams.author}`);
   }
   if (filterParams?.tags) {
-    query.tags = filterParams.tags;
     cacheTags.push(`posts-tag-${filterParams.tags}`);
   }
   if (filterParams?.categories) {
-    query.categories = filterParams.categories;
     cacheTags.push(`posts-category-${filterParams.categories}`);
   }
 
@@ -247,7 +204,7 @@ export async function getPostsPaginated(
   };
 }
 
-export const getAllPosts = createGetAll<Post, PostQuery>("/wp-json/wp/v2/posts", {
+export const getAllPosts = createGetAll<Post>("/wp-json/wp/v2/posts", {
   _fields: postFields,
 })
 
@@ -395,14 +352,14 @@ export async function getPostsByTagSlug(tagSlug: string): Promise<Post[]> {
   });
 }
 
-const mediaFields: Array<keyof FeaturedMedia> = [
+const mediaFields: Array<keyof Media> = [
   "id", "date", "date_gmt", "modified", "modified_gmt", "slug", "status", "link",
   "guid", "title", "author", "caption", "alt_text", "media_type", "mime_type",
   "media_details", "source_url",
 ];
 
-export async function getFeaturedMediaById(id: number): Promise<FeaturedMedia> {
-  return wordpressFetch<FeaturedMedia>(`/wp-json/wp/v2/media/${id}`, {
+export async function getFeaturedMediaById(id: number): Promise<Media> {
+  return wordpressFetch<Media>(`/wp-json/wp/v2/media/${id}`, {
     _fields: mediaFields,
   });
 }
