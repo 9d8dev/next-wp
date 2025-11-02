@@ -330,3 +330,16 @@ export type WordPressQuery<T> =
   Flatten<T> extends Category ? CategoryQuery :
   Flatten<T> extends Author ? AuthorQuery :
   BaseQuery<Flatten<T>>;
+
+export type CacheTag = "wordpress"
+  | "posts"
+  | `post-${number | string}`
+  | `posts-category-${number | string}`
+  | `posts-tag-${number | string}`
+  | `posts-author-${number | string}`
+  | "categories"
+  | `category-${number | string}`
+  | "tags"
+  | `tag-${number | string}`
+  | "authors"
+  | `author-${number | string}`;
