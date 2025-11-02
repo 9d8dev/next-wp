@@ -35,6 +35,8 @@ export async function POST(request: NextRequest) {
       console.log(
         `Revalidating content: ${contentType}${
           contentId ? ` (ID: ${contentId})` : ""
+        }${
+          contentSlug ? ` (slug: ${contentSlug})` : ""
         }`
       );
 

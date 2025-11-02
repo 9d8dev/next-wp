@@ -411,7 +411,7 @@ export async function searchAuthors(query: string): Promise<Author[]> {
 }
 
 // Function specifically for generateStaticParams - fetches ALL posts
-export const getAllPostSlugs = () => getAllPosts({ _fields: [ "slug" ] }, ["posts"])
+export const getAllPostSlugs = () => getAllPosts({ _fields: [ "slug" ] })
 
 // Enhanced pagination functions for specific queries
 export async function getPostsByCategoryPaginated(
