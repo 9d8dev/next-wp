@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { cn } from "@/lib/utils";
+import { cn, extractExcerptText } from "@/lib/utils";
 
 import {
   getFeaturedMediaById,
@@ -52,15 +52,11 @@ export async function PostCard({ post }: { post: CardPost }) {
           }}
           className="text-xl text-primary font-medium group-hover:underline decoration-muted-foreground underline-offset-4 decoration-dotted transition-all"
         ></div>
-        <div
-          className="text-sm"
-          dangerouslySetInnerHTML={{
-            __html: post.excerpt?.rendered
-              ? post.excerpt.rendered.split(" ").slice(0, 12).join(" ").trim() +
-                "..."
-              : "No excerpt available",
-          }}
-        ></div>
+        <div className="text-sm">
+          {post.excerpt?.rendered
+              ? extractExcerptText(post.excerpt.rendered).split(" ").slice(0, 24).join(" ").trim() + "..."
+              : "No excerpt available"}
+        </div>
       </div>
 
       <div className="flex flex-col gap-4">

@@ -15,7 +15,8 @@ export default async function Home() {
         <h1>
           Системный Блокъ
         </h1>
-        {posts.length > 0 ? (
+      </Prose>
+      {posts.length > 0 ? (
           <div className="grid md:grid-cols-3 gap-4">
             {posts.map((post) => (
               <PostCard key={post.id} post={post} />
@@ -26,7 +27,6 @@ export default async function Home() {
             <p>No posts found</p>
           </div>
         )}
-      </Prose>
     </Container>
   );
 }
