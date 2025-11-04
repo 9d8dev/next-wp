@@ -39,8 +39,8 @@ class Next_Revalidation {
         // Trash and delete hooks with higher priority to ensure they run
         add_action('trashed_post', array($this, 'on_post_trash'), 5);
         add_action('untrashed_post', array($this, 'on_post_untrash'), 5);
-        add_action('delete_post', array($this, 'on_post_delete'), 5);
-        add_action('after_delete_post', array($this, 'on_post_delete'), 5);
+        add_action('delete_post', array($this, 'on_post_delete'), 5, 2);
+        add_action('after_delete_post', array($this, 'on_post_delete'), 5, 2);
         
         // Term changes
         add_action('created_term', array($this, 'on_term_change'), 10, 3);
@@ -353,7 +353,7 @@ class Next_Revalidation {
         // If the status is changing, we should revalidate
         if ($new_status !== $old_status) {
             error_log("Next.js Revalidation: Post status changed from {$old_status} to {$new_status} for post {$post->ID}");
-            $this->send_revalidation_request($post->post_type, $post->ID);
+            $this->send_revalidation_request($post->post_type, $post->ID, $post->post_name);
         }
     }
 
@@ -369,28 +369,29 @@ class Next_Revalidation {
         }
         
         error_log("Next.js Revalidation: Content changed for post {$post_id}");
-        $this->send_revalidation_request($post->post_type, $post_id);
+        $this->send_revalidation_request($post->post_type, $post_id, $post->post_name);
     }
 
     public function on_post_trash($post_id) {
-        $post_type = get_post_type($post_id);
-        error_log("Next.js Revalidation: Post trashed {$post_id} of type {$post_type}");
-        $this->send_revalidation_request($post_type, $post_id);
+        $post = get_post($post_id);
+        error_log("Next.js Revalidation: Post trashed {$post_id} of type {$post->type}");
+        $this->send_revalidation_request($post->type, $post_id, $post->post_name);
     }
 
     public function on_post_untrash($post_id) {
-        $post_type = get_post_type($post_id);
-        error_log("Next.js Revalidation: Post untrashed {$post_id} of type {$post_type}");
-        $this->send_revalidation_request($post_type, $post_id);
+        $post = get_post($post_id);
+        error_log("Next.js Revalidation: Post untrashed {$post_id} of type {$post->type}");
+        $this->send_revalidation_request($post->type, $post_id, $post->post_name);
     }
 
-    public function on_post_delete($post_id) {
-        $post_type = get_post_type($post_id);
-        if (!$post_type) {
-            $post_type = 'unknown'; // Fallback if post type can't be determined
+    public function on_post_delete($post_id, $post = null) {
+        // Get the post if not provided
+        if (null === $post) {
+            $post = get_post($post_id);
         }
-        error_log("Next.js Revalidation: Post deleted {$post_id} of type {$post_type}");
-        $this->send_revalidation_request($post_type, $post_id);
+
+        error_log("Next.js Revalidation: Post deleted {$post_id} of type {$post->type}");
+        $this->send_revalidation_request($post->type, $post_id, $post->post_name);
     }
 
     public function on_term_change($term_id, $tt_id, $taxonomy) {
@@ -441,7 +442,7 @@ class Next_Revalidation {
         update_option($this->history_option_name, $history);
     }
 
-    private function send_revalidation_request($content_type, $content_id = null) {
+    private function send_revalidation_request($content_type, $content_id = null, $content_slug = null) {
         // Get cooldown from settings if available
         $cooldown = isset($this->options['revalidation_cooldown']) ? intval($this->options['revalidation_cooldown']) : $this->revalidation_cooldown;
         
@@ -476,6 +477,10 @@ class Next_Revalidation {
         
         if ($content_id !== null) {
             $payload['contentId'] = $content_id;
+        }
+
+        if ($content_slug !== null) {
+            $payload['contentSlug'] = $content_slug;
         }
 
         error_log("Next.js Revalidation: Sending request to {$endpoint} for {$content_type} {$content_id}");

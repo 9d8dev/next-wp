@@ -1,12 +1,13 @@
 // Craft Imports
 import { Container, Prose } from "@/components/craft";
 
-import { getPostsPaginated } from "@/lib/wordpress";
+import { getCategoryBySlug, getPostsPaginated } from "@/lib/wordpress";
 import { PostCard } from "@/components/posts/post-card";
 
 // This page is using the craft.tsx component and design system
 export default async function Home() {
-  const { data: posts } = await getPostsPaginated(1, 30);
+  const newsCategpry = await getCategoryBySlug("news");
+  const { data: posts } = await getPostsPaginated(1, 30, { categories_exclude: newsCategpry.id });
 
   return (
     <Container>
@@ -14,7 +15,8 @@ export default async function Home() {
         <h1>
           Системный Блокъ
         </h1>
-        {posts.length > 0 ? (
+      </Prose>
+      {posts.length > 0 ? (
           <div className="grid md:grid-cols-3 gap-4">
             {posts.map((post) => (
               <PostCard key={post.id} post={post} />
@@ -25,7 +27,6 @@ export default async function Home() {
             <p>No posts found</p>
           </div>
         )}
-      </Prose>
     </Container>
   );
 }

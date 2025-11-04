@@ -1,24 +1,28 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Post } from "@/lib/wordpress.d";
-import { cn } from "@/lib/utils";
+import { cn, extractExcerptText } from "@/lib/utils";
 
 import {
-  getFeaturedMediaById,
+  getMediaById,
   getCategoryById,
+  CardPost,
 } from "@/lib/wordpress";
 
-export async function PostCard({ post }: { post: Post }) {
-  const media = post.featured_media
-    ? await getFeaturedMediaById(post.featured_media)
+export async function PostCard({ post }: { post: CardPost }) {
+  const media = post._embedded?.["wp:featuredmedia"] ?
+    post._embedded?.["wp:featuredmedia"][0]
+    : post.featured_media
+    ? await getMediaById(post.featured_media)
     : null;
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
   });
-  const category = post.categories?.[0]
+  const category = post._embedded?.["wp:term"][0] && post._embedded?.["wp:term"][0][0].taxonomy === "category" ?
+    post._embedded?.["wp:term"][0][0]
+    : post.categories?.[0]
     ? await getCategoryById(post.categories[0])
     : null;
 
@@ -36,7 +40,7 @@ export async function PostCard({ post }: { post: Post }) {
             <Image
               className="h-full w-full object-cover"
               src={media.source_url}
-              alt={post.title?.rendered || "Post thumbnail"}
+              alt={media.alt_text || post.title?.rendered || "Post thumbnail"}
               width={400}
               height={200}
             />
@@ -48,15 +52,11 @@ export async function PostCard({ post }: { post: Post }) {
           }}
           className="text-xl text-primary font-medium group-hover:underline decoration-muted-foreground underline-offset-4 decoration-dotted transition-all"
         ></div>
-        <div
-          className="text-sm"
-          dangerouslySetInnerHTML={{
-            __html: post.excerpt?.rendered
-              ? post.excerpt.rendered.split(" ").slice(0, 12).join(" ").trim() +
-                "..."
-              : "No excerpt available",
-          }}
-        ></div>
+        <div className="text-sm">
+          {post.excerpt?.rendered
+              ? extractExcerptText(post.excerpt.rendered).split(" ").slice(0, 24).join(" ").trim() + "..."
+              : "No excerpt available"}
+        </div>
       </div>
 
       <div className="flex flex-col gap-4">

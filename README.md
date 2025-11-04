@@ -142,7 +142,7 @@ const defaultFetchOptions = {
 
 #### Media
 
-- `getFeaturedMediaById(id: number)`: Retrieves featured media (images) with size information.
+- `getMediaById(id: number)`: Retrieves featured media (images) with size information.
 
 ### Error Handling
 
@@ -403,7 +403,7 @@ The `components/posts/post-card.tsx` file contains the `PostCard` component, whi
 
 ### Functionality
 
-1. The component fetches the featured media, author, and category associated with the post using the `getFeaturedMediaById`, `getAuthorById`, and `getCategoryById` functions from `lib/wordpress.ts`.
+1. The component fetches the featured media, author, and category associated with the post using the `getMediaById`, `getAuthorById`, and `getCategoryById` functions from `lib/wordpress.ts`.
 
 2. It formats the post date using the `toLocaleDateString` method with the specified options.
 

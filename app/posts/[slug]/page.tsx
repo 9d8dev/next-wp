@@ -1,6 +1,6 @@
 import {
   getPostBySlug,
-  getFeaturedMediaById,
+  getMediaById,
   getAuthorById,
   getCategoryById,
   getAllPostSlugs,
@@ -15,6 +15,10 @@ import Link from "next/link";
 import Balancer from "react-wrap-balancer";
 
 import type { Metadata } from "next";
+
+export async function generateStaticParams() {
+  return getAllPostSlugs();
+}
 
 export async function generateMetadata({
   params,
@@ -68,7 +72,7 @@ export default async function Page({
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   const featuredMedia = post.featured_media
-    ? await getFeaturedMediaById(post.featured_media)
+    ? await getMediaById(post.featured_media)
     : null;
   let author;
   // TODO: Add coauthor fetch

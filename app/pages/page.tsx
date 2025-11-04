@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const pages = await getAllPages();
+  const pages = await getAllPages({ _fields: [ "id", "slug", "title" ]});
 
   return (
     <Section>
