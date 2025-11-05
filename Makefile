@@ -1,90 +1,87 @@
 # Variables
-IMAGE_NAME = wp-nextjs
-IMAGE_TAG = latest
-CONTAINER_NAME = wp-nextjs-container
-HOST_PORT = 3000
-CONTAINER_PORT = 3000
-DOCKERFILE = Dockerfile
-NODE_VERSION = 22.14.0-alpine
-NODE_ENV=production
+DOCKER_COMPOSE_DEV_FILE=compose-dev.yml
 
 # Default target
 .PHONY: help
 help:
 	@echo "Available commands:"
-	@echo "  make build          - Build the production Docker image"
-	@echo "  make build-dev      - Build the development Docker image and create container"
-	@echo "  make run            - Run the production Docker container"
-	@echo "  make run-dev        - Build and run the development Docker container"
+	@echo "  make build          - Build the Docker container"
+	@echo "  make build-dev      - Build the development Docker container"
+	@echo "  make up             - Run the Docker container"
+	@echo "  make up-dev         - Run the development Docker container"
+	@echo "  make build-up       - Build and run the Docker container"
+	@echo "  make build-up-dev   - Build and run the development Docker container"
+	@echo "  make start          - Start the development Docker container"
 	@echo "  make start-dev      - Start the development Docker container"
-	@echo "  make build-run      - Build and run the production Docker container"
-	@echo "  make stop           - Stop the production Docker container"
+	@echo "  make stop           - Stop the Docker container"
 	@echo "  make stop-dev       - Stop the development Docker container"
+	@echo "  make down           - Stop and remove the development Docker container"
 	@echo "  make down-dev       - Stop and remove the development Docker container"
-	@echo "  make restart        - Restart the production Docker container"
+	@echo "  make restart        - Restart the Docker container"
 	@echo "  make restart-dev    - Restart the development Docker container"
-	@echo "  make logs           - Show production container logs"
-	@echo "  make clean          - Remove production Docker image and container"
+	@echo "  make logs           - Show container logs"
+	@echo "  make logs-dev       - Show development container logs"
 
-# Build the production Docker image
+# Build the Docker image
 build:
-	docker build \
-		--build-arg NODE_VERSION=$(NODE_VERSION) \
-		-f $(DOCKERFILE) -t $(IMAGE_NAME):$(IMAGE_TAG) .
-
-# Build the development Docker image and create container
-build-dev:
 	docker compose build
 	docker compose create
 
-# Run the production Docker container
-run:
-	@docker rm -f $(CONTAINER_NAME) 2>/dev/null || true
-	docker run --name $(CONTAINER_NAME) -p $(HOST_PORT):$(CONTAINER_PORT) $(IMAGE_NAME):$(IMAGE_TAG)
+# Build the development Docker image and create container
+build-dev:
+	docker compose -f ${DOCKER_COMPOSE_DEV_FILE} build
+	docker compose -f ${DOCKER_COMPOSE_DEV_FILE} create
+
+# Run the Docker container
+up:
+	docker compose up
+
+# Run the development Docker container
+up-dev:
+	docker compose -f ${DOCKER_COMPOSE_DEV_FILE} up
+
+# Build and run the Docker container
+build-up:
+	docker compose up --build
 
 # Build and run the development Docker container
-run-dev:
-	docker compose up --build
+build-up-dev:
+	docker compose -f ${DOCKER_COMPOSE_DEV_FILE} up --build
+
+# Start the Docker container
+start:
+	docker compose start
 
 # Start the development Docker container
 start-dev:
-	docker compose start
+	docker compose -f ${DOCKER_COMPOSE_DEV_FILE} start
 
-# Build and run the production Docker container in one step
-build-run: build run
-
-# Stop the production Docker container
+# Stop the Docker container
 stop:
-	docker stop $(CONTAINER_NAME)
+	docker compose stop
 
 # Stop the development Docker container
 stop-dev:
-	docker compose stop
+	docker compose -f ${DOCKER_COMPOSE_DEV_FILE} stop
+
+down:
+	docker compose down
 
 # Clean the development Docker container
 down-dev:
-	docker compose down
+	docker compose -f ${DOCKER_COMPOSE_DEV_FILE} down
 
-# Restart the production Docker container
-restart: stop run
+# Restart the Docker container
+restart:
+	docker compose restart
 
 # Restart the development Docker container
 restart-dev:
-	docker compose restart
+	docker compose -f ${DOCKER_COMPOSE_DEV_FILE} restart
 
-# Show logs from the production Docker container
+# Show logs from the Docker container
 logs:
-	docker logs -f $(CONTAINER_NAME)
+	docker compose logs
 
-# Clean up by removing production Docker image and container
-clean:
-	-docker rm -f $(CONTAINER_NAME)
-	-docker rmi $(IMAGE_NAME):$(IMAGE_TAG)
-
-# Clean up by removing production Docker container
-clean-container:
-	docker rm -f $(CONTAINER_NAME)
-
-# Clean up by removing production Docker image and container
-clean-image:
-	docker rmi $(IMAGE_NAME):$(IMAGE_TAG)
+logs-dev:
+	docker compose -f ${DOCKER_COMPOSE_DEV_FILE} logs
