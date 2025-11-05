@@ -6,21 +6,24 @@ This is Next.js application that fetches data from a WordPress site using the Wo
 
 ## Make usage
 
- * `make build`          - Build the production Docker image
- * `make build-dev`      - Build the development Docker image and create container
- * `make run`            - Run the production Docker container
- * `make run-dev`        - Build and run the development Docker container
- * `make start-dev`      - Start the development Docker container
- * `make build-run`      - Build and run the production Docker container
- * `make stop`           - Stop the production Docker container
- * `make stop-dev`       - Stop the development Docker container
- * `make down-dev`       - Stop and remove the development Docker container
- * `make restart`        - Restart the production Docker container
- * `make restart-dev`    - Restart the development Docker container
- * `make logs`           - Show production container logs
- * `make clean`          - Remove production Docker image and container
+ * `make build`          - Build the Docker container
+ * `make build-dev`      - Build the development Docker container
+ * `make up`             - Run the production Docker container
+ * `make up-dev`         - Run the development Docker container
+ * `make build-up`       - Build and run the Docker container
+ * `make build-up-dev`   - Build and run the development Docker container
+ * `make start`          - Start the development Docker container"
+ * `make start-dev`      - Start the development Docker container"
+ * `make stop`           - Stop the Docker container"
+ * `make stop-dev`       - Stop the development Docker container"
+ * `make down`           - Stop and remove the development Docker container"
+ * `make down-dev`       - Stop and remove the development Docker container"
+ * `make restart`        - Restart the Docker container"
+ * `make restart-dev`    - Restart the development Docker container"
+ * `make logs`           - Show container logs"
+ * `make logs-dev`      - Show development container logs"
 
- To start dev server without docker - `npm run dev`
+ To start dev server without docker - `npm run dev` or `npm run dev-ssl`(with https)
 
 
 ## Table of Contents
