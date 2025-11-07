@@ -11,6 +11,8 @@ interface WPEntity {
   guid: {
     rendered: string;
   };
+  title: RenderedTitle;
+  author: number;
 }
 
 interface RenderedContent {
@@ -38,9 +40,7 @@ interface MediaDetails {
   sizes: Record<string, MediaSize>;
 }
 
-export interface Media extends WPEntity {
-  title: RenderedTitle;
-  author: number;
+export interface WPMedia extends WPEntity {
   caption: {
     rendered: string;
   };
@@ -52,12 +52,10 @@ export interface Media extends WPEntity {
 }
 
 // Content types
-export interface Post extends WPEntity {
+export interface WPPost extends WPEntity {
   type: string;
-  title: RenderedTitle;
   content: RenderedContent;
   excerpt: RenderedContent;
-  author: number;
   featured_media: number;
   comment_status: "open" | "closed";
   ping_status: "open" | "closed";
@@ -86,16 +84,14 @@ export interface Post extends WPEntity {
   _links?: Record<string, Array<Record<string, any>>>;
   _embedded?: {
     author: Author;
-    "wp:featuredmedia": Media[];
+    "wp:featuredmedia": WPMedia[];
     "wp:term": Array<Array<Category | Tag>>; 
   };
 }
 
-export interface Page extends WPEntity {
-  title: RenderedTitle;
+export interface WPPage extends WPEntity {
   content: RenderedContent;
   excerpt: RenderedContent;
-  author: number;
   featured_media: number;
   parent: number;
   menu_order: number;
@@ -281,7 +277,7 @@ interface EntityQuery<T> extends BaseQuery<T> {
   status?: "publish" | "future" | "draft" | "pending" | "private"; // Limit result set to posts assigned one or more statuses.
 }
 
-export interface PostQuery extends EntityQuery<Post> {
+export interface PostQuery extends EntityQuery<WPPost> {
   tax_relation?: "AND" | "OR"; // Limit result set based on relationship between multiple taxonomies.
   categories?: number | string | Array<number | string>; // Limit result set to items with specific terms assigned in the categories
   categories_exclude?: number | string | Array<number | string>; // Limit result set to items except those with specific terms assigned in the categories taxonomy.
@@ -290,13 +286,13 @@ export interface PostQuery extends EntityQuery<Post> {
   sticky?: boolean; // Limit result set to items that are sticky.
 }
 
-export interface PageQuery extends EntityQuery<Page> {
+export interface PageQuery extends EntityQuery<WPPage> {
   parent?: number | Array<number>; // Limit result set to items with particular parent IDs.
   parent_exclude?: number | Array<number>; // Limit result set to all items except those of a particular parent ID.
   menu_order?: number; // Limit result set to posts with a specific menu_order value.
 }
 
-export interface MediaQuery extends EntityQuery<FeaturedMedia> {
+export interface MediaQuery extends EntityQuery<WPMedia> {
   parent?: number | Array<number>; // Limit result set to items with particular parent IDs.
   parent_exclude?: number | Array<number>; // Limit result set to all items except those of a particular parent ID.
   media_type?: "image" | "video" | "text" | "application" | "audio"; // Limit result set to attachments of a particular media type.
@@ -323,9 +319,9 @@ interface AuthorQuery<T> extends BaseQuery<Author> {
 type Flatten<T> = T extends any[] ? T[number] : T;
 
 export type WordPressQuery<T> =
-  Flatten<T> extends Post ? PostQuery :
-  Flatten<T> extends Page ? PageQuery :
-  Flatten<T> extends Media ? MediaQuery :
+  Flatten<T> extends WPPost ? PostQuery :
+  Flatten<T> extends WPPage ? PageQuery :
+  Flatten<T> extends WPMedia ? MediaQuery :
   Flatten<T> extends Tag ? TagQuery :
   Flatten<T> extends Category ? CategoryQuery :
   Flatten<T> extends Author ? AuthorQuery :

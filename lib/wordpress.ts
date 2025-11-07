@@ -4,12 +4,12 @@
 
 import querystring from "query-string";
 import type {
-  Post,
+  WPPost,
   Category,
   Tag,
-  Page,
+  WPPage,
   Author,
-  Media,
+  WPMedia,
   WordPressResponse,
   WordPressQuery,
   CacheTag,
@@ -133,28 +133,28 @@ function createGetAll<T>(
   }
 }
 
-const postFields: Array<keyof Post> = [ 
+const postFields: Array<keyof WPPost> = [ 
   "id", "date", "date_gmt", "modified", "modified_gmt", "slug", "status", "link", 
   "guid", "title", "content", "excerpt", "author", "featured_media", "comment_status", 
   "ping_status", "sticky", "template", "format", "categories", "tags", "meta",
   "author_meta", "featured_img", "featured_img_caption",
 ];
 
-const postCardFields: Array<keyof Post> = [
+const postCardFields: Array<keyof WPPost> = [
   "id", "date", "slug", "title", "excerpt", "author", "featured_media",
   "categories", "tags", "_links", "_embedded",
 ];
 
-export type CardPost = Pick<Post, "id" | "date" | "slug" | "title" | "excerpt" | "author" | "featured_media" |
+export type CardPost = Pick<WPPost, "id" | "date" | "slug" | "title" | "excerpt" | "author" | "featured_media" |
   "categories" | "tags" | "_links" | "_embedded">;
 
 // New function for paginated posts
 export async function getPostsPaginated(
   page: number = 1,
   perPage: number = 9,
-  filterParams?: WordPressQuery<Post>,
+  filterParams?: WordPressQuery<WPPost>,
 ): Promise<WordPressResponse<CardPost[]>> {
-  const query: WordPressQuery<Post> = {
+  const query: WordPressQuery<WPPost> = {
     _fields: postCardFields,
     context: "embed",
     ...filterParams,
@@ -176,19 +176,19 @@ export async function getPostsPaginated(
     cacheTags.push(`posts-category-${filterParams.categories}`);
   }
 
-  return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query, cacheTags);
+  return wordpressFetchWithPagination<WPPost[]>("/wp-json/wp/v2/posts", query, cacheTags);
 }
 
-export const getAllPosts = createGetAll<Post>("/wp-json/wp/v2/posts", {
+export const getAllPosts = createGetAll<WPPost>("/wp-json/wp/v2/posts", {
   _fields: postFields,
 }, ["posts"]);
 
-export async function getPostById(id: number): Promise<Post> {
-  return wordpressFetch<Post>(`/wp-json/wp/v2/posts/${id}`, { _fields: postFields }, [`post-${id}`]);
+export async function getPostById(id: number): Promise<WPPost> {
+  return wordpressFetch<WPPost>(`/wp-json/wp/v2/posts/${id}`, { _fields: postFields }, [`post-${id}`]);
 }
 
-export async function getPostBySlug(slug: string): Promise<Post> {
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", {
+export async function getPostBySlug(slug: string): Promise<WPPost> {
+  return wordpressFetch<WPPost[]>("/wp-json/wp/v2/posts", {
     slug,
     _fields: postFields,
   }, [`post-${slug}`]).then(
@@ -196,22 +196,22 @@ export async function getPostBySlug(slug: string): Promise<Post> {
   );
 }
 
-export async function getPostsByCategory(categoryId: number): Promise<Post[]> {
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", {
+export async function getPostsByCategory(categoryId: number): Promise<WPPost[]> {
+  return wordpressFetch<WPPost[]>("/wp-json/wp/v2/posts", {
     categories: categoryId,
     _fields: postFields,
   }, ["posts", `posts-category-${categoryId}`]);
 }
 
-export async function getPostsByTag(tagId: number): Promise<Post[]> {
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", {
+export async function getPostsByTag(tagId: number): Promise<WPPost[]> {
+  return wordpressFetch<WPPost[]>("/wp-json/wp/v2/posts", {
     tags: tagId, 
     _fields: postFields,
   }, ["posts", `posts-tag-${tagId}`]);
 }
 
-export async function getPostsByAuthor(authorId: number): Promise<Post[]> {
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", {
+export async function getPostsByAuthor(authorId: number): Promise<WPPost[]> {
+  return wordpressFetch<WPPost[]>("/wp-json/wp/v2/posts", {
     author: authorId,
     _fields: postFields,
   }, ["posts", `posts-author-${authorId}`]);
@@ -290,28 +290,28 @@ export async function getTagBySlug(slug: string): Promise<Tag> {
   );
 }
 
-const pageFields: Array<keyof Page> = [ 
+const pageFields: Array<keyof WPPage> = [ 
   "id", "date", "date_gmt", "modified", "modified_gmt", "slug", "status", "link", 
   "guid", "title", "content", "excerpt", "author", "featured_media", "parent", 
   "menu_order", "comment_status", "ping_status", "template", "meta",
 ];
 
-export const getAllPages = createGetAll<Page>(
+export const getAllPages = createGetAll<WPPage>(
   "/wp-json/wp/v2/pages",
   { _fields: pageFields },
   ["pages"],
 );
 
-export async function getPageById(id: number): Promise<Page> {
-  return wordpressFetch<Page>(
+export async function getPageById(id: number): Promise<WPPage> {
+  return wordpressFetch<WPPage>(
     `/wp-json/wp/v2/pages/${id}`,
     { _fields: pageFields },
     [`page-${id}`],
   );
 }
 
-export async function getPageBySlug(slug: string): Promise<Page> {
-  return wordpressFetch<Page[]>(
+export async function getPageBySlug(slug: string): Promise<WPPage> {
+  return wordpressFetch<WPPage[]>(
     "/wp-json/wp/v2/pages",
     { slug, _fields: pageFields },
     [`page-${slug}`],
@@ -345,9 +345,9 @@ export async function getAuthorBySlug(slug: string): Promise<Author> {
 
 export async function getPostsByAuthorSlug(
   authorSlug: string
-): Promise<Post[]> {
+): Promise<WPPost[]> {
   const author = await getAuthorBySlug(authorSlug);
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", {
+  return wordpressFetch<WPPost[]>("/wp-json/wp/v2/posts", {
     author: author.id,
     _fields: postFields,
   }, ["posts", `posts-author-${author.id}`]);
@@ -355,30 +355,30 @@ export async function getPostsByAuthorSlug(
 
 export async function getPostsByCategorySlug(
   categorySlug: string
-): Promise<Post[]> {
+): Promise<WPPost[]> {
   const category = await getCategoryBySlug(categorySlug);
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", {
+  return wordpressFetch<WPPost[]>("/wp-json/wp/v2/posts", {
     categories: category.id,
     _fields: postFields,
   }, ["posts", `posts-category-${category.id}`]);
 }
 
-export async function getPostsByTagSlug(tagSlug: string): Promise<Post[]> {
+export async function getPostsByTagSlug(tagSlug: string): Promise<WPPost[]> {
   const tag = await getTagBySlug(tagSlug);
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", {
+  return wordpressFetch<WPPost[]>("/wp-json/wp/v2/posts", {
     tags: tag.id,
     _fields: postFields,
   }, ["posts", `posts-tag-${tag.id}`]);
 }
 
-const mediaFields: Array<keyof Media> = [
+const mediaFields: Array<keyof WPMedia> = [
   "id", "date", "date_gmt", "modified", "modified_gmt", "slug", "status", "link",
   "guid", "title", "author", "caption", "alt_text", "media_type", "mime_type",
   "media_details", "source_url",
 ];
 
-export async function getMediaById(id: number): Promise<Media> {
-  return wordpressFetch<Media>(`/wp-json/wp/v2/media/${id}`, {
+export async function getMediaById(id: number): Promise<WPMedia> {
+  return wordpressFetch<WPMedia>(`/wp-json/wp/v2/media/${id}`, {
     _fields: mediaFields,
   }, ["media", `media-${id}`]);
 }
@@ -418,7 +418,7 @@ export async function getPostsByCategoryPaginated(
   categoryId: number,
   page: number = 1,
   perPage: number = 9
-): Promise<WordPressResponse<Post[]>> {
+): Promise<WordPressResponse<WPPost[]>> {
   const query = {
     _embed: true,
     per_page: perPage,
@@ -427,14 +427,14 @@ export async function getPostsByCategoryPaginated(
     _fields: postFields,
   };
 
-  return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query, ["posts", `posts-category-${categoryId}`]);
+  return wordpressFetchWithPagination<WPPost[]>("/wp-json/wp/v2/posts", query, ["posts", `posts-category-${categoryId}`]);
 }
 
 export async function getPostsByTagPaginated(
   tagId: number,
   page: number = 1,
   perPage: number = 9
-): Promise<WordPressResponse<Post[]>> {
+): Promise<WordPressResponse<WPPost[]>> {
   const query = {
     _embed: true,
     per_page: perPage,
@@ -443,14 +443,14 @@ export async function getPostsByTagPaginated(
     _fields: postFields,
   };
 
-  return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query, ["posts", `posts-tag-${tagId}`]);
+  return wordpressFetchWithPagination<WPPost[]>("/wp-json/wp/v2/posts", query, ["posts", `posts-tag-${tagId}`]);
 }
 
 export async function getPostsByAuthorPaginated(
   authorId: number,
   page: number = 1,
   perPage: number = 9
-): Promise<WordPressResponse<Post[]>> {
+): Promise<WordPressResponse<WPPost[]>> {
   const query = {
     _embed: true,
     per_page: perPage,
@@ -459,7 +459,7 @@ export async function getPostsByAuthorPaginated(
     _fields: postFields,
   };
 
-  return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query, ["posts", `posts-author-${authorId}`]);
+  return wordpressFetchWithPagination<WPPost[]>("/wp-json/wp/v2/posts", query, ["posts", `posts-author-${authorId}`]);
 }
 
 export { WordPressAPIError };
