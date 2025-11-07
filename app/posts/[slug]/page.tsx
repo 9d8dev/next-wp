@@ -6,6 +6,8 @@ import {
   getAllPostSlugs,
 } from "@/lib/wordpress";
 
+import { getPostData } from "@/lib/wordpress";
+
 import { Section, Container, Article, Prose } from "@/components/craft";
 import { badgeVariants } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -70,21 +72,20 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
-  const featuredMedia = post.featured_media
-    ? await getMediaById(post.featured_media)
-    : null;
-  let author;
-  // TODO: Add coauthor fetch
-  try {
-    author = await getAuthorById(post.author);
-  } catch {}
+
+  const postData = await getPostData(slug);
+
+  if (!postData || !postData.post) {
+    return <p>Post not found</p>;
+  }
+
+  const { post, featuredMedia, category, authors } = postData;
+
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
   });
-  const category = await getCategoryById(post.categories[0]);
 
   return (
     <Section>
@@ -100,12 +101,17 @@ export default async function Page({
           <div className="flex justify-between items-center gap-4 text-sm mb-4">
             <h5>
               Published {date}
-              {author?.name && <>
-                {" by "}
-                <span>
-                  <a href={`/posts/?author=${author.id}`}>{author.name}</a>{" "}
-                </span>
-              </>}
+              {authors?.length > 0 && (
+                <>
+                  {" by "}
+                  {authors.map((a: any, i: number) => (
+                    <span key={a.id}>
+                      <a href={`/posts/?author=${a.id}`}>{a.name}</a>
+                      {i < authors.length - 1 ? ", " : ""}
+                    </span>
+                  ))}
+                </>
+              )}
             </h5>
 
             <Link
