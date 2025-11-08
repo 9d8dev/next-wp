@@ -105,7 +105,6 @@ export interface WPPage extends WPEntity {
 interface Taxonomy {
   id: number;
   count: number;
-  description: string;
   link: string;
   name: string;
   slug: string;
@@ -113,11 +112,13 @@ interface Taxonomy {
 }
 
 export interface Category extends Taxonomy {
+  description: string;
   taxonomy: "category";
   parent: number;
 }
 
 export interface Tag extends Taxonomy {
+  description: string;
   taxonomy: "post_tag";
 }
 
@@ -225,6 +226,52 @@ export interface SearchResult {
       href: string;
     }>;
   };
+}
+
+// Transformed content types
+interface Entity {
+  id: number;
+  date: Date;
+  modified: Date;
+  slug: string;
+  status: WBEntity["status"];
+  link: string;
+  guid: string;
+  title: string;
+  author: Author;
+}
+
+export interface Media extends Entity {
+  caption: string;
+  altText: string;
+  mediaType: string;
+  mimeType: string;
+  mediaDetails: MediaDetails;
+  sourceUrl: string;
+}
+
+interface PostMetaEntity {
+  content: string;
+  excerpt: string;
+  featuredMedia: WPMedia;
+}
+
+export interface Post extends PostMetaEntity {
+  type: string;
+  sticky: boolean;
+  template: string;
+  format: WPPost["format"];
+  categories: Category[];
+  tags: Tag[];
+  meta: Record<string, unknown>;
+}
+
+
+export interface Page extends PostMetaEntity {
+  parent: number;
+  menuOrder: number;
+  template: string;
+  meta: Record<string, unknown>;
 }
 
 // Component Props Types
