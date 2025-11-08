@@ -100,37 +100,34 @@ async function wordpressFetchWithPagination<T>(
   };
 }
 
-function createGetAll<T>(
+async function wordpressFetchAll<T>(
   path: string,
   queryParams?: WordPressQuery<T>,
   cacheTags: CacheTag[] = [],
-): (query?: WordPressQuery<T>, cacheTags?: CacheTag[]) => Promise<T[]> {
-  return async (query?: WordPressQuery<T>, cTags: CacheTag[] = cacheTags) => {
-    const getPage = (page: number) => wordpressFetchWithPagination<T[]>(
-      path,
-      <WordPressQuery<T[]>> {
-        ...queryParams,
-        ...query,
-        per_page: 100,
-        page,
-      },
-      cTags,
-    );
+): Promise<T[]> {
+  const getPage = (page: number) => wordpressFetchWithPagination<T[]>(
+    path,
+    <WordPressQuery<T[]>> {
+      ...queryParams,
+      per_page: 100,
+      page,
+    },
+    cacheTags,
+  );
 
-    const { headers, data } = await getPage(1);
+  const { headers, data } = await getPage(1);
 
-    if (headers.totalPages > 1) {
-      const promiseArray: Promise<T[]>[] = [];
+  if (headers.totalPages > 1) {
+    const promiseArray: Promise<T[]>[] = [];
 
-      for (let i = 2; i <= headers.totalPages; i++) {
-        promiseArray.push(getPage(i).then((response) => response.data));
-      }
-
-      return data.concat(...(await Promise.all(promiseArray)));
+    for (let i = 2; i <= headers.totalPages; i++) {
+      promiseArray.push(getPage(i).then((response) => response.data));
     }
 
-    return data;
+    return data.concat(...(await Promise.all(promiseArray)));
   }
+
+  return data;
 }
 
 const postFields: Array<keyof WPPost> = [ 
@@ -179,9 +176,12 @@ export async function getPostsPaginated(
   return wordpressFetchWithPagination<WPPost[]>("/wp-json/wp/v2/posts", query, cacheTags);
 }
 
-export const getAllPosts = createGetAll<WPPost>("/wp-json/wp/v2/posts", {
-  _fields: postFields,
-}, ["posts"]);
+export async function getAllPosts(queryParams: WordPressQuery<WPPost>) {
+  return wordpressFetchAll<WPPost>("/wp-json/wp/v2/posts", {
+    _fields: postFields,
+    ...queryParams,
+  }, ["posts"]);
+}
 
 export async function getPostById(id: number): Promise<WPPost> {
   return wordpressFetch<WPPost>(`/wp-json/wp/v2/posts/${id}`, { _fields: postFields }, [`post-${id}`]);
@@ -221,11 +221,12 @@ const categoryFields: Array<keyof Category> = [
   "id", "count", "description", "link", "name", "slug", "taxonomy", "parent",
 ];
 
-export const getAllCategories = createGetAll<Category>(
+export const getAllCategories = (queryParams: WordPressQuery<Category>) => wordpressFetchAll<Category>(
   "/wp-json/wp/v2/categories",
   {
     hide_empty: true,
     _fields: categoryFields,
+    ...queryParams,
   },
   ["categories"]
 );
@@ -263,11 +264,12 @@ export async function getTagsByPost(postId: number): Promise<Tag[]> {
   );
 }
 
-export const getAllTags = createGetAll<Tag>(
+export const getAllTags = (queryParams: WordPressQuery<Tag>) => wordpressFetchAll<Tag>(
   "/wp-json/wp/v2/tags", 
   {
     hide_empty: true,
     _fields: tagFields,
+    ...queryParams,
   }, 
   ["tags"],
 );
@@ -296,11 +298,11 @@ const pageFields: Array<keyof WPPage> = [
   "menu_order", "comment_status", "ping_status", "template", "meta",
 ];
 
-export const getAllPages = createGetAll<WPPage>(
-  "/wp-json/wp/v2/pages",
-  { _fields: pageFields },
-  ["pages"],
-);
+export async function getAllPages(queryParams: WordPressQuery<WPPage>) {
+  return wordpressFetchAll<WPPage>( "/wp-json/wp/v2/pages", { 
+    _fields: pageFields, ...queryParams 
+  }, ["pages"]);
+}
 
 export async function getPageById(id: number): Promise<WPPage> {
   return wordpressFetch<WPPage>(
@@ -324,11 +326,12 @@ const authorFields: Array<keyof Author> = [
   "id", "name", "url", "description", "link", "slug", "avatar_urls",
 ];
 
-export const getAllAuthors = createGetAll<Author>(
+export const getAllAuthors = (queryParams: WordPressQuery<Author>) => wordpressFetchAll<Author>(
   "/wp-json/wp/v2/users",
   {
     has_published_posts: true,
     _fields: authorFields,
+    ...queryParams,
   },
   ["authors"],
 );
