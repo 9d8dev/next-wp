@@ -13,6 +13,9 @@ import type {
   WordPressResponse,
   WordPressQuery,
   CacheTag,
+  Post,
+  Media,
+  Page,
 } from "./wordpress.d";
 
 const baseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
@@ -128,6 +131,93 @@ async function wordpressFetchAll<T>(
   }
 
   return data;
+}
+
+const transformMedia = (wpMedia: WPMedia): Media => ({
+    id: wpMedia.id,
+    date: new Date(wpMedia.date),
+    modified: new Date(wpMedia.date),
+    slug: wpMedia.slug,
+    status: wpMedia.status,
+    link: wpMedia.link,
+    guid: wpMedia.guid.rendered,
+    title: wpMedia.title.rendered,
+    caption: wpMedia.caption.rendered,
+    altText: wpMedia.alt_text,
+    mediaType: wpMedia.media_type,
+    mimeType: wpMedia.mime_type,
+    mediaDetails: wpMedia.media_details,
+    sourceUrl: wpMedia.source_url,
+    authorID: wpMedia.author,
+});
+
+function transformPost(wpPost: WPPost): Post {
+  if (!wpPost._embedded) {
+    throw Error("Can't transform WPPost without embedded data")
+  }
+
+  let categories: Category[] = [], tags: Tag [] = [];
+  
+  if (wpPost._embedded["wp:term"]) {
+    for (let terms of wpPost._embedded["wp:term"]) {
+      switch (terms[0].taxonomy) {
+        case "category":
+          categories = terms as Category[];
+          break;
+        case "post_tag":
+          tags = terms as Tag[];
+        default:
+          break;
+      }
+    }
+  }
+
+  return {
+    id: wpPost.id,
+    date: new Date(wpPost.date),
+    modified: new Date(wpPost.modified),
+    slug: wpPost.slug,
+    status: wpPost.status,
+    link: wpPost.link,
+    guid: wpPost.guid.rendered,
+    title: wpPost.title.rendered,
+    content: wpPost.content.rendered,
+    excerpt: wpPost.content.rendered,
+    type: wpPost.type,
+    sticky: wpPost.sticky,
+    template: wpPost.template,
+    format: wpPost.format,
+    meta: wpPost.meta,
+    author: wpPost._embedded["author"][0]?.id !== undefined ? wpPost._embedded["author"][0]: undefined,
+    featuredMedia: wpPost._embedded["wp:featuredmedia"] && transformMedia(wpPost._embedded["wp:featuredmedia"][0]),
+    categories,
+    tags,
+  };
+}
+
+function transformPage(wpPage: WPPage): Page {
+  if (!wpPage._embedded) {
+    throw Error("Can't transform WPPage without embedded data")
+  }
+
+  return {
+    id: wpPage.id,
+    date: new Date(wpPage.date),
+    modified: new Date(wpPage.modified),
+    slug: wpPage.slug,
+    status: wpPage.status,
+    link: wpPage.link,
+    guid: wpPage.guid.rendered,
+    title: wpPage.title.rendered,
+    content: wpPage.content.rendered,
+    excerpt: wpPage.content.rendered,
+    parent: wpPage.parent,
+    menuOrder: wpPage.menu_order,
+    template: wpPage.template,
+    meta: wpPage.meta,
+    author: wpPage._embedded["author"][0]?.id !== undefined ? wpPage._embedded["author"][0]: undefined,
+    featuredMedia: wpPage._embedded["wp:featuredmedia"] && transformMedia(wpPage._embedded["wp:featuredmedia"][0]),
+  };
 }
 
 const postFields: Array<keyof WPPost> = [ 

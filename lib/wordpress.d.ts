@@ -83,9 +83,9 @@ export interface WPPost extends WPEntity {
   featured_img_caption: string;
   _links?: Record<string, Array<Record<string, any>>>;
   _embedded?: {
-    author: Author;
-    "wp:featuredmedia": WPMedia[];
-    "wp:term": Array<Array<Category | Tag>>; 
+    author: Author[];
+    "wp:featuredmedia"?: WPMedia[];
+    "wp:term": Array<Category[] | Tag[]>; 
   };
 }
 
@@ -99,6 +99,12 @@ export interface WPPage extends WPEntity {
   ping_status: "open" | "closed";
   template: string;
   meta: Record<string, unknown>;
+  _embedded?: {
+    author: Author[];
+    "wp:featuredmedia"?: WPMedia[];
+    up?: WPPage;
+    "wp:term": Array<unknown[]>; 
+  };
 }
 
 // Taxonomy types
@@ -228,6 +234,8 @@ export interface SearchResult {
   };
 }
 
+type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
+
 // Transformed content types
 interface Entity {
   id: number;
@@ -238,7 +246,7 @@ interface Entity {
   link: string;
   guid: string;
   title: string;
-  author: Author;
+  author?: Author;
 }
 
 export interface Media extends Entity {
@@ -248,12 +256,13 @@ export interface Media extends Entity {
   mimeType: string;
   mediaDetails: MediaDetails;
   sourceUrl: string;
+  authorID: number;
 }
 
-interface PostMetaEntity {
+interface PostMetaEntity extends Entity {
   content: string;
   excerpt: string;
-  featuredMedia: WPMedia;
+  featuredMedia?: Media;
 }
 
 export interface Post extends PostMetaEntity {
