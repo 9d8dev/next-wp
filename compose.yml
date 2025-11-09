@@ -1,18 +1,18 @@
 services:
-  next:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
+  nextjs:
+    build: .
+    container_name: nextjs
     env_file:
       - .env.example
       - .env
+    restart: unless-stopped
+  nginx:
+    image: nginx:1-alpine
+    container_name: nginx
     ports:
-      - "3000:3000"
+      - "3080:80"
+      - "3443:443"
     volumes:
-      - .:/app # Mount the current directory to /app in the container
-      - /app/node_modules # Prevent overwriting node_modules
-    develop:
-      watch:
-        # Rebuild the service when package.json changes
-        - action: rebuild
-          path: package.json
+      - ${SSL_CERTS}:/etc/nginx/ssl:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    restart: unless-stopped

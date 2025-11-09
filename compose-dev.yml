@@ -1,0 +1,18 @@
+services:
+  next:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env.example
+      - .env
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app # Mount the current directory to /app in the container
+      - /app/node_modules # Prevent overwriting node_modules
+    develop:
+      watch:
+        # Rebuild the service when package.json changes
+        - action: rebuild
+          path: package.json

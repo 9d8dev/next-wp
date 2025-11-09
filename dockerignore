@@ -1,4 +1,10 @@
 Dockerfile
+Dockerfile.dev
+compose.yml
+compose-dev.yml
+nginx
+plugin
+Makefile
 .dockerignore
 node_modules
 npm-debug.log
