@@ -1,23 +1,22 @@
 import "./globals.css";
 
-import { Section, Container } from "@/components/craft";
-import { Inter as FontSans } from "next/font/google";
-import { ThemeProvider } from "@/components/theme/theme-provider";
-import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { MobileNav } from "@/components/nav/mobile-nav";
-import { Analytics } from "@vercel/analytics/react";
-import { Button } from "@/components/ui/button";
+import {Container, Section} from "@/components/craft";
+import {Inter as FontSans} from "next/font/google";
+import {ThemeProvider} from "@/components/theme/theme-provider";
+import {ThemeToggle} from "@/components/theme/theme-toggle";
+import {MobileNav} from "@/components/nav/mobile-nav";
+import {Button} from "@/components/ui/button";
 
-import { mainMenu, contentMenu } from "@/menu.config";
-import { siteConfig } from "@/site.config";
-import { cn } from "@/lib/utils";
+import {contentMenu, mainMenu} from "@/menu.config";
+import {siteConfig} from "@/site.config";
+import {cn} from "@/lib/utils";
 
 import Balancer from "react-wrap-balancer";
 import Logo from "@/public/logo.svg";
 import Image from "next/image";
 import Link from "next/link";
 
-import type { Metadata } from "next";
+import type {Metadata} from "next";
 
 const font = FontSans({
   subsets: ["latin"],
@@ -53,7 +52,6 @@ export default function RootLayout({
           {children}
           <Footer />
         </ThemeProvider>
-        <Analytics />
       </body>
     </html>
   );
