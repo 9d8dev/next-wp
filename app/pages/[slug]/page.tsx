@@ -1,8 +1,9 @@
-import { getPageBySlug, getAllPages } from "@/lib/wordpress";
-import { Section, Container, Prose } from "@/components/craft";
-import { siteConfig } from "@/site.config";
+import {getAllPages, getPageBySlug} from "@/lib/wordpress";
+import {Container, Prose, Section} from "@/components/craft";
+import {siteConfig} from "@/site.config";
 
-import type { Metadata } from "next";
+import type {Metadata} from "next";
+import HtmlRenderer from "@/components/HtmlRenderer";
 
 // Revalidate pages every hour
 export const revalidate = 3600;
@@ -71,14 +72,19 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const page = await getPageBySlug(slug);
-
+    console.log('page', page)
   return (
     <Section>
       <Container>
-        <Prose>
-          <h2>{page.title.rendered}</h2>
-          <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
-        </Prose>
+        {/*<Prose>*/}
+        {/*  <h2>{page.title.rendered}</h2>*/}
+        {/*  <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />*/}
+        {/*</Prose>*/}
+          <HtmlRenderer
+              htmlContent={page.content.rendered}
+              className="page-content max-w-4xl mx-auto"
+              debug={true}
+          />
       </Container>
     </Section>
   );

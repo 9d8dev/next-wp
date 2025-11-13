@@ -29,7 +29,11 @@
     "react-dom": "19.2.0",
     "react-hook-form": "^7.65.0",
     "react-wrap-balancer": "^1.1.1",
+    "rehype-parse": "^9.0.1",
+    "rehype-react": "^8.0.0",
     "tailwind-merge": "^3.3.1",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.0.0",
     "use-debounce": "^10.0.6",
     "zod": "^4.1.12"
   },

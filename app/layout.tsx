@@ -75,7 +75,7 @@ const Nav = ({ className, children, id }: NavProps) => {
             src={Logo}
             alt="Logo"
             loading="eager"
-            className="dark:invert"
+            className="dark:invert w-[42px] h-auto"
             width={42}
             height={26.44}
           ></Image>
