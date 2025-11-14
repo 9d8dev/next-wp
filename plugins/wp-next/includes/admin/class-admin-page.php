@@ -15,7 +15,10 @@ class WP_Next_Admin_Page {
         $custom_endpoint = $settings['custom_endpoint'] ?? '';
         $enable_routes = $settings['enable_custom_routes'] ?? false;
         $expose_data = $settings['expose_data'] ?? array();
-        $site_info_endpoint = $default_endpoint . '/wp-next/site-info';
+
+        // Get the active endpoint (considering custom endpoint)
+        $active_endpoint = WP_Next_Settings::get_endpoint();
+        $site_info_endpoint = $active_endpoint . '/wp-next/site-info';
         ?>
         <div class="wrap">
             <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
@@ -45,6 +48,9 @@ class WP_Next_Admin_Page {
                                 </div>
                                 <p class="description">
                                     Leave empty to use default. Example: <code>my-json</code> creates endpoint at <code><?php echo esc_html($home_url); ?>/my-json</code>
+                                </p>
+                                <p class="description" style="background: #fff3cd; padding: 8px; margin-top: 10px; border-radius: 4px; border-left: 3px solid #ffc107;">
+                                    <strong>⚠️ After saving:</strong> <a href="<?php echo esc_url(admin_url('options-permalink.php')); ?>" target="_blank">Go to Settings > Permalinks</a> and click "Save Changes" to flush rewrite rules and activate the new endpoint.
                                 </p>
                             </td>
                         </tr>
@@ -98,6 +104,8 @@ class WP_Next_Admin_Page {
                                     </div>
 
                                     <div style="margin: 10px 0;">
+                                        <!-- Hidden input for unchecked state -->
+                                        <input type="hidden" name="wp_next_settings[expose_data][favicon]" value="0">
                                         <label>
                                             <input type="checkbox"
                                                    id="expose_favicon"

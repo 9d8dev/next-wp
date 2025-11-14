@@ -9,15 +9,14 @@ class WP_Next_Settings {
 
     private static $defaults = array(
         // General Settings
-        'use_custom_endpoint' => false,
-        'custom_endpoint' => '',
+        'custom_endpoint' => '',       // Leave empty to use default endpoint
 
         // Custom Routes Settings
         'enable_custom_routes' => false,
         'expose_data' => array(
-            'title' => true,           // Enabled by default (public in WP)
-            'description' => true,     // Enabled by default (public in WP)
-            'favicon' => true,         // Enabled by default (optional, not exposed by WP)
+            'title' => true,           // Always enabled (public in WP)
+            'description' => true,     // Always enabled (public in WP)
+            'favicon' => false,        // Disabled by default (optional, not exposed by WP)
         ),
     );
 
@@ -68,15 +67,15 @@ class WP_Next_Settings {
      * Get the active REST API endpoint (custom or default)
      */
     public static function get_endpoint() {
-        $use_custom = self::get('use_custom_endpoint');
+        $custom_endpoint = self::get('custom_endpoint');
 
-        if ($use_custom && !empty(self::get('custom_endpoint'))) {
-            // Custom endpoint is just the path, combine with home URL
-            $custom_path = self::get('custom_endpoint');
+        // If custom endpoint is provided, use it
+        if (!empty($custom_endpoint)) {
             $home = rtrim(home_url(), '/');
-            return $home . '/' . ltrim($custom_path, '/');
+            return $home . '/' . ltrim($custom_endpoint, '/');
         }
 
+        // Otherwise use default
         return rtrim(get_rest_url(), '/');
     }
 

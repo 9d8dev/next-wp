@@ -12,11 +12,7 @@ class WP_Next_Validators {
     public static function sanitize_settings($input) {
         $output = array();
 
-        // General Settings
-        if (isset($input['use_custom_endpoint'])) {
-            $output['use_custom_endpoint'] = (bool) $input['use_custom_endpoint'];
-        }
-
+        // General Settings - Custom Endpoint
         if (isset($input['custom_endpoint'])) {
             $endpoint = trim($input['custom_endpoint']);
             if (!empty($endpoint)) {

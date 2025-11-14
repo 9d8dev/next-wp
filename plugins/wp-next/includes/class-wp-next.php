@@ -33,6 +33,9 @@ class WP_Next {
      * Initialize WordPress hooks
      */
     private function init_hooks() {
+        // Custom REST API prefix
+        add_filter('rest_url_prefix', array($this, 'custom_rest_url_prefix'));
+
         // Admin
         add_action('admin_init', array($this, 'register_settings'));
         add_action('admin_menu', array($this, 'add_admin_menu'));
@@ -40,6 +43,17 @@ class WP_Next {
 
         // REST API
         add_action('rest_api_init', array($this, 'register_rest_routes'));
+    }
+
+    /**
+     * Filter REST API URL prefix to use custom endpoint if configured
+     */
+    public function custom_rest_url_prefix() {
+        $custom_endpoint = WP_Next_Settings::get('custom_endpoint');
+        if (!empty($custom_endpoint)) {
+            return ltrim($custom_endpoint, '/');
+        }
+        return 'wp-json';
     }
 
     /**
