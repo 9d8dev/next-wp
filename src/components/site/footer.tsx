@@ -1,6 +1,6 @@
 import {Container, Section} from "@/components/craft";
 import Link from "next/link";
-import {siteConfig} from "@root/site.config";
+import {getSiteConfig} from "@root/site.config";
 import Image from "next/image";
 import Logo from "@root/public/logo.svg";
 import Balancer from "react-wrap-balancer";
@@ -9,14 +9,16 @@ import {ThemeToggle} from "@/components/theme/theme-toggle";
 
 type Props = {};
 
-export function Footer(props: Props) {
+export async function Footer(props: Props) {
+    const config = await getSiteConfig();
+
     return (
         <footer>
             <Section>
                 <Container className="grid md:grid-cols-[1.5fr_0.5fr_0.5fr] gap-12">
                     <div className="flex flex-col gap-6 not-prose">
                         <Link href="/">
-                            <h3 className="sr-only">{siteConfig.site_name}</h3>
+                            <h3 className="sr-only">{config.site_name}</h3>
                             <Image
                                 src={Logo}
                                 alt="Logo"
@@ -26,7 +28,7 @@ export function Footer(props: Props) {
                             ></Image>
                         </Link>
                         <p>
-                            <Balancer>{siteConfig.site_description}</Balancer>
+                            <Balancer>{config.site_description}</Balancer>
                         </p>
                     </div>
                     <div className="flex flex-col gap-2 text-sm">

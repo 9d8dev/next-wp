@@ -1,7 +1,7 @@
 import "./globals.css";
 import {Inter as FontSans} from "next/font/google";
 import {ThemeProvider} from "@/components/theme/theme-provider";
-import {siteConfig} from "@root/site.config";
+import {getSiteConfig} from "@root/site.config";
 import {cn} from "@/lib/utils";
 
 import type {Metadata} from "next";
@@ -13,15 +13,27 @@ const font = FontSans({
     variable: "--font-sans",
 });
 
-export const metadata: Metadata = {
-    title: "WordPress & Next.js Starter by 9d8",
-    description:
-        "A starter template for Next.js with WordPress as a headless CMS.",
-    metadataBase: new URL(siteConfig.site_domain),
-    alternates: {
-        canonical: "/",
-    },
-};
+export async function generateMetadata(): Promise<Metadata> {
+    const config = await getSiteConfig();
+
+    const metadata: Metadata = {
+        title: config.site_name,
+        description: config.site_description,
+        metadataBase: new URL(config.site_domain),
+        alternates: {
+            canonical: "/",
+        },
+    };
+
+    // Add favicon if available from WordPress
+    if (config.site_favicon) {
+        metadata.icons = {
+            icon: config.site_favicon,
+        };
+    }
+
+    return metadata;
+}
 
 export default function RootLayout({
                                        children,
