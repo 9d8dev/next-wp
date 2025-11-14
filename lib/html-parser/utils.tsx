@@ -29,6 +29,10 @@ function rehypeComponentMapper() {
 
             // Try to find a matching component mapping
             for (const mapping of componentMappings) {
+                if (!mapping.selector) {
+                    console.warn('Invalid mapping - missing selector:', mapping);
+                    continue;
+                }
                 const {type, value} = parseSelector(mapping.selector);
 
                 let matches = false;
@@ -81,26 +85,27 @@ function buildComponentsMap() {
 }
 
 /**
- * Main parser function - Asynchronous version
+ * Main parser function - Synchronous version
  * Converts HTML string to React components
+ * Runs server-side during page render
  *
  * Usage:
  * ```tsx
- * const content = await parseHtmlToComponents(htmlString);
+ * const content = parseHtmlToComponents(htmlString);
  * ```
  */
-export async function parseHtmlToComponents(htmlString: string) {
+export function parseHtmlToComponents(htmlString: string) {
     try {
         const componentsMap = buildComponentsMap();
 
-        const file = await unified()
+        const file = unified()
             .use(rehypeParse, {fragment: true})
             .use(rehypeComponentMapper)
             .use(rehypeReact, {
                 ...production,
                 components: componentsMap,
             })
-            .process(htmlString);
+            .processSync(htmlString);
 
         return file.result;
     } catch (error) {

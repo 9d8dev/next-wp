@@ -1,6 +1,4 @@
-'use client';
-
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {parseHtmlToComponents} from '@/lib/html-parser/utils';
 
 interface HtmlRendererProps {
@@ -11,9 +9,10 @@ interface HtmlRendererProps {
 }
 
 /**
- * HtmlRenderer Component
+ * HtmlRenderer Component (Server Component)
  *
  * Converts WordPress API HTML content to React components
+ * Parsing happens server-side during render
  *
  * Usage:
  * ```tsx
@@ -30,56 +29,31 @@ export default function HtmlRenderer({
                                          fallback = <div>Unable to render content</div>,
                                          debug = false,
                                      }: HtmlRendererProps) {
-    const [parsedContent, setParsedContent] = useState<React.ReactNode>(null);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        if (!htmlContent) {
-            if (debug) console.warn('HtmlRenderer: No htmlContent provided');
-            setIsLoading(false);
-            return;
-        }
-
-        let isMounted = true;
-
-        (async () => {
-            try {
-                const result = await parseHtmlToComponents(htmlContent);
-
-                if (!result) {
-                    if (debug) console.warn('HtmlRenderer: Parser returned null');
-                    isMounted && setParsedContent(null);
-                } else {
-                    if (debug) console.log('HtmlRenderer: Successfully parsed content');
-                    isMounted && setParsedContent(result);
-                }
-            } catch (error) {
-                console.error('HtmlRenderer: Failed to parse HTML content:', error);
-                if (debug) {
-                    console.error('HtmlRenderer: Input HTML:', htmlContent);
-                }
-                isMounted && setParsedContent(null);
-            } finally {
-                isMounted && setIsLoading(false);
-            }
-        })();
-
-        return () => {
-            isMounted = false;
-        };
-    }, [htmlContent, debug]);
-
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (!parsedContent) {
+    if (!htmlContent) {
+        if (debug) console.warn('HtmlRenderer: No htmlContent provided');
         return <>{fallback}</>;
     }
 
-    return (
-        <div className={className}>
-            {parsedContent}
-        </div>
-    );
+    try {
+        const parsedContent = parseHtmlToComponents(htmlContent);
+
+        if (!parsedContent) {
+            if (debug) console.warn('HtmlRenderer: Parser returned null');
+            return <>{fallback}</>;
+        }
+
+        if (debug) console.log('HtmlRenderer: Successfully parsed content');
+
+        return (
+            <div className={className}>
+                {parsedContent}
+            </div>
+        );
+    } catch (error) {
+        console.error('HtmlRenderer: Failed to parse HTML content:', error);
+        if (debug) {
+            console.error('HtmlRenderer: Input HTML:', htmlContent);
+        }
+        return <>{fallback}</>;
+    }
 }
