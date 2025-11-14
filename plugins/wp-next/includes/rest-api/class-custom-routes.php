@@ -14,11 +14,10 @@ class WP_Next_Custom_Routes {
             return;
         }
 
-        $route_path = WP_Next_Settings::get_custom_route_path();
-
+        // Route is always /wp-next/site-info
         register_rest_route(
             'wp-next',
-            str_replace('/wp-json/wp-next', '', $route_path),
+            '/site-info',
             array(
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => array(__CLASS__, 'get_site_info'),
@@ -34,24 +33,15 @@ class WP_Next_Custom_Routes {
         $exposed_data = WP_Next_Settings::get_exposed_data();
         $response = array();
 
-        if ($exposed_data['title']) {
-            $response['title'] = get_bloginfo('name');
-        }
+        // Title - always enabled
+        $response['title'] = get_bloginfo('name');
 
-        if ($exposed_data['description']) {
-            $response['description'] = get_bloginfo('description');
-        }
+        // Description - always enabled
+        $response['description'] = get_bloginfo('description');
 
-        if ($exposed_data['favicon']) {
+        // Favicon - optional
+        if (isset($exposed_data['favicon']) && $exposed_data['favicon']) {
             $response['favicon'] = self::get_favicon_url();
-        }
-
-        if ($exposed_data['language']) {
-            $response['language'] = get_locale();
-        }
-
-        if ($exposed_data['timezone']) {
-            $response['timezone'] = wp_timezone_string();
         }
 
         return new WP_REST_Response($response, 200);

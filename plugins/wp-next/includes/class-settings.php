@@ -14,13 +14,10 @@ class WP_Next_Settings {
 
         // Custom Routes Settings
         'enable_custom_routes' => false,
-        'custom_route_path' => '/wp-json/wp-next/site-info',
         'expose_data' => array(
-            'title' => false,
-            'description' => false,
-            'favicon' => false,
-            'language' => false,
-            'timezone' => false,
+            'title' => true,           // Enabled by default (public in WP)
+            'description' => true,     // Enabled by default (public in WP)
+            'favicon' => true,         // Enabled by default (optional, not exposed by WP)
         ),
     );
 
@@ -74,18 +71,21 @@ class WP_Next_Settings {
         $use_custom = self::get('use_custom_endpoint');
 
         if ($use_custom && !empty(self::get('custom_endpoint'))) {
-            return rtrim(self::get('custom_endpoint'), '/');
+            // Custom endpoint is just the path, combine with home URL
+            $custom_path = self::get('custom_endpoint');
+            $home = rtrim(home_url(), '/');
+            return $home . '/' . ltrim($custom_path, '/');
         }
 
         return rtrim(get_rest_url(), '/');
     }
 
     /**
-     * Get the active custom route path
+     * Get the site info endpoint path
      */
-    public static function get_custom_route_path() {
-        $path = self::get('custom_route_path', '/wp-json/wp-next/site-info');
-        return '/' . ltrim($path, '/');
+    public static function get_site_info_path() {
+        $endpoint = self::get_endpoint();
+        return $endpoint . '/wp-next/site-info';
     }
 
     /**

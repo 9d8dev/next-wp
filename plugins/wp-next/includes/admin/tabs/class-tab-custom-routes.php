@@ -15,17 +15,18 @@ class WP_Next_Tab_Custom_Routes {
 
     public function render($settings) {
         $enable_routes = $settings['enable_custom_routes'] ?? false;
-        $route_path = $settings['custom_route_path'] ?? '/wp-json/wp-next/site-info';
         $expose_data = $settings['expose_data'] ?? array();
+        $endpoint = rtrim(get_rest_url(), '/');
 
         // Get exposed fields for preview
         $exposed_fields = array_keys(array_filter($expose_data, function($v) {
             return $v === true;
         }));
+
+        // Auto-generate route path
+        $auto_route_path = $endpoint . '/wp-next/site-info';
         ?>
-        <div x-data="{ enableRoutes: <?php echo json_encode($enable_routes); ?>, routePath: '<?php echo esc_attr($route_path); ?>', exposedFields: <?php echo json_encode($exposed_fields); ?> }"
-             @change="if($el.name === 'wp_next_settings[enable_custom_routes]') enableRoutes = $el.checked"
-             class="wp-next-custom-routes-tab">
+        <div class="wp-next-custom-routes-tab" x-data="wpNextCustomRoutes(<?php echo json_encode($enable_routes); ?>, <?php echo json_encode($exposed_fields); ?>)" x-cloak>
 
             <div class="form-group">
                 <label>
@@ -33,28 +34,24 @@ class WP_Next_Tab_Custom_Routes {
                            name="wp_next_settings[enable_custom_routes]"
                            value="1"
                            <?php checked($enable_routes); ?>
-                           @change="enableRoutes = $el.checked">
+                           @change="toggleRoutes($event)">
                     Enable Custom Route Data Exposure
                 </label>
                 <p class="description">Exposes selected site data via a public REST API endpoint.</p>
             </div>
 
-            <div x-show="enableRoutes">
+            <div x-show="enableRoutes" style="display: <?php echo $enable_routes ? 'block' : 'none'; ?>; transition: all 0.3s ease;">
                 <div class="form-group">
-                    <label for="custom_route_path">Route Path</label>
-                    <input type="text"
-                           id="custom_route_path"
-                           name="wp_next_settings[custom_route_path]"
-                           value="<?php echo esc_attr($route_path); ?>"
-                           placeholder="/wp-json/wp-next/site-info"
-                           x-model="routePath"
-                           @change="routePath = $el.value">
-                    <p class="description">The endpoint path where data will be exposed. Must start with /</p>
+                    <label>Endpoint Path</label>
+                    <div class="preview-box" style="border-left: 3px solid #4CAF50;">
+                        <strong>GET</strong> <?php echo esc_html($auto_route_path); ?>
+                    </div>
+                    <p class="description">This endpoint automatically exposes the selected site data below.</p>
                 </div>
 
                 <div class="form-group">
                     <label>Expose Data Fields</label>
-                    <p class="description">Select which site information to expose via the custom route.</p>
+                    <p class="description">Select which site information to expose. Title and Description are enabled by default.</p>
 
                     <div class="checkbox-group">
                         <div class="checkbox-item">
@@ -62,9 +59,11 @@ class WP_Next_Tab_Custom_Routes {
                                    id="expose_title"
                                    name="wp_next_settings[expose_data][title]"
                                    value="1"
-                                   <?php checked($expose_data['title'] ?? false); ?>
-                                   @change="exposedFields = Array.from(document.querySelectorAll('input[name^=\"wp_next_settings[expose_data]\"]')).filter(el => el.checked).map(el => el.id.replace('expose_', ''))">
-                            <label for="expose_title">Site Title</label>
+                                   disabled
+                                   checked>
+                            <label for="expose_title"><strong>Site Title</strong> <em style="color: #999;">(always enabled)</em></label>
+                            <!-- Hidden input to ensure title is always saved as true -->
+                            <input type="hidden" name="wp_next_settings[expose_data][title]" value="1">
                         </div>
 
                         <div class="checkbox-item">
@@ -72,9 +71,11 @@ class WP_Next_Tab_Custom_Routes {
                                    id="expose_description"
                                    name="wp_next_settings[expose_data][description]"
                                    value="1"
-                                   <?php checked($expose_data['description'] ?? false); ?>
-                                   @change="exposedFields = Array.from(document.querySelectorAll('input[name^=\"wp_next_settings[expose_data]\"]')).filter(el => el.checked).map(el => el.id.replace('expose_', ''))">
-                            <label for="expose_description">Site Description</label>
+                                   disabled
+                                   checked>
+                            <label for="expose_description"><strong>Site Description</strong> <em style="color: #999;">(always enabled)</em></label>
+                            <!-- Hidden input to ensure description is always saved as true -->
+                            <input type="hidden" name="wp_next_settings[expose_data][description]" value="1">
                         </div>
 
                         <div class="checkbox-item">
@@ -83,37 +84,21 @@ class WP_Next_Tab_Custom_Routes {
                                    name="wp_next_settings[expose_data][favicon]"
                                    value="1"
                                    <?php checked($expose_data['favicon'] ?? false); ?>
-                                   @change="exposedFields = Array.from(document.querySelectorAll('input[name^=\"wp_next_settings[expose_data]\"]')).filter(el => el.checked).map(el => el.id.replace('expose_', ''))">
-                            <label for="expose_favicon">Favicon URL</label>
-                        </div>
-
-                        <div class="checkbox-item">
-                            <input type="checkbox"
-                                   id="expose_language"
-                                   name="wp_next_settings[expose_data][language]"
-                                   value="1"
-                                   <?php checked($expose_data['language'] ?? false); ?>
-                                   @change="exposedFields = Array.from(document.querySelectorAll('input[name^=\"wp_next_settings[expose_data]\"]')).filter(el => el.checked).map(el => el.id.replace('expose_', ''))">
-                            <label for="expose_language">Language</label>
-                        </div>
-
-                        <div class="checkbox-item">
-                            <input type="checkbox"
-                                   id="expose_timezone"
-                                   name="wp_next_settings[expose_data][timezone]"
-                                   value="1"
-                                   <?php checked($expose_data['timezone'] ?? false); ?>
-                                   @change="exposedFields = Array.from(document.querySelectorAll('input[name^=\"wp_next_settings[expose_data]\"]')).filter(el => el.checked).map(el => el.id.replace('expose_', ''))">
-                            <label for="expose_timezone">Timezone</label>
+                                   @change="exposedFields.includes('favicon') ? exposedFields = exposedFields.filter(f => f !== 'favicon') : exposedFields.push('favicon');">
+                            <label for="expose_favicon">Favicon URL <em style="color: #999;">(optional - not exposed by WordPress by default)</em></label>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Endpoint Preview</label>
+                    <label>Response Preview</label>
                     <div class="preview-box">
-                        <strong>GET</strong> <span x-text="routePath"></span><br><br>
-                        <strong>Returns:</strong> { <span x-text="exposedFields.length > 0 ? exposedFields.join(', ') : '(no fields selected)'"></span> }
+                        <strong>Returns:</strong><br>
+                        {<br>
+                        &nbsp;&nbsp;"title": "...",<br>
+                        &nbsp;&nbsp;"description": "...",<br>
+                        <span x-show="exposedFields.includes('favicon')">&nbsp;&nbsp;"favicon": "...",<br></span>
+                        }
                     </div>
                 </div>
             </div>

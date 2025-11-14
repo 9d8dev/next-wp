@@ -20,8 +20,10 @@ class WP_Next_Validators {
         if (isset($input['custom_endpoint'])) {
             $endpoint = trim($input['custom_endpoint']);
             if (!empty($endpoint)) {
-                $endpoint = esc_url_raw($endpoint);
-                $endpoint = rtrim($endpoint, '/');
+                // Remove leading/trailing slashes from path
+                $endpoint = trim($endpoint, '/');
+                // Sanitize the path
+                $endpoint = sanitize_text_field($endpoint);
             }
             $output['custom_endpoint'] = $endpoint;
         }
@@ -31,12 +33,7 @@ class WP_Next_Validators {
             $output['enable_custom_routes'] = (bool) $input['enable_custom_routes'];
         }
 
-        if (isset($input['custom_route_path'])) {
-            $path = sanitize_text_field(trim($input['custom_route_path']));
-            // Ensure it starts with /
-            $path = '/' . ltrim($path, '/');
-            $output['custom_route_path'] = $path;
-        }
+        // Note: custom_route_path is now auto-generated, no need to sanitize from input
 
         if (isset($input['expose_data']) && is_array($input['expose_data'])) {
             $output['expose_data'] = self::sanitize_expose_data($input['expose_data']);
@@ -50,16 +47,20 @@ class WP_Next_Validators {
      */
     private static function sanitize_expose_data($data) {
         $allowed_fields = array(
-            'title' => false,
-            'description' => false,
-            'favicon' => false,
-            'language' => false,
-            'timezone' => false,
+            'title' => true,          // Always enabled
+            'description' => true,    // Always enabled
+            'favicon' => true,        // Optional but enabled by default
         );
 
         $sanitized = array();
         foreach ($allowed_fields as $field => $default) {
-            $sanitized[$field] = isset($data[$field]) ? (bool) $data[$field] : $default;
+            // For title and description, always set to true (they're always enabled)
+            if ($field === 'title' || $field === 'description') {
+                $sanitized[$field] = true;
+            } else {
+                // For optional fields like favicon, use the provided value or default
+                $sanitized[$field] = isset($data[$field]) ? (bool) $data[$field] : $default;
+            }
         }
 
         return $sanitized;

@@ -66,44 +66,17 @@ class WP_Next {
             'manage_options',
             'wp-next-settings',
             array('WP_Next_Admin_Page', 'render'),
-            'dashicons-link',
+            'dashicons-rest-api',
             100
         );
     }
 
     /**
-     * Enqueue admin assets
+     * Enqueue admin assets (currently none needed - using plain HTML)
      */
     public function enqueue_admin_assets($hook) {
-        if ($hook !== 'toplevel_page_wp-next-settings') {
-            return;
-        }
-
-        // Enqueue Alpine.js from CDN
-        wp_enqueue_script(
-            'alpine-js',
-            'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js',
-            array(),
-            '3.x.x',
-            true
-        );
-
-        // Enqueue admin script
-        wp_enqueue_script(
-            'wp-next-admin',
-            WP_NEXT_PLUGIN_URL . 'assets/admin.js',
-            array('alpine-js'),
-            WP_NEXT_VERSION,
-            true
-        );
-
-        // Enqueue admin styles
-        wp_enqueue_style(
-            'wp-next-admin',
-            WP_NEXT_PLUGIN_URL . 'assets/admin.css',
-            array(),
-            WP_NEXT_VERSION
-        );
+        // Currently not needed - using plain HTML forms
+        return;
     }
 
     /**

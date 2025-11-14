@@ -16,12 +16,14 @@ class WP_Next_Tab_General {
     public function render($settings) {
         $use_custom = $settings['use_custom_endpoint'] ?? false;
         $custom_endpoint = $settings['custom_endpoint'] ?? '';
+        $home_url = rtrim(home_url(), '/');
         $default_endpoint = rtrim(get_rest_url(), '/');
-        $active_endpoint = $use_custom && !empty($custom_endpoint) ? rtrim($custom_endpoint, '/') : $default_endpoint;
         ?>
-        <div x-data="{ useCustom: <?php echo json_encode($use_custom); ?>, customEndpoint: '<?php echo esc_attr($custom_endpoint); ?>' }"
-             @change="useCustom = $el.checked"
-             class="wp-next-general-tab">
+        <div x-data="{
+            useCustom: <?php echo json_encode($use_custom); ?>,
+            customEndpoint: '<?php echo esc_attr($custom_endpoint); ?>',
+            homeUrl: '<?php echo esc_attr($home_url); ?>'
+        }" class="wp-next-general-tab">
 
             <div class="form-group">
                 <label>
@@ -30,28 +32,33 @@ class WP_Next_Tab_General {
                            value="1"
                            <?php checked($use_custom); ?>
                            @change="useCustom = $el.checked">
-                    Use Custom REST API Endpoint
+                    Change default REST API endpoint
                 </label>
-                <p class="description">Enable this to use a custom REST API endpoint URL.</p>
+                <p class="description">Recommended: enable to give your endpoint a custom name to avoid conflicts.</p>
             </div>
 
-            <div class="form-group" x-show="useCustom">
-                <label for="custom_endpoint">Custom Endpoint URL</label>
-                <input type="url"
-                       id="custom_endpoint"
-                       name="wp_next_settings[custom_endpoint]"
-                       value="<?php echo esc_attr($custom_endpoint); ?>"
-                       placeholder="https://api.example.com"
-                       @change="customEndpoint = $el.value"
-                       x-model="customEndpoint">
-                <p class="description">e.g., https://api.example.com or https://example.com/wp-json</p>
+            <div class="form-group" x-show="useCustom" style="display: <?php echo $use_custom ? 'block' : 'none'; ?>">
+                <label for="custom_endpoint">Endpoint Path Name</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span style="color: #666;"><?php echo esc_html($home_url); ?>/</span>
+                    <input type="text"
+                           id="custom_endpoint"
+                           name="wp_next_settings[custom_endpoint]"
+                           value="<?php echo esc_attr($custom_endpoint); ?>"
+                           placeholder="my-json"
+                           style="flex: 1; max-width: none;"
+                           @change="customEndpoint = $el.value"
+                           @input="customEndpoint = $el.value"
+                           x-model="customEndpoint">
+                </div>
+                <p class="description">e.g., <code>my-json</code> or <code>custom-api</code> - this will create your endpoint at <code><?php echo esc_html($home_url); ?>/my-json</code></p>
             </div>
 
             <div class="form-group">
                 <label>Current Endpoint</label>
                 <div class="preview-box">
                     <strong>Your endpoint:</strong><br>
-                    <span x-text="useCustom && customEndpoint ? customEndpoint.replace(/\/$/, '') : '<?php echo esc_js($default_endpoint); ?>'"></span>
+                    <span x-text="useCustom && customEndpoint ? (homeUrl + '/' + customEndpoint.replace(/^\\//, '')) : '<?php echo esc_js($default_endpoint); ?>'"></span>
                 </div>
             </div>
         </div>
