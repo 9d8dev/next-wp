@@ -47,7 +47,10 @@ class WP_Next_Admin_Page {
                                            style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; flex: 1; max-width: 500px;">
                                 </div>
                                 <p class="description">
-                                    Leave empty to use default. Example: <code>my-json</code> creates endpoint at <code><?php echo esc_html($home_url); ?>/my-json</code>
+                                    Leave empty to use default. Current endpoint path:
+                                    <a target="_blank" href="<?php echo $active_endpoint; ?>">
+                                        <code><?php echo $active_endpoint; ?></code>
+                                    </a>
                                 </p>
                                 <p class="description" style="background: #fff3cd; padding: 8px; margin-top: 10px; border-radius: 4px; border-left: 3px solid #ffc107;">
                                     <strong>⚠️ After saving:</strong> <a href="<?php echo esc_url(admin_url('options-permalink.php')); ?>" target="_blank">Go to Settings > Permalinks</a> and click "Save Changes" to flush rewrite rules and activate the new endpoint.
