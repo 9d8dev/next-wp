@@ -1,5 +1,3 @@
-import Blockquote from "@/components/blocks/Blockquote";
-
 interface ParagraphProps {
     children?: React.ReactNode;
     className?: string;
@@ -14,7 +12,7 @@ export default function Paragraph({ children, className = '' }: ParagraphProps) 
 }
 
 export const ParagraphMapping = {
-    selector: '.wp-block-quote',
-    component: Blockquote,
+    selector: 'p',
+    component: Paragraph,
     extractProps: () => ({}),
 }
