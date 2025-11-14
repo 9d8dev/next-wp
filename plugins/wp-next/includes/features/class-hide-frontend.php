@@ -69,18 +69,22 @@ class WP_Next_Hide_Frontend {
             return true;
         }
 
-        // Allow default REST API
-        if (strpos($request_uri, '/wp-json') === 0) {
-            return true;
-        }
-
-        // Allow custom REST API endpoint (if configured)
+        // Get custom endpoint (if configured)
         $custom_endpoint = WP_Next_Settings::get('custom_endpoint');
+
+        // If custom endpoint is set, only allow that one (not /wp-json)
         if (!empty($custom_endpoint)) {
             $endpoint_path = '/' . ltrim($custom_endpoint, '/');
             if (strpos($request_uri, $endpoint_path) === 0) {
                 return true;
             }
+            // /wp-json is not the active endpoint, treat as normal page
+            return false;
+        }
+
+        // If no custom endpoint, allow default REST API
+        if (strpos($request_uri, '/wp-json') === 0) {
+            return true;
         }
 
         // Allow other WordPress core files
