@@ -27,6 +27,8 @@ class WP_Next {
         require_once WP_NEXT_PLUGIN_DIR . 'includes/class-validators.php';
         require_once WP_NEXT_PLUGIN_DIR . 'includes/admin/class-admin-page.php';
         require_once WP_NEXT_PLUGIN_DIR . 'includes/rest-api/class-custom-routes.php';
+        require_once WP_NEXT_PLUGIN_DIR . 'includes/features/class-hide-backend.php';
+        require_once WP_NEXT_PLUGIN_DIR . 'includes/features/class-hide-frontend.php';
     }
 
     /**
@@ -36,6 +38,9 @@ class WP_Next {
         // Custom REST API prefix
         add_filter('rest_url_prefix', array($this, 'custom_rest_url_prefix'));
 
+        // Backend Hide (use 'init' hook with priority 0 - fires very early, before WordPress processing)
+        add_action('init', array($this, 'handle_hide_backend'), 0);
+
         // Admin
         add_action('admin_init', array($this, 'register_settings'));
         add_action('admin_menu', array($this, 'add_admin_menu'));
@@ -43,6 +48,9 @@ class WP_Next {
 
         // REST API
         add_action('rest_api_init', array($this, 'register_rest_routes'));
+
+        // Frontend Redirect (use 'template_redirect' hook)
+        add_action('template_redirect', array($this, 'handle_template_redirect'));
     }
 
     /**
@@ -98,5 +106,21 @@ class WP_Next {
      */
     public function register_rest_routes() {
         WP_Next_Custom_Routes::register_routes();
+    }
+
+    /**
+     * Handle hide backend (runs very early on init hook)
+     */
+    public function handle_hide_backend() {
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field($_SERVER['REQUEST_URI']) : '/';
+        WP_Next_Hide_Backend::handle($request_uri);
+    }
+
+    /**
+     * Handle frontend redirect (runs on template_redirect hook)
+     */
+    public function handle_template_redirect() {
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field($_SERVER['REQUEST_URI']) : '/';
+        WP_Next_Hide_Frontend::handle($request_uri);
     }
 }

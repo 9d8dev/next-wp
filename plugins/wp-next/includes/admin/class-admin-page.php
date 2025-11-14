@@ -13,6 +13,10 @@ class WP_Next_Admin_Page {
         $home_url = rtrim(home_url(), '/');
         $default_endpoint = rtrim(get_rest_url(), '/');
         $custom_endpoint = $settings['custom_endpoint'] ?? '';
+        $enable_hide_backend = $settings['enable_hide_backend'] ?? false;
+        $hide_backend_path = $settings['hide_backend_path'] ?? '';
+        $enable_hide_frontend = $settings['enable_hide_frontend'] ?? false;
+        $frontend_url = $settings['frontend_url'] ?? '';
         $enable_routes = $settings['enable_custom_routes'] ?? false;
         $expose_data = $settings['expose_data'] ?? array();
 
@@ -61,7 +65,97 @@ class WP_Next_Admin_Page {
                     </table>
                 </div>
 
-                <!-- Section 2: Data Exposure Configuration -->
+                <!-- Section 2: Hide Backend Configuration -->
+                <div class="wp-next-section">
+                    <h2>Hide Backend</h2>
+                    <p>Hide WordPress backend (wp-admin, wp-login) from public access.</p>
+
+                    <table class="form-table">
+                        <tr>
+                            <th scope="row">
+                                <label for="enable_hide_backend">Enable</label>
+                            </th>
+                            <td>
+                                <input type="checkbox"
+                                       id="enable_hide_backend"
+                                       name="wp_next_settings[enable_hide_backend]"
+                                       value="1"
+                                       <?php checked($enable_hide_backend); ?>>
+                                <label for="enable_hide_backend">Hide backend access</label>
+                                <p class="description">
+                                    When enabled, /wp-admin and /wp-login.php will show 404 unless accessed with the correct token.
+                                </p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">
+                                <label for="hide_backend_path">Custom Backend Path</label>
+                            </th>
+                            <td>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <span style="color: #666; font-weight: 500;"><?php echo esc_html($home_url); ?>/</span>
+                                    <input type="text"
+                                           id="hide_backend_path"
+                                           name="wp_next_settings[hide_backend_path]"
+                                           value="<?php echo esc_attr($hide_backend_path); ?>"
+                                           placeholder="manager"
+                                           style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; flex: 1; max-width: 500px;">
+                                </div>
+                                <p class="description">
+                                    The custom path to access wp-login. Visiting this path will redirect to wp-login.php with the token. Defaults to "manager" if left empty.
+                                </p>
+                                <p class="description" style="color: #d63638; margin-top: 8px;">
+                                    <strong>⚠️ Important:</strong> Keep this value safe. Anyone knowing this path can access wp-login.php.
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Section 3: Hide Frontend Configuration -->
+                <div class="wp-next-section">
+                    <h2>Hide Frontend</h2>
+                    <p>Redirect all public pages to your Next.js frontend site.</p>
+
+                    <table class="form-table">
+                        <tr>
+                            <th scope="row">
+                                <label for="enable_hide_frontend">Enable</label>
+                            </th>
+                            <td>
+                                <input type="checkbox"
+                                       id="enable_hide_frontend"
+                                       name="wp_next_settings[enable_hide_frontend]"
+                                       value="1"
+                                       <?php checked($enable_hide_frontend); ?>>
+                                <label for="enable_hide_frontend">Redirect public pages to frontend</label>
+                                <p class="description">
+                                    When enabled, all requests (except /wp-admin, /wp-login, /wp-content/uploads, and APIs) will redirect to your frontend site.
+                                </p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">
+                                <label for="frontend_url">Frontend URL</label>
+                            </th>
+                            <td>
+                                <input type="url"
+                                       id="frontend_url"
+                                       name="wp_next_settings[frontend_url]"
+                                       value="<?php echo esc_attr($frontend_url); ?>"
+                                       placeholder="https://nextjs-frontend.com"
+                                       style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%; max-width: 500px;">
+                                <p class="description">
+                                    <strong>Required</strong> when Hide Frontend is enabled. The URL of your Next.js frontend site. Requests will be redirected to: frontend_url + current_path
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Section 4: Data Exposure Configuration -->
                 <div class="wp-next-section">
                     <h2>Data Exposure via Custom Route</h2>
                     <p>Select which site information to expose via a public REST API endpoint.</p>

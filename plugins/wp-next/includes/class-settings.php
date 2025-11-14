@@ -8,8 +8,16 @@ class WP_Next_Settings {
     private static $option_name = 'wp_next_settings';
 
     private static $defaults = array(
-        // General Settings
+        // REST API Settings
         'custom_endpoint' => '',       // Leave empty to use default endpoint
+
+        // Hide Backend Settings
+        'enable_hide_backend' => false,
+        'hide_backend_path' => 'manager',     // Custom path for accessing login (defaults to 'manager')
+
+        // Hide Frontend Settings
+        'enable_hide_frontend' => false,
+        'frontend_url' => '',          // Frontend site URL for redirects
 
         // Custom Routes Settings
         'enable_custom_routes' => false,

@@ -18,6 +18,10 @@ define('WP_NEXT_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('WP_NEXT_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('WP_NEXT_VERSION', '1.0.0');
 
+// Feature constants
+define('WP_NEXT_HIDE_BACKEND_TOKEN_PARAM', 'wp-next-hb-token');
+define('WP_NEXT_HIDE_FRONTEND_404_PATH', '/404');
+
 // Require main class
 require_once WP_NEXT_PLUGIN_DIR . 'includes/class-wp-next.php';
 
