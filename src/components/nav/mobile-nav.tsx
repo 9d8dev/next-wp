@@ -2,27 +2,21 @@
 
 // React and Next Imports
 import * as React from "react";
-import Link, { LinkProps } from "next/link";
-import { useRouter } from "next/navigation";
+import Link, {LinkProps} from "next/link";
+import {useRouter} from "next/navigation";
 
 // Utility Imports
-import { Menu, ArrowRightSquare } from "lucide-react";
-import { cn } from "@/lib/utils";
+import {ArrowRightSquare, Menu} from "lucide-react";
+import {cn} from "@/lib/utils";
 
 // Component Imports
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetTitle,
-  SheetHeader,
-} from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
+import {Button} from "@/components/ui/button";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,} from "@/components/ui/sheet";
+import {Separator} from "@/components/ui/separator";
 
-import { mainMenu, contentMenu } from "@/menu.config";
-import { siteConfig } from "@/site.config";
+import {contentMenu, mainMenu} from "@root/menu.config";
+import {siteConfig} from "@root/site.config";
 
 export function MobileNav() {
   const [open, setOpen] = React.useState(false);

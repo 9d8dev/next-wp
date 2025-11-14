@@ -9,7 +9,7 @@ import {
 import { Section, Container, Article, Prose } from "@/components/craft";
 import { badgeVariants } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { siteConfig } from "@/site.config";
+import { siteConfig } from "@root/site.config";
 
 import Link from "next/link";
 import Balancer from "react-wrap-balancer";

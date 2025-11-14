@@ -7,12 +7,12 @@ import {ThemeToggle} from "@/components/theme/theme-toggle";
 import {MobileNav} from "@/components/nav/mobile-nav";
 import {Button} from "@/components/ui/button";
 
-import {contentMenu, mainMenu} from "@/menu.config";
-import {siteConfig} from "@/site.config";
+import {contentMenu, mainMenu} from "@root/menu.config";
+import {siteConfig} from "@root/site.config";
 import {cn} from "@/lib/utils";
 
 import Balancer from "react-wrap-balancer";
-import Logo from "@/public/logo.svg";
+import Logo from "@root/public/logo.svg";
 import Image from "next/image";
 import Link from "next/link";
 
