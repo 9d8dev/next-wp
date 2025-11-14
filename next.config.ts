@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
             {
                 source: "/manager",
                 destination: `https://nextwp-cms.phucbm.com/wp-login.php?wp-next-hb-token=manager`,
-                permanent: false,
+                permanent: true,
             },
         ];
     },
