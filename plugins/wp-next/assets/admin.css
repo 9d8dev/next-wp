@@ -1,0 +1,78 @@
+/**
+ * WP Next Admin Styles
+ */
+
+.wp-next-form .tab-pane {
+    display: none;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+.wp-next-form .tab-pane.active {
+    display: block;
+}
+
+.wp-next-form .form-group {
+    margin: 20px 0;
+}
+
+.wp-next-form .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.wp-next-form input[type="text"],
+.wp-next-form input[type="url"],
+.wp-next-form input[type="number"] {
+    width: 100%;
+    max-width: 500px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.wp-next-form .description {
+    display: block;
+    margin-top: 8px;
+    color: #666;
+    font-size: 13px;
+}
+
+.wp-next-form .checkbox-group {
+    margin: 15px 0;
+}
+
+.wp-next-form .checkbox-item {
+    margin: 8px 0;
+}
+
+.wp-next-form .checkbox-item input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.wp-next-form .checkbox-item label {
+    display: inline;
+    margin-bottom: 0;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.wp-next-form .preview-box {
+    background: #f5f5f5;
+    padding: 12px;
+    border-radius: 4px;
+    margin-top: 10px;
+    border-left: 3px solid #0073aa;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    word-break: break-all;
+}
+
+/* Alpine.js transitions */
+[x-cloak] {
+    display: none;
+}
