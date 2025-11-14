@@ -16,9 +16,10 @@ class WP_Next_Admin_Page {
         $enable_routes = $settings['enable_custom_routes'] ?? false;
         $expose_data = $settings['expose_data'] ?? array();
 
-        // Get the active endpoint (considering custom endpoint)
+        // Get the active endpoint (for display in custom endpoint section)
         $active_endpoint = WP_Next_Settings::get_endpoint();
-        $site_info_endpoint = $active_endpoint . '/wp-next/site-info';
+        // Get the data exposure endpoint
+        $data_expose_endpoint = WP_Next_Settings::get_data_expose_path();
         ?>
         <div class="wrap">
             <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
@@ -127,7 +128,10 @@ class WP_Next_Admin_Page {
                             <th scope="row">Endpoint</th>
                             <td>
                                 <div style="background: #f5f5f5; padding: 12px; border-radius: 4px; border-left: 3px solid #4CAF50; font-family: monospace; font-size: 13px;">
-                                    <strong>GET</strong> <?php echo esc_html($site_info_endpoint); ?>
+                                    <strong>GET</strong>
+                                    <a href="<?php echo esc_html($data_expose_endpoint); ?>" target="_blank">
+	                                    <?php echo esc_html($data_expose_endpoint); ?>
+                                    </a>
                                 </div>
                                 <p class="description">This endpoint returns JSON with selected fields above.</p>
                             </td>

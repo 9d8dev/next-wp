@@ -14,10 +14,10 @@ class WP_Next_Custom_Routes {
             return;
         }
 
-        // Route is always /wp-next/site-info
+        // Route is /wp-next/info (returns site info)
         register_rest_route(
             'wp-next',
-            '/site-info',
+            '/info',
             array(
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => array(__CLASS__, 'get_site_info'),

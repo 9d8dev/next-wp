@@ -80,11 +80,11 @@ class WP_Next_Settings {
     }
 
     /**
-     * Get the site info endpoint path
+     * Get the data exposure endpoint path
      */
-    public static function get_site_info_path() {
+    public static function get_data_expose_path() {
         $endpoint = self::get_endpoint();
-        return $endpoint . '/wp-next/site-info';
+        return $endpoint . '/wp-next/info';
     }
 
     /**
