@@ -38,8 +38,9 @@ class WP_Next {
         // Custom REST API prefix
         add_filter('rest_url_prefix', array($this, 'custom_rest_url_prefix'));
 
-        // Backend Hide (use 'init' hook with priority 0 - fires very early, before WordPress processing)
-        add_action('init', array($this, 'handle_hide_backend'), 0);
+        // Hide Backend and Frontend (use 'init' hook - hide backend runs first with higher priority)
+        add_action('init', array($this, 'handle_hide_backend'), 1);
+        add_action('init', array($this, 'handle_hide_frontend'), 0);
 
         // Admin
         add_action('admin_init', array($this, 'register_settings'));
@@ -48,9 +49,6 @@ class WP_Next {
 
         // REST API
         add_action('rest_api_init', array($this, 'register_rest_routes'));
-
-        // Frontend Redirect (use 'template_redirect' hook)
-        add_action('template_redirect', array($this, 'handle_template_redirect'));
     }
 
     /**
@@ -117,9 +115,9 @@ class WP_Next {
     }
 
     /**
-     * Handle frontend redirect (runs on template_redirect hook)
+     * Handle hide frontend (runs very early on init hook)
      */
-    public function handle_template_redirect() {
+    public function handle_hide_frontend() {
         $request_uri = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field($_SERVER['REQUEST_URI']) : '/';
         WP_Next_Hide_Frontend::handle($request_uri);
     }

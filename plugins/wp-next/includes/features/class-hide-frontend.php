@@ -27,6 +27,14 @@ class WP_Next_Hide_Frontend {
             return;
         }
 
+        // Skip if hide backend is handling this request
+        if (WP_Next_Hide_Backend::is_enabled()) {
+            // Skip backend paths - let hide backend handle them
+            if (strpos($request_uri, '/wp-admin') === 0 || strpos($request_uri, '/wp-login.php') === 0 || strpos($request_uri, '/wp-signup.php') === 0) {
+                return;
+            }
+        }
+
         // Check if this is a path that should NOT be redirected
         if (self::should_exclude_from_redirect($request_uri)) {
             return;
@@ -83,25 +91,4 @@ class WP_Next_Hide_Frontend {
         return false;
     }
 
-    /**
-     * Show 404 or redirect to frontend 404
-     */
-    public static function show_404_or_redirect() {
-        if (self::is_enabled()) {
-            $frontend_url = WP_Next_Settings::get('frontend_url');
-            if (!empty($frontend_url)) {
-                // Redirect to frontend 404
-                $redirect_url = rtrim($frontend_url, '') . WP_NEXT_HIDE_FRONTEND_404_PATH;
-                wp_redirect($redirect_url, 302);
-                exit;
-            }
-        }
-
-        // Show WordPress 404
-        global $wp_query;
-        $wp_query->set_404();
-        status_header(404);
-        get_template_part(404);
-        exit;
-    }
 }

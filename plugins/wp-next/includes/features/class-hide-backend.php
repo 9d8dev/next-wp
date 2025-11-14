@@ -29,34 +29,61 @@ class WP_Next_Hide_Backend {
             return;
         }
 
+        // Allow logged-in admins to access wp-admin
+        if (is_user_logged_in() && current_user_can('manage_options')) {
+            return;
+        }
+
         $hide_backend_path = self::get_backend_path();
 
         // Block direct access to wp-admin
         if (strpos($request_uri, '/wp-admin') === 0) {
-            WP_Next_Hide_Frontend::show_404_or_redirect();
+            self::redirect_to_frontend($request_uri);
         }
 
-        // Handle wp-login access
-        if (strpos($request_uri, '/wp-login.php') === 0) {
-            // Check for valid token parameter
-            $token_param = isset($_GET[WP_NEXT_HIDE_BACKEND_TOKEN_PARAM]) ? sanitize_text_field($_GET[WP_NEXT_HIDE_BACKEND_TOKEN_PARAM]) : '';
+        // Handle wp-login access (block /wp-login* variations)
+        if (strpos($request_uri, '/wp-login') === 0) {
+            // Only allow /wp-login.php with valid token
+            if (strpos($request_uri, '/wp-login.php') === 0) {
+                // Check for valid token parameter
+                $token_param = isset($_GET[WP_NEXT_HIDE_BACKEND_TOKEN_PARAM]) ? $_GET[WP_NEXT_HIDE_BACKEND_TOKEN_PARAM] : '';
 
-            if ($token_param === $hide_backend_path) {
-                // Valid token - allow access
-                return;
+                if (!empty($token_param) && $token_param === $hide_backend_path) {
+                    // Valid token - allow access
+                    return;
+                }
             }
 
-            // Invalid or missing token - show 404
-            WP_Next_Hide_Frontend::show_404_or_redirect();
+            // Invalid or missing token, or wrong wp-login variation - redirect to frontend
+            self::redirect_to_frontend($request_uri);
         }
+    }
 
-        // Redirect custom path to wp-login with token
-        $custom_path = '/' . ltrim($hide_backend_path, '/');
-        if (strpos($request_uri, $custom_path) === 0) {
-            $login_url = home_url('/wp-login.php');
-            $redirect_url = add_query_arg(WP_NEXT_HIDE_BACKEND_TOKEN_PARAM, $hide_backend_path, $login_url);
+    /**
+     * Redirect request to frontend or show 403 Forbidden
+     */
+    private static function redirect_to_frontend($request_uri) {
+        // Check if hide frontend is enabled and frontend URL is set
+        $hide_frontend_enabled = WP_Next_Settings::get('enable_hide_frontend');
+        $frontend_url = WP_Next_Settings::get('frontend_url');
+
+        if ($hide_frontend_enabled && !empty($frontend_url)) {
+            // Extract path and query string
+            $request_path = parse_url($request_uri, PHP_URL_PATH) ?? '/';
+            $request_query = parse_url($request_uri, PHP_URL_QUERY) ?? '';
+
+            // Build redirect URL
+            $redirect_url = rtrim($frontend_url, '/') . $request_path;
+            if (!empty($request_query)) {
+                $redirect_url .= '?' . $request_query;
+            }
+
             wp_redirect($redirect_url, 302);
             exit;
         }
+
+        // Return 403 Forbidden (no UI, no template)
+        status_header(403);
+        exit('Forbidden');
     }
 }

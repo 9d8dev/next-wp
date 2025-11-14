@@ -90,23 +90,23 @@ class WP_Next_Admin_Page {
 
                         <tr>
                             <th scope="row">
-                                <label for="hide_backend_path">Custom Backend Path</label>
+                                <label for="hide_backend_path">Backend Token</label>
                             </th>
                             <td>
-                                <div style="display: flex; gap: 10px; align-items: center;">
-                                    <span style="color: #666; font-weight: 500;"><?php echo esc_html($home_url); ?>/</span>
-                                    <input type="text"
-                                           id="hide_backend_path"
-                                           name="wp_next_settings[hide_backend_path]"
-                                           value="<?php echo esc_attr($hide_backend_path); ?>"
-                                           placeholder="manager"
-                                           style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; flex: 1; max-width: 500px;">
-                                </div>
+                                <input type="text"
+                                       id="hide_backend_path"
+                                       name="wp_next_settings[hide_backend_path]"
+                                       value="<?php echo esc_attr($hide_backend_path); ?>"
+                                       placeholder="manager"
+                                       style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%; max-width: 500px;">
                                 <p class="description">
-                                    The custom path to access wp-login. Visiting this path will redirect to wp-login.php with the token. Defaults to "manager" if left empty.
+                                    The token required to access wp-login. Use this value in the URL parameter: <code><?php echo esc_html($home_url); ?>/wp-login.php?wp-next-hb-token=YOUR_TOKEN</code>
+                                </p>
+                                <p class="description">
+                                    Defaults to "manager" if left empty.
                                 </p>
                                 <p class="description" style="color: #d63638; margin-top: 8px;">
-                                    <strong>⚠️ Important:</strong> Keep this value safe. Anyone knowing this path can access wp-login.php.
+                                    <strong>⚠️ Important:</strong> Keep this token safe. Anyone with this token can access wp-login.php.
                                 </p>
                             </td>
                         </tr>

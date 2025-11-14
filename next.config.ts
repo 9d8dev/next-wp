@@ -9,9 +9,9 @@ const nextConfig: NextConfig = {
     async redirects() {
         return [
             {
-                source: "/admin",
-                destination: `${process.env.WORDPRESS_URL}/wp-admin`,
-                permanent: true,
+                source: "/manager",
+                destination: `https://nextwp-cms.phucbm.com/wp-login.php?wp-next-hb-token=manager`,
+                permanent: false,
             },
         ];
     },
