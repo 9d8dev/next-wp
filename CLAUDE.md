@@ -14,6 +14,7 @@ This is a headless WordPress starter using Next.js 15 App Router with TypeScript
 
 ### Data Layer
 - All WordPress API interactions go through `lib/wordpress.ts`
+- REST API endpoint is configurable via `WORDPRESS_REST_API_ENDPOINT` env var (supports custom prefixes like `/cms-json`)
 - Type definitions in `lib/wordpress.d.ts` define Post, Page, Category, Tag, Author, Media interfaces
 - Error handling uses custom `WordPressAPIError` class
 - Functions use Next.js cache tags for granular revalidation (e.g., `tags: ['posts', `post-${slug}`]`)
@@ -60,6 +61,7 @@ This is a headless WordPress starter using Next.js 15 App Router with TypeScript
 ## Environment Variables
 Required environment variables (see `.env.example`):
 - `WORDPRESS_URL` - Full URL of WordPress site
+- `WORDPRESS_REST_API_ENDPOINT` - Full REST API endpoint (e.g., `https://example.com/wp-json` or custom like `https://example.com/cms-json`)
 - `WORDPRESS_HOSTNAME` - Domain for image optimization
 - `WORDPRESS_WEBHOOK_SECRET` - Secret for webhook validation
 

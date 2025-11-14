@@ -1,22 +1,14 @@
 import type {NextConfig} from "next";
 
+const wpUrl = process.env.WORDPRESS_URL
+    ? new URL(process.env.WORDPRESS_URL)
+    : null;
+
 const nextConfig: NextConfig = {
     images: {
-        remotePatterns: [
-            {
-                protocol: "http",
-                hostname: `${process.env.WORDPRESS_HOSTNAME}`,
-                port: "",
-                pathname: "/**",
-            },
-            {
-                protocol: "https",
-                hostname: `${process.env.WORDPRESS_HOSTNAME}`,
-                port: "",
-                pathname: "/**",
-            },
-        ],
-        unoptimized: process.env.NODE_ENV === 'development',
+        // use the URL instance directly — satisfies (URL | RemotePattern)[]
+        remotePatterns: wpUrl ? [wpUrl] : [],
+        unoptimized: process.env.NODE_ENV === "development",
     },
     async redirects() {
         return [
