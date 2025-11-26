@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "WebFetch(domain:docs.railway.app)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
