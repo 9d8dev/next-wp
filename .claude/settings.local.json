@@ -9,7 +9,8 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:blog.railway.com)",
       "Bash(pnpm remove:*)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
