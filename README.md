@@ -7,6 +7,7 @@
 ![CleanShot 2025-01-07 at 23 18 41@2x](https://github.com/user-attachments/assets/8b268c36-eb0d-459f-b9f1-b5f129bd29bc)
 
 [![Deploy with Vercel](https://vercel.com/button)](<https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F9d8dev%2Fnext-wp&env=WORDPRESS_URL,WORDPRESS_HOSTNAME,WORDPRESS_WEBHOOK_SECRET&envDescription=Add%20WordPress%20URL%20with%20Rest%20API%20enabled%20(ie.%20https%3A%2F%2Fwp.example.com)%2C%20the%20hostname%20for%20Image%20rendering%20in%20Next%20JS%20(ie.%20wp.example.com)%2C%20and%20a%20secret%20key%20for%20secure%20revalidation&project-name=next-wp&repository-name=next-wp&demo-title=Next%20JS%20and%20WordPress%20Starter&demo-url=https%3A%2F%2Fwp.9d8.dev>)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/template/TEMPLATE_ID)
 
 This is a starter template for building a Next.js application that fetches data from a WordPress site using the WordPress REST API. The template includes functions for fetching posts, categories, tags, authors, and featured media from a WordPress site and rendering them in a Next.js application.
 
@@ -17,6 +18,7 @@ This is a starter template for building a Next.js application that fetches data 
 - [Next.js Starter for WordPress Headless CMS](#nextjs-starter-for-wordpress-headless-cms)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
+  - [Railway Deployment](#railway-deployment)
   - [WordPress Functions](#wordpress-functions)
   - [Pagination System](#pagination-system)
   - [WordPress Types](#wordpress-types)
@@ -72,6 +74,46 @@ WORDPRESS_WEBHOOK_SECRET="your-secret-key-here"
 ```
 
 You can find the example of `.env.local` file in the `.env.example` file (and in Vercel).
+
+## Railway Deployment
+
+The Railway button deploys the complete stack with one click:
+
+- **MySQL** - Database for WordPress
+- **WordPress** - Content management system (official Docker image)
+- **Next.js** - This headless frontend
+
+### Post-Deployment Setup
+
+After deployment completes:
+
+1. **Configure WordPress:**
+   - Access your WordPress admin at `https://your-wordpress-domain.up.railway.app/wp-admin`
+   - Complete the WordPress installation wizard
+
+2. **Install the Revalidation Plugin:**
+   - Download the plugin from `/plugin/next-revalidate.zip` in this repository
+   - Upload and activate it in WordPress admin (Plugins > Add New > Upload Plugin)
+
+3. **Configure the Plugin:**
+   - Go to Settings > Next.js Revalidation
+   - Enter your Next.js site URL (shown in Railway dashboard)
+   - Enter the webhook secret (use the `WORDPRESS_WEBHOOK_SECRET` value from Railway)
+
+4. **Verify the Setup:**
+   - Ensure WordPress REST API is accessible at `/wp-json/wp/v2/`
+   - Create or update a post to test cache revalidation
+
+### Railway Environment Variables
+
+The template automatically configures these variables:
+
+| Variable | Description |
+|----------|-------------|
+| `WORDPRESS_URL` | WordPress service public URL |
+| `WORDPRESS_HOSTNAME` | WordPress domain for image optimization |
+| `WORDPRESS_WEBHOOK_SECRET` | Shared secret for cache revalidation |
+| MySQL credentials | Auto-generated for WordPress database |
 
 ## WordPress Functions
 

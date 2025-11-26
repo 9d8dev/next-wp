@@ -3,7 +3,11 @@
     "allow": [
       "Bash(find:*)",
       "Bash(cat:*)",
-      "WebFetch(domain:docs.railway.app)"
+      "WebFetch(domain:docs.railway.app)",
+      "WebFetch(domain:docs.railway.com)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:blog.railway.com)"
     ],
     "deny": [],
     "ask": []
