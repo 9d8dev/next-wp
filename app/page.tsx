@@ -59,7 +59,7 @@ const ToDelete = () => {
               height={32.62}
             />
           </a>
-          <p className="!text-sm sr-only sm:not-sr-only text-muted-foreground">
+          <p className="text-sm! sr-only sm:not-sr-only text-muted-foreground">
             Deploy with Vercel in seconds.
           </p>
         </div>

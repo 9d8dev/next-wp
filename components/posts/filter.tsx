@@ -62,7 +62,7 @@ export function FilterPosts({
   const hasAuthors = authors.length > 0;
 
   return (
-    <div className="grid md:grid-cols-[1fr_1fr_1fr_0.5fr] gap-2 my-4 !z-10">
+    <div className="grid md:grid-cols-[1fr_1fr_1fr_0.5fr] gap-2 my-4 z-10!">
       <Select
         value={selectedTag || "all"}
         onValueChange={(value) => handleFilterChange("tag", value)}

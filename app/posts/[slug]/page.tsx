@@ -107,7 +107,7 @@ export default async function Page({
               href={`/posts/?category=${category.id}`}
               className={cn(
                 badgeVariants({ variant: "outline" }),
-                "!no-underline"
+                "no-underline!"
               )}
             >
               {category.name}
