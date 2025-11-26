@@ -271,7 +271,12 @@ export async function getTagBySlug(slug: string): Promise<Tag> {
 }
 
 export async function getAllPages(): Promise<Page[]> {
-  return wordpressFetch<Page[]>("/wp-json/wp/v2/pages");
+  try {
+    return await wordpressFetch<Page[]>("/wp-json/wp/v2/pages");
+  } catch (error) {
+    console.warn("WordPress unavailable during build, skipping static generation for pages");
+    return [];
+  }
 }
 
 export async function getPageById(id: number): Promise<Page> {
@@ -349,29 +354,35 @@ export async function searchAuthors(query: string): Promise<Author[]> {
 }
 
 // Function specifically for generateStaticParams - fetches ALL posts
+// Returns empty array if WordPress is unavailable (allows build to succeed)
 export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
-  const allSlugs: { slug: string }[] = [];
-  let page = 1;
-  let hasMore = true;
+  try {
+    const allSlugs: { slug: string }[] = [];
+    let page = 1;
+    let hasMore = true;
 
-  while (hasMore) {
-    const response = await wordpressFetchWithPagination<Post[]>(
-      "/wp-json/wp/v2/posts",
-      {
-        per_page: 100,
-        page,
-        _fields: "slug", // Only fetch slug field for performance
-      }
-    );
+    while (hasMore) {
+      const response = await wordpressFetchWithPagination<Post[]>(
+        "/wp-json/wp/v2/posts",
+        {
+          per_page: 100,
+          page,
+          _fields: "slug", // Only fetch slug field for performance
+        }
+      );
 
-    const posts = response.data;
-    allSlugs.push(...posts.map((post) => ({ slug: post.slug })));
+      const posts = response.data;
+      allSlugs.push(...posts.map((post) => ({ slug: post.slug })));
 
-    hasMore = page < response.headers.totalPages;
-    page++;
+      hasMore = page < response.headers.totalPages;
+      page++;
+    }
+
+    return allSlugs;
+  } catch (error) {
+    console.warn("WordPress unavailable during build, skipping static generation for posts");
+    return [];
   }
-
-  return allSlugs;
 }
 
 // Enhanced pagination functions for specific queries
