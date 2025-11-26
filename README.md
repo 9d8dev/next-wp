@@ -6,6 +6,8 @@
 
 ![CleanShot 2025-01-07 at 23 18 41@2x](https://github.com/user-attachments/assets/8b268c36-eb0d-459f-b9f1-b5f129bd29bc)
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/04y-xq?referralCode=AJtQpy&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 [![Deploy with Vercel](https://vercel.com/button)](<https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F9d8dev%2Fnext-wp&env=WORDPRESS_URL,WORDPRESS_HOSTNAME,WORDPRESS_WEBHOOK_SECRET&envDescription=Add%20WordPress%20URL%20with%20Rest%20API%20enabled%20(ie.%20https%3A%2F%2Fwp.example.com)%2C%20the%20hostname%20for%20Image%20rendering%20in%20Next%20JS%20(ie.%20wp.example.com)%2C%20and%20a%20secret%20key%20for%20secure%20revalidation&project-name=next-wp&repository-name=next-wp&demo-title=Next%20JS%20and%20WordPress%20Starter&demo-url=https%3A%2F%2Fwp.9d8.dev>)
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/template/TEMPLATE_ID)
 
@@ -108,12 +110,12 @@ After deployment completes:
 
 The template automatically configures these variables:
 
-| Variable | Description |
-|----------|-------------|
-| `WORDPRESS_URL` | WordPress service public URL |
-| `WORDPRESS_HOSTNAME` | WordPress domain for image optimization |
-| `WORDPRESS_WEBHOOK_SECRET` | Shared secret for cache revalidation |
-| MySQL credentials | Auto-generated for WordPress database |
+| Variable                   | Description                             |
+| -------------------------- | --------------------------------------- |
+| `WORDPRESS_URL`            | WordPress service public URL            |
+| `WORDPRESS_HOSTNAME`       | WordPress domain for image optimization |
+| `WORDPRESS_WEBHOOK_SECRET` | Shared secret for cache revalidation    |
+| MySQL credentials          | Auto-generated for WordPress database   |
 
 ## WordPress Functions
 
@@ -241,7 +243,7 @@ Instead of fetching all posts and paginating client-side, the `getPostsPaginated
 const response = await getPostsPaginated(2, 10, {
   author: "123",
   category: "news",
-  search: "nextjs"
+  search: "nextjs",
 });
 
 const { data: posts, headers } = response;
@@ -254,10 +256,10 @@ The `getPostsPaginated` function returns a `WordPressResponse<Post[]>` object:
 
 ```typescript
 interface WordPressResponse<T> {
-  data: T;                    // The actual posts array
+  data: T; // The actual posts array
   headers: {
-    total: number;            // Total number of posts matching the query
-    totalPages: number;       // Total number of pages
+    total: number; // Total number of posts matching the query
+    totalPages: number; // Total number of pages
   };
 }
 ```
@@ -279,11 +281,17 @@ For existing implementations using `getAllPosts`, you can migrate to the more ef
 const allPosts = await getAllPosts({ author, category });
 const page = 1;
 const postsPerPage = 9;
-const paginatedPosts = allPosts.slice((page - 1) * postsPerPage, page * postsPerPage);
+const paginatedPosts = allPosts.slice(
+  (page - 1) * postsPerPage,
+  page * postsPerPage,
+);
 const totalPages = Math.ceil(allPosts.length / postsPerPage);
 
 // After: Server-side pagination
-const { data: posts, headers } = await getPostsPaginated(page, postsPerPage, { author, category });
+const { data: posts, headers } = await getPostsPaginated(page, postsPerPage, {
+  author,
+  category,
+});
 const { total, totalPages } = headers;
 ```
 
@@ -336,7 +344,7 @@ The pagination system includes sophisticated cache tags for optimal performance:
 
 ```typescript
 // Dynamic cache tags based on query parameters
-["wordpress", "posts", "posts-page-1", "posts-category-123"]
+["wordpress", "posts", "posts-page-1", "posts-category-123"];
 ```
 
 This ensures that when content changes, only the relevant pagination pages are revalidated, maintaining excellent performance even with large content sets.
@@ -504,13 +512,11 @@ Features:
 The search system is implemented across several layers:
 
 1. **Client-Side Component** (`search-input.tsx`):
-
    - Uses Next.js App Router's URL handling
    - Debounced input for better performance
    - Maintains search state in URL parameters
 
 2. **Server-Side Processing** (`page.tsx`):
-
    - Handles search parameters server-side
    - Combines search with other filters
    - Parallel data fetching for better performance
@@ -593,15 +599,18 @@ This starter implements an intelligent caching and revalidation system using Nex
 The WordPress API functions use a sophisticated hierarchical cache tag system for granular revalidation:
 
 #### Global Tags
+
 - `wordpress` - Affects all WordPress content
 
 #### Content Type Tags
+
 - `posts` - All post content
 - `categories` - All category content
 - `tags` - All tag content
 - `authors` - All author content
 
 #### Pagination-Specific Tags
+
 - `posts-page-1`, `posts-page-2`, etc. - Individual pagination pages
 - `posts-search` - Search result pages
 - `posts-author-123` - Posts filtered by specific author
@@ -609,6 +618,7 @@ The WordPress API functions use a sophisticated hierarchical cache tag system fo
 - `posts-tag-789` - Posts filtered by specific tag
 
 #### Individual Item Tags
+
 - `post-123` - Specific post content
 - `category-456` - Specific category content
 - `tag-789` - Specific tag content
@@ -619,7 +629,6 @@ This granular system ensures that when content changes, only the relevant cached
 ### Automatic Revalidation
 
 1. **Install the WordPress Plugin:**
-
    - Navigate to the `/plugin` directory
    - Use the pre-built `next-revalidate.zip` file or create a ZIP from the `next-revalidate` folder
    - Install and activate through WordPress admin
@@ -627,7 +636,6 @@ This granular system ensures that when content changes, only the relevant cached
    - Configure your Next.js URL and webhook secret
 
 2. **Configure Next.js:**
-
    - Add `WORDPRESS_WEBHOOK_SECRET` to your environment variables (same secret as in WordPress plugin)
    - The webhook endpoint at `/api/revalidate` is already set up
    - No additional configuration needed
