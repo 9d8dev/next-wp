@@ -4,6 +4,8 @@ import { Metadata } from "next";
 import BackButton from "@/components/back";
 import Link from "next/link";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "All Tags",
   description: "Browse all tags of our blog posts",
@@ -20,13 +22,17 @@ export default async function Page() {
       <Container className="space-y-6">
         <Prose className="mb-8">
           <h2>All Tags</h2>
-          <ul className="grid">
-            {tags.map((tag: any) => (
-              <li key={tag.id}>
-                <Link href={`/posts/?tag=${tag.id}`}>{tag.name}</Link>
-              </li>
-            ))}
-          </ul>
+          {tags.length > 0 ? (
+            <ul className="grid">
+              {tags.map((tag: any) => (
+                <li key={tag.id}>
+                  <Link href={`/posts/?tag=${tag.id}`}>{tag.name}</Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-muted-foreground">No tags available yet.</p>
+          )}
         </Prose>
         <BackButton />
       </Container>

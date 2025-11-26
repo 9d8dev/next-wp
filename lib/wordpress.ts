@@ -229,7 +229,12 @@ export async function getPostBySlug(slug: string): Promise<Post> {
 }
 
 export async function getAllCategories(): Promise<Category[]> {
-  return wordpressFetch<Category[]>("/wp-json/wp/v2/categories");
+  try {
+    return await wordpressFetch<Category[]>("/wp-json/wp/v2/categories");
+  } catch (error) {
+    console.warn("WordPress unavailable, returning empty categories");
+    return [];
+  }
 }
 
 export async function getCategoryById(id: number): Promise<Category> {
@@ -257,7 +262,12 @@ export async function getTagsByPost(postId: number): Promise<Tag[]> {
 }
 
 export async function getAllTags(): Promise<Tag[]> {
-  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags");
+  try {
+    return await wordpressFetch<Tag[]>("/wp-json/wp/v2/tags");
+  } catch (error) {
+    console.warn("WordPress unavailable, returning empty tags");
+    return [];
+  }
 }
 
 export async function getTagById(id: number): Promise<Tag> {
@@ -290,7 +300,12 @@ export async function getPageBySlug(slug: string): Promise<Page> {
 }
 
 export async function getAllAuthors(): Promise<Author[]> {
-  return wordpressFetch<Author[]>("/wp-json/wp/v2/users");
+  try {
+    return await wordpressFetch<Author[]>("/wp-json/wp/v2/users");
+  } catch (error) {
+    console.warn("WordPress unavailable, returning empty authors");
+    return [];
+  }
 }
 
 export async function getAuthorById(id: number): Promise<Author> {
