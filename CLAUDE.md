@@ -3,69 +3,70 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Build Commands
-- `npm run dev` - Start development server with turbo mode
-- `npm run build` - Build for production
-- `npm run start` - Start production server  
-- `npm run lint` - Run ESLint to check code quality
+- `pnpm dev` - Start development server with turbo mode
+- `pnpm build` - Build for production
+- `pnpm start` - Start production server
+- `pnpm lint` - Run ESLint
 
 ## Architecture Overview
 
-This is a headless WordPress starter using Next.js 15 App Router with TypeScript. Key architectural patterns:
+Headless WordPress starter using Next.js 16 App Router with TypeScript.
 
-### Data Layer
-- All WordPress API interactions go through `lib/wordpress.ts`
-- Type definitions in `lib/wordpress.d.ts` define Post, Page, Category, Tag, Author, Media interfaces
-- Error handling uses custom `WordPressAPIError` class
-- Functions use Next.js cache tags for granular revalidation (e.g., `tags: ['posts', `post-${slug}`]`)
+### Data Layer (`lib/wordpress.ts`)
+- All WordPress REST API interactions centralized here
+- Type definitions in `lib/wordpress.d.ts` (Post, Page, Category, Tag, Author, FeaturedMedia)
+- `WordPressAPIError` class for consistent error handling
+- Cache tags for granular revalidation: `['wordpress', 'posts', 'post-{id}', 'posts-page-{n}']`
+- Pagination via `getPostsPaginated()` returns `{ data, headers: { total, totalPages } }`
+- Default cache: 1 hour (`revalidate: 3600`)
 
-### Routing Structure
-- Dynamic routes: `/posts/[slug]`, `/pages/[slug]`
-- Archive pages: `/posts`, `/posts/authors`, `/posts/categories`, `/posts/tags`
-- API routes: `/api/revalidate` (webhook), `/api/og` (OG images)
+### Routing
+- Dynamic: `/posts/[slug]`, `/pages/[slug]`
+- Archives: `/posts`, `/posts/authors`, `/posts/categories`, `/posts/tags`
+- API: `/api/revalidate` (webhook), `/api/og` (OG images)
 
-### Component Patterns
-- Server Components for data fetching with parallel `Promise.all()` calls
-- URL-based state management for search and filters
-- Debounced search (300ms) with `useSearchParams`
-- Pagination with 9 posts per page default
+### Data Fetching Patterns
+- Server Components with parallel `Promise.all()` calls
+- `generateStaticParams()` uses `getAllPostSlugs()` for static generation
+- URL-based state for search/filters via `searchParams`
+- Debounced search (300ms) in `SearchInput` component
 
-### Revalidation System
-- WordPress plugin sends webhooks on content changes
-- Next.js endpoint validates webhook secret and calls `revalidateTag()`
-- Default cache duration: 1 hour (`revalidate: 3600`)
+### Revalidation Flow
+1. WordPress plugin sends webhook to `/api/revalidate`
+2. Validates `x-webhook-secret` header against `WORDPRESS_WEBHOOK_SECRET`
+3. Calls `revalidateTag()` for specific content types (posts, categories, tags, authors)
+
+### Configuration Files
+- `site.config.ts` - Site metadata (domain, name, description)
+- `menu.config.ts` - Navigation menu structure
+- `next.config.ts` - Image remotePatterns, /admin redirect to WordPress
 
 ## Code Style
 
 ### TypeScript
-- Use strict typing with interfaces defined in `lib/wordpress.d.ts`
-- Prefer type annotations over type assertions
-- Use type inference when the type is obvious
+- Strict typing with interfaces from `lib/wordpress.d.ts`
+- Async params: `params: Promise<{ slug: string }>` (Next.js 15+ pattern)
 
-### Naming Conventions
-- React components: PascalCase (e.g., `PostCard.tsx`)
-- Functions and variables: camelCase
-- Types and interfaces: PascalCase
-- Constants: UPPERCASE_SNAKE_CASE for true constants
+### Naming
+- Components: PascalCase (`PostCard.tsx`)
+- Functions/variables: camelCase
+- Types/interfaces: PascalCase
 
 ### File Structure
-- Page components: `/app/**/*.tsx`
-- Reusable UI components: `/components/**/*.tsx`  
-- API and utility functions: `/lib/**/*.ts`
-- WordPress data functions must use cache tags for proper revalidation
-
-### Error Handling
-- Use `try/catch` blocks for API calls
-- Utilize `WordPressAPIError` class for consistent API error handling
+- Pages: `/app/**/*.tsx`
+- UI components: `/components/ui/*.tsx` (shadcn/ui)
+- Feature components: `/components/posts/*.tsx`, `/components/theme/*.tsx`
+- WordPress functions must include cache tags
 
 ## Environment Variables
-Required environment variables (see `.env.example`):
-- `WORDPRESS_URL` - Full URL of WordPress site
-- `WORDPRESS_HOSTNAME` - Domain for image optimization
-- `WORDPRESS_WEBHOOK_SECRET` - Secret for webhook validation
+```
+WORDPRESS_URL="https://example.com"      # Full WordPress URL
+WORDPRESS_HOSTNAME="example.com"          # For Next.js image optimization
+WORDPRESS_WEBHOOK_SECRET="secret-key"     # Webhook validation
+```
 
 ## Key Dependencies
-- Next.js 15.3.3 with React 19.1.0
-- TypeScript with strict mode
-- Tailwind CSS with shadcn/ui components
-- React Hook Form for form handling
-- Lucide React for icons
+- Next.js 16 with React 19
+- Tailwind CSS v4 with `@tailwindcss/postcss`
+- shadcn/ui components (Radix primitives)
+- brijr/craft for layout (`Section`, `Container`, `Article`, `Prose`)
