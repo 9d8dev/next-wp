@@ -1,6 +1,5 @@
 // Craft Imports
 import { Section, Container, Prose } from "@/components/craft";
-import Balancer from "react-wrap-balancer";
 
 // Next.js Imports
 import Link from "next/link";
@@ -26,9 +25,7 @@ const ToDelete = () => {
   return (
     <main className="space-y-6">
       <Prose>
-        <h1>
-          <Balancer>Headless WordPress built with the Next.js</Balancer>
-        </h1>
+        <h1>Headless WordPress built with the Next.js</h1>
 
         <p>
           This is <a href="https://github.com/9d8dev/next-wp">next-wp</a>,

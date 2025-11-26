@@ -7,7 +7,9 @@
       "WebFetch(domain:docs.railway.com)",
       "WebSearch",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:blog.railway.com)"
+      "WebFetch(domain:blog.railway.com)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm build:*)"
     ],
     "deny": [],
     "ask": []

@@ -12,7 +12,6 @@ import { mainMenu, contentMenu } from "@/menu.config";
 import { siteConfig } from "@/site.config";
 import { cn } from "@/lib/utils";
 
-import Balancer from "react-wrap-balancer";
 import Logo from "@/public/logo.svg";
 import Image from "next/image";
 import Link from "next/link";
@@ -120,9 +119,7 @@ const Footer = () => {
                 height={26.44}
               ></Image>
             </Link>
-            <p>
-              <Balancer>{siteConfig.site_description}</Balancer>
-            </p>
+            <p>{siteConfig.site_description}</p>
           </div>
           <div className="flex flex-col gap-2 text-sm">
             <h5 className="font-medium text-base">Website</h5>

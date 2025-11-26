@@ -28,7 +28,6 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.66.1",
-    "react-wrap-balancer": "^1.1.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.6",

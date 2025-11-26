@@ -12,8 +12,6 @@ import { cn } from "@/lib/utils";
 import { siteConfig } from "@/site.config";
 
 import Link from "next/link";
-import Balancer from "react-wrap-balancer";
-
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -87,11 +85,9 @@ export default async function Page({
       <Container>
         <Prose>
           <h1>
-            <Balancer>
-              <span
+            <span
                 dangerouslySetInnerHTML={{ __html: post.title.rendered }}
               ></span>
-            </Balancer>
           </h1>
           <div className="flex justify-between items-center gap-4 text-sm mb-4">
             <h5>
