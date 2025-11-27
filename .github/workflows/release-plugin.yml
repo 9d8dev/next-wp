@@ -1,0 +1,48 @@
+name: Release Plugin
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'wordpress/next-revalidate/**'
+    tags:
+      - 'plugin-v*'
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create plugin ZIP
+        run: |
+          cd wordpress
+          zip -r next-revalidate.zip next-revalidate/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: next-revalidate-plugin
+          path: wordpress/next-revalidate.zip
+
+      - name: Create Release (on tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: wordpress/next-revalidate.zip
+          name: Next.js Revalidation Plugin ${{ github.ref_name }}
+          body: |
+            ## Next.js Revalidation Plugin
+
+            WordPress plugin for automatic cache revalidation with Next.js.
+
+            ### Installation
+            1. Download `next-revalidate.zip`
+            2. Go to WordPress Admin → Plugins → Add New → Upload Plugin
+            3. Upload the ZIP and activate
+            4. Configure at Settings → Next.js Revalidation

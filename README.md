@@ -264,12 +264,14 @@ console.log(`Found ${headers.total} posts across ${headers.totalPages} pages`);
 
 The starter uses Next.js cache tags for efficient revalidation:
 
-1. **Install the plugin** - Upload `/plugin/next-revalidate.zip` to WordPress
+1. **Install the plugin** - Download [next-revalidate.zip](https://github.com/9d8dev/next-wp/releases/latest/download/next-revalidate.zip) and upload to WordPress
 2. **Configure** - Go to Settings > Next.js Revalidation
 3. **Set URL** - Enter your Next.js site URL
 4. **Set secret** - Use the same `WORDPRESS_WEBHOOK_SECRET` value
 
 When content changes in WordPress, only affected pages are revalidated.
+
+> **Note:** If using the Railway template, the plugin is pre-installed automatically.
 
 ## Customization
 
