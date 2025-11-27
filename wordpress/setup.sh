@@ -21,6 +21,11 @@ if ! wp core is-installed --allow-root 2>/dev/null; then
     --allow-root
 
   echo "WordPress installed successfully!"
+
+  # Remove default plugins (keep only next-revalidate)
+  echo "Removing default plugins..."
+  wp plugin delete akismet --allow-root 2>/dev/null || true
+  wp plugin delete hello --allow-root 2>/dev/null || true
 fi
 
 # Activate the revalidation plugin if not already active

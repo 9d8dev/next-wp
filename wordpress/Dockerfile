@@ -10,11 +10,9 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp
 
-# Copy the revalidation plugin
-COPY next-revalidate /var/www/html/wp-content/plugins/next-revalidate
-
-# Copy the headless redirect theme
-COPY theme /var/www/html/wp-content/themes/nextjs-headless
+# Copy plugin and theme to staging location (volume overwrites /var/www/html)
+COPY next-revalidate /usr/src/next-revalidate
+COPY theme /usr/src/nextjs-headless
 
 # Copy the setup scripts
 COPY setup.sh /usr/local/bin/setup-wordpress.sh
