@@ -21,6 +21,14 @@ copy_custom_files() {
         chown -R www-data:www-data /var/www/html/wp-content/themes/nextjs-headless
     fi
 
+    # Create robots.txt to block all crawlers (Next.js is the public site)
+    echo "Creating robots.txt..."
+    cat > /var/www/html/robots.txt << 'EOF'
+User-agent: *
+Disallow: /
+EOF
+    chown www-data:www-data /var/www/html/robots.txt
+
     # Run the setup script
     /usr/local/bin/setup-wordpress.sh
 }

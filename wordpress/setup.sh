@@ -34,12 +34,9 @@ if ! wp plugin is-active next-revalidate --allow-root 2>/dev/null; then
   wp plugin activate next-revalidate --allow-root
 fi
 
-# Activate the headless theme
-current_theme=$(wp theme list --status=active --field=name --allow-root 2>/dev/null)
-if [ "$current_theme" != "nextjs-headless" ]; then
-  echo "Activating Next.js Headless theme..."
-  wp theme activate nextjs-headless --allow-root
-fi
+# Activate the headless theme (always run, safe if already active)
+echo "Activating Next.js Headless theme..."
+wp theme activate nextjs-headless --allow-root || true
 
 # Configure the plugin if NEXTJS_URL is set
 if [ -n "$NEXTJS_URL" ]; then
