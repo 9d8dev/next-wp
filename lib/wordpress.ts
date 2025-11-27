@@ -12,20 +12,28 @@ import type {
   FeaturedMedia,
 } from "./wordpress.d";
 
+// Single source of truth for WordPress configuration
 const baseUrl = process.env.WORDPRESS_URL;
+const isConfigured = Boolean(baseUrl);
 
-if (!baseUrl) {
-  console.warn("WORDPRESS_URL environment variable is not defined - WordPress features will be unavailable");
+if (!isConfigured) {
+  console.warn(
+    "WORDPRESS_URL environment variable is not defined - WordPress features will be unavailable"
+  );
 }
 
 class WordPressAPIError extends Error {
-  constructor(message: string, public status: number, public endpoint: string) {
+  constructor(
+    message: string,
+    public status: number,
+    public endpoint: string
+  ) {
     super(message);
     this.name = "WordPressAPIError";
   }
 }
 
-// New types for pagination support
+// Pagination types
 export interface WordPressPaginationHeaders {
   total: number;
   totalPages: number;
@@ -36,27 +44,24 @@ export interface WordPressResponse<T> {
   headers: WordPressPaginationHeaders;
 }
 
-// Keep original function for backward compatibility
+const USER_AGENT = "Next.js WordPress Client";
+const CACHE_TTL = 3600; // 1 hour
+
+// Core fetch - throws on error (for functions that require data)
 async function wordpressFetch<T>(
   path: string,
-  query?: Record<string, any>
+  query?: Record<string, any>,
+  tags: string[] = ["wordpress"]
 ): Promise<T> {
   if (!baseUrl) {
     throw new Error("WordPress URL not configured");
   }
-  const url = `${baseUrl}${path}${
-    query ? `?${querystring.stringify(query)}` : ""
-  }`;
-  const userAgent = "Next.js WordPress Client";
+
+  const url = `${baseUrl}${path}${query ? `?${querystring.stringify(query)}` : ""}`;
 
   const response = await fetch(url, {
-    headers: {
-      "User-Agent": userAgent,
-    },
-    next: {
-      tags: ["wordpress"],
-      revalidate: 3600, // 1 hour cache
-    },
+    headers: { "User-Agent": USER_AGENT },
+    next: { tags, revalidate: CACHE_TTL },
   });
 
   if (!response.ok) {
@@ -70,27 +75,38 @@ async function wordpressFetch<T>(
   return response.json();
 }
 
-// New function for paginated requests
-async function wordpressFetchWithPagination<T>(
+// Graceful fetch - returns fallback when WordPress unavailable or on error
+async function wordpressFetchGraceful<T>(
   path: string,
-  query?: Record<string, any>
+  fallback: T,
+  query?: Record<string, any>,
+  tags: string[] = ["wordpress"]
+): Promise<T> {
+  if (!isConfigured) return fallback;
+
+  try {
+    return await wordpressFetch<T>(path, query, tags);
+  } catch {
+    console.warn(`WordPress fetch failed for ${path}`);
+    return fallback;
+  }
+}
+
+// Paginated fetch - returns response with headers
+async function wordpressFetchPaginated<T>(
+  path: string,
+  query?: Record<string, any>,
+  tags: string[] = ["wordpress"]
 ): Promise<WordPressResponse<T>> {
   if (!baseUrl) {
     throw new Error("WordPress URL not configured");
   }
-  const url = `${baseUrl}${path}${
-    query ? `?${querystring.stringify(query)}` : ""
-  }`;
-  const userAgent = "Next.js WordPress Client";
+
+  const url = `${baseUrl}${path}${query ? `?${querystring.stringify(query)}` : ""}`;
 
   const response = await fetch(url, {
-    headers: {
-      "User-Agent": userAgent,
-    },
-    next: {
-      tags: ["wordpress"],
-      revalidate: 3600, // 1 hour cache
-    },
+    headers: { "User-Agent": USER_AGENT },
+    next: { tags, revalidate: CACHE_TTL },
   });
 
   if (!response.ok) {
@@ -101,10 +117,8 @@ async function wordpressFetchWithPagination<T>(
     );
   }
 
-  const data = await response.json();
-
   return {
-    data,
+    data: await response.json(),
     headers: {
       total: parseInt(response.headers.get("X-WP-Total") || "0", 10),
       totalPages: parseInt(response.headers.get("X-WP-TotalPages") || "0", 10),
@@ -112,7 +126,28 @@ async function wordpressFetchWithPagination<T>(
   };
 }
 
-// New function for paginated posts
+// Graceful paginated fetch - returns empty response when unavailable
+async function wordpressFetchPaginatedGraceful<T>(
+  path: string,
+  query?: Record<string, any>,
+  tags: string[] = ["wordpress"]
+): Promise<WordPressResponse<T[]>> {
+  const emptyResponse: WordPressResponse<T[]> = {
+    data: [],
+    headers: { total: 0, totalPages: 0 },
+  };
+
+  if (!isConfigured) return emptyResponse;
+
+  try {
+    return await wordpressFetchPaginated<T[]>(path, query, tags);
+  } catch {
+    console.warn(`WordPress paginated fetch failed for ${path}`);
+    return emptyResponse;
+  }
+}
+
+// Paginated posts with filter support
 export async function getPostsPaginated(
   page: number = 1,
   perPage: number = 9,
@@ -123,13 +158,6 @@ export async function getPostsPaginated(
     search?: string;
   }
 ): Promise<WordPressResponse<Post[]>> {
-  if (!baseUrl) {
-    return {
-      data: [],
-      headers: { total: 0, totalPages: 0 },
-    };
-  }
-
   const query: Record<string, any> = {
     _embed: true,
     per_page: perPage,
@@ -137,7 +165,7 @@ export async function getPostsPaginated(
   };
 
   // Build cache tags based on filters
-  const cacheTags = ["wordpress", "posts"];
+  const cacheTags = ["wordpress", "posts", `posts-page-${page}`];
 
   if (filterParams?.search) {
     query.search = filterParams.search;
@@ -156,41 +184,11 @@ export async function getPostsPaginated(
     cacheTags.push(`posts-category-${filterParams.category}`);
   }
 
-  // Add page-specific cache tag for granular invalidation
-  cacheTags.push(`posts-page-${page}`);
-
-  const url = `${baseUrl}/wp-json/wp/v2/posts${
-    query ? `?${querystring.stringify(query)}` : ""
-  }`;
-  const userAgent = "Next.js WordPress Client";
-
-  const response = await fetch(url, {
-    headers: {
-      "User-Agent": userAgent,
-    },
-    next: {
-      tags: cacheTags,
-      revalidate: 3600, // 1 hour cache
-    },
-  });
-
-  if (!response.ok) {
-    throw new WordPressAPIError(
-      `WordPress API request failed: ${response.statusText}`,
-      response.status,
-      url
-    );
-  }
-
-  const data = await response.json();
-
-  return {
-    data,
-    headers: {
-      total: parseInt(response.headers.get("X-WP-Total") || "0", 10),
-      totalPages: parseInt(response.headers.get("X-WP-TotalPages") || "0", 10),
-    },
-  };
+  return wordpressFetchPaginatedGraceful<Post>(
+    "/wp-json/wp/v2/posts",
+    query,
+    cacheTags
+  );
 }
 
 export async function getAllPosts(filterParams?: {
@@ -199,41 +197,20 @@ export async function getAllPosts(filterParams?: {
   category?: string;
   search?: string;
 }): Promise<Post[]> {
-  try {
-    const query: Record<string, any> = {
-      _embed: true,
-      per_page: 100,
-    };
+  const query: Record<string, any> = {
+    _embed: true,
+    per_page: 100,
+  };
 
-    if (filterParams?.search) {
-      query.search = filterParams.search;
+  if (filterParams?.search) query.search = filterParams.search;
+  if (filterParams?.author) query.author = filterParams.author;
+  if (filterParams?.tag) query.tags = filterParams.tag;
+  if (filterParams?.category) query.categories = filterParams.category;
 
-      if (filterParams?.author) {
-        query.author = filterParams.author;
-      }
-      if (filterParams?.tag) {
-        query.tags = filterParams.tag;
-      }
-      if (filterParams?.category) {
-        query.categories = filterParams.category;
-      }
-    } else {
-      if (filterParams?.author) {
-        query.author = filterParams.author;
-      }
-      if (filterParams?.tag) {
-        query.tags = filterParams.tag;
-      }
-      if (filterParams?.category) {
-        query.categories = filterParams.category;
-      }
-    }
-
-    return await wordpressFetch<Post[]>("/wp-json/wp/v2/posts", query);
-  } catch (error) {
-    console.warn("WordPress unavailable, returning empty posts");
-    return [];
-  }
+  return wordpressFetchGraceful<Post[]>("/wp-json/wp/v2/posts", [], query, [
+    "wordpress",
+    "posts",
+  ]);
 }
 
 export async function getPostById(id: number): Promise<Post> {
@@ -241,22 +218,21 @@ export async function getPostById(id: number): Promise<Post> {
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | undefined> {
-  try {
-    const posts = await wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { slug });
-    return posts[0];
-  } catch (error) {
-    console.warn("WordPress unavailable, post not found");
-    return undefined;
-  }
+  const posts = await wordpressFetchGraceful<Post[]>(
+    "/wp-json/wp/v2/posts",
+    [],
+    { slug }
+  );
+  return posts[0];
 }
 
 export async function getAllCategories(): Promise<Category[]> {
-  try {
-    return await wordpressFetch<Category[]>("/wp-json/wp/v2/categories");
-  } catch (error) {
-    console.warn("WordPress unavailable, returning empty categories");
-    return [];
-  }
+  return wordpressFetchGraceful<Category[]>(
+    "/wp-json/wp/v2/categories",
+    [],
+    undefined,
+    ["wordpress", "categories"]
+  );
 }
 
 export async function getCategoryById(id: number): Promise<Category> {
@@ -284,12 +260,10 @@ export async function getTagsByPost(postId: number): Promise<Tag[]> {
 }
 
 export async function getAllTags(): Promise<Tag[]> {
-  try {
-    return await wordpressFetch<Tag[]>("/wp-json/wp/v2/tags");
-  } catch (error) {
-    console.warn("WordPress unavailable, returning empty tags");
-    return [];
-  }
+  return wordpressFetchGraceful<Tag[]>("/wp-json/wp/v2/tags", [], undefined, [
+    "wordpress",
+    "tags",
+  ]);
 }
 
 export async function getTagById(id: number): Promise<Tag> {
@@ -303,12 +277,10 @@ export async function getTagBySlug(slug: string): Promise<Tag> {
 }
 
 export async function getAllPages(): Promise<Page[]> {
-  try {
-    return await wordpressFetch<Page[]>("/wp-json/wp/v2/pages");
-  } catch (error) {
-    console.warn("WordPress unavailable during build, skipping static generation for pages");
-    return [];
-  }
+  return wordpressFetchGraceful<Page[]>("/wp-json/wp/v2/pages", [], undefined, [
+    "wordpress",
+    "pages",
+  ]);
 }
 
 export async function getPageById(id: number): Promise<Page> {
@@ -316,22 +288,21 @@ export async function getPageById(id: number): Promise<Page> {
 }
 
 export async function getPageBySlug(slug: string): Promise<Page | undefined> {
-  try {
-    const pages = await wordpressFetch<Page[]>("/wp-json/wp/v2/pages", { slug });
-    return pages[0];
-  } catch (error) {
-    console.warn("WordPress unavailable, page not found");
-    return undefined;
-  }
+  const pages = await wordpressFetchGraceful<Page[]>(
+    "/wp-json/wp/v2/pages",
+    [],
+    { slug }
+  );
+  return pages[0];
 }
 
 export async function getAllAuthors(): Promise<Author[]> {
-  try {
-    return await wordpressFetch<Author[]>("/wp-json/wp/v2/users");
-  } catch (error) {
-    console.warn("WordPress unavailable, returning empty authors");
-    return [];
-  }
+  return wordpressFetchGraceful<Author[]>(
+    "/wp-json/wp/v2/users",
+    [],
+    undefined,
+    ["wordpress", "authors"]
+  );
 }
 
 export async function getAuthorById(id: number): Promise<Author> {
@@ -374,69 +345,51 @@ export async function getFeaturedMediaById(id: number): Promise<FeaturedMedia> {
 }
 
 export async function searchCategories(query: string): Promise<Category[]> {
-  try {
-    return await wordpressFetch<Category[]>("/wp-json/wp/v2/categories", {
-      search: query,
-      per_page: 100,
-    });
-  } catch (error) {
-    console.warn("WordPress unavailable, returning empty categories");
-    return [];
-  }
+  return wordpressFetchGraceful<Category[]>(
+    "/wp-json/wp/v2/categories",
+    [],
+    { search: query, per_page: 100 }
+  );
 }
 
 export async function searchTags(query: string): Promise<Tag[]> {
-  try {
-    return await wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", {
-      search: query,
-      per_page: 100,
-    });
-  } catch (error) {
-    console.warn("WordPress unavailable, returning empty tags");
-    return [];
-  }
+  return wordpressFetchGraceful<Tag[]>("/wp-json/wp/v2/tags", [], {
+    search: query,
+    per_page: 100,
+  });
 }
 
 export async function searchAuthors(query: string): Promise<Author[]> {
-  try {
-    return await wordpressFetch<Author[]>("/wp-json/wp/v2/users", {
-      search: query,
-      per_page: 100,
-    });
-  } catch (error) {
-    console.warn("WordPress unavailable, returning empty authors");
-    return [];
-  }
+  return wordpressFetchGraceful<Author[]>("/wp-json/wp/v2/users", [], {
+    search: query,
+    per_page: 100,
+  });
 }
 
 // Function specifically for generateStaticParams - fetches ALL posts
 // Returns empty array if WordPress is unavailable (allows build to succeed)
 export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
+  if (!isConfigured) return [];
+
   try {
     const allSlugs: { slug: string }[] = [];
     let page = 1;
     let hasMore = true;
 
     while (hasMore) {
-      const response = await wordpressFetchWithPagination<Post[]>(
+      const response = await wordpressFetchPaginated<Post[]>(
         "/wp-json/wp/v2/posts",
-        {
-          per_page: 100,
-          page,
-          _fields: "slug", // Only fetch slug field for performance
-        }
+        { per_page: 100, page, _fields: "slug" }
       );
 
-      const posts = response.data;
-      allSlugs.push(...posts.map((post) => ({ slug: post.slug })));
-
+      allSlugs.push(...response.data.map((post) => ({ slug: post.slug })));
       hasMore = page < response.headers.totalPages;
       page++;
     }
 
     return allSlugs;
-  } catch (error) {
-    console.warn("WordPress unavailable during build, skipping static generation for posts");
+  } catch {
+    console.warn("WordPress unavailable, skipping static generation for posts");
     return [];
   }
 }
@@ -447,14 +400,12 @@ export async function getPostsByCategoryPaginated(
   page: number = 1,
   perPage: number = 9
 ): Promise<WordPressResponse<Post[]>> {
-  const query = {
+  return wordpressFetchPaginatedGraceful<Post>("/wp-json/wp/v2/posts", {
     _embed: true,
     per_page: perPage,
     page,
     categories: categoryId,
-  };
-
-  return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query);
+  });
 }
 
 export async function getPostsByTagPaginated(
@@ -462,14 +413,12 @@ export async function getPostsByTagPaginated(
   page: number = 1,
   perPage: number = 9
 ): Promise<WordPressResponse<Post[]>> {
-  const query = {
+  return wordpressFetchPaginatedGraceful<Post>("/wp-json/wp/v2/posts", {
     _embed: true,
     per_page: perPage,
     page,
     tags: tagId,
-  };
-
-  return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query);
+  });
 }
 
 export async function getPostsByAuthorPaginated(
@@ -477,14 +426,12 @@ export async function getPostsByAuthorPaginated(
   page: number = 1,
   perPage: number = 9
 ): Promise<WordPressResponse<Post[]>> {
-  const query = {
+  return wordpressFetchPaginatedGraceful<Post>("/wp-json/wp/v2/posts", {
     _embed: true,
     per_page: perPage,
     page,
     author: authorId,
-  };
-
-  return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query);
+  });
 }
 
 export { WordPressAPIError };
