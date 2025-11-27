@@ -13,6 +13,9 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 # Copy the revalidation plugin
 COPY next-revalidate /var/www/html/wp-content/plugins/next-revalidate
 
+# Copy the headless redirect theme
+COPY theme /var/www/html/wp-content/themes/nextjs-headless
+
 # Copy the setup scripts
 COPY setup.sh /usr/local/bin/setup-wordpress.sh
 COPY entrypoint.sh /usr/local/bin/custom-entrypoint.sh
