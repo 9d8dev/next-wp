@@ -35,13 +35,15 @@ if ! wp plugin is-active next-revalidate --allow-root 2>/dev/null; then
 fi
 
 # Activate the headless theme (always run, safe if already active)
+# Note: Theme directory name must match the actual directory in wp-content/themes
 echo "Activating Next.js Headless theme..."
-wp theme activate nextjs-headless --allow-root || true
+wp theme activate theme --allow-root || wp theme activate nextjs-headless --allow-root || true
 
 # Configure the plugin if NEXTJS_URL is set
 if [ -n "$NEXTJS_URL" ]; then
   echo "Configuring Next.js Revalidation plugin..."
-  wp option update next_revalidate_settings "{\"nextjs_url\":\"${NEXTJS_URL}\",\"webhook_secret\":\"${WORDPRESS_WEBHOOK_SECRET:-}\",\"enable_notifications\":false,\"cooldown\":2}" --format=json --allow-root
+  # Plugin expects: nextjs_url, webhook_secret, cooldown (no enable_notifications field)
+  wp option update next_revalidate_settings "{\"nextjs_url\":\"${NEXTJS_URL}\",\"webhook_secret\":\"${WORDPRESS_WEBHOOK_SECRET:-}\",\"cooldown\":2}" --format=json --allow-root
   echo "Plugin configured with Next.js URL: $NEXTJS_URL"
 fi
 
