@@ -10,7 +10,8 @@
       "WebFetch(domain:blog.railway.com)",
       "Bash(pnpm remove:*)",
       "Bash(pnpm build:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(WORDPRESS_URL=\"\" WORDPRESS_HOSTNAME=\"\" pnpm build:*)"
     ],
     "deny": [],
     "ask": []

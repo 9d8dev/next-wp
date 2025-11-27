@@ -15,7 +15,7 @@ import type {
 const baseUrl = process.env.WORDPRESS_URL;
 
 if (!baseUrl) {
-  throw new Error("WORDPRESS_URL environment variable is not defined");
+  console.warn("WORDPRESS_URL environment variable is not defined - WordPress features will be unavailable");
 }
 
 class WordPressAPIError extends Error {
@@ -41,6 +41,9 @@ async function wordpressFetch<T>(
   path: string,
   query?: Record<string, any>
 ): Promise<T> {
+  if (!baseUrl) {
+    throw new Error("WordPress URL not configured");
+  }
   const url = `${baseUrl}${path}${
     query ? `?${querystring.stringify(query)}` : ""
   }`;
@@ -72,6 +75,9 @@ async function wordpressFetchWithPagination<T>(
   path: string,
   query?: Record<string, any>
 ): Promise<WordPressResponse<T>> {
+  if (!baseUrl) {
+    throw new Error("WordPress URL not configured");
+  }
   const url = `${baseUrl}${path}${
     query ? `?${querystring.stringify(query)}` : ""
   }`;
@@ -117,6 +123,13 @@ export async function getPostsPaginated(
     search?: string;
   }
 ): Promise<WordPressResponse<Post[]>> {
+  if (!baseUrl) {
+    return {
+      data: [],
+      headers: { total: 0, totalPages: 0 },
+    };
+  }
+
   const query: Record<string, any> = {
     _embed: true,
     per_page: perPage,
