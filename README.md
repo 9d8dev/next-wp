@@ -99,12 +99,76 @@ next-wp/
 
 Railway deploys the complete stack with one click: MySQL + WordPress + Next.js.
 
+#### What's Included
+
+The Railway template uses a custom WordPress Docker image (`ghcr.io/9d8dev/next-wp-wordpress`) with:
+
+- **next-revalidate plugin** - Pre-installed and auto-activated for cache revalidation
+- **nextjs-headless theme** - Redirects WordPress frontend to your Next.js site
+- **WP-CLI** - Automated WordPress setup
+- **MySQL 8.0** - Database with persistent volume
+- **Next.js** - Your frontend application
+
+```
+┌─────────┐     ┌───────────┐     ┌─────────┐
+│  MySQL  │────▶│ WordPress │◀────│ Next.js │
+│   DB    │     │   (CMS)   │     │(Frontend)│
+└─────────┘     └───────────┘     └─────────┘
+```
+
+#### Deployment
+
 1. Click the **Deploy on Railway** button above
-2. Wait for deployment to complete
-3. Access WordPress admin at `https://your-wordpress.up.railway.app/wp-admin`
-4. Complete the WordPress installation wizard
-5. Install the revalidation plugin from `/plugin/next-revalidate.zip`
-6. Configure the plugin at Settings > Next.js Revalidation
+2. Wait for all 3 services to deploy (MySQL, WordPress, Next.js)
+3. Note the WordPress and Next.js public URLs from the Railway dashboard
+
+#### Post-Deployment Setup
+
+**1. Complete WordPress Installation**
+
+1. Visit your WordPress URL (e.g., `https://wordpress-xxx.up.railway.app`)
+2. Complete the installation wizard:
+   - Site Title
+   - Admin Username
+   - Admin Password
+   - Admin Email
+3. Click "Install WordPress"
+
+**2. Configure the Revalidation Plugin**
+
+The `next-revalidate` plugin is pre-installed and activated.
+
+1. Go to WordPress Admin → **Settings** → **Next.js Revalidation**
+2. Enter your **Next.js URL** (e.g., `https://next-wp-xxx.up.railway.app`)
+3. Enter the **Webhook Secret**:
+   - In Railway, go to your Next.js service → Variables
+   - Copy the `WORDPRESS_WEBHOOK_SECRET` value
+   - Paste it in the plugin settings
+4. Click **Save**
+
+**3. Test the Setup**
+
+1. Create a test post in WordPress and publish it
+2. Visit your Next.js site - the post should appear
+3. Edit the post in WordPress
+4. Refresh the Next.js site - changes should appear (revalidation working)
+
+#### Customizing the Next.js Code
+
+By default, the template deploys from the `9d8dev/next-wp` repository. To customize:
+
+1. In Railway, click on the **Next.js service**
+2. Go to **Settings** → **Source** → **Upstream Repo**
+3. Click **"Eject"**
+4. Select your GitHub account/organization
+5. Click **"Eject service"**
+
+Railway creates a copy of the repository in your GitHub. You can then:
+- Clone the repo locally
+- Make customizations (styling, components, pages)
+- Push changes → Railway auto-deploys
+
+> For template creators, see [RAILWAY-SETUP.md](RAILWAY-SETUP.md) for detailed instructions on creating your own Railway template.
 
 ### Vercel
 
