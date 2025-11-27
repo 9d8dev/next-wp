@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { siteConfig } from "@/site.config";
 
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -69,6 +70,11 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
+
+  if (!post) {
+    notFound();
+  }
+
   const featuredMedia = post.featured_media
     ? await getFeaturedMediaById(post.featured_media)
     : null;

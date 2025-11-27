@@ -240,10 +240,14 @@ export async function getPostById(id: number): Promise<Post> {
   return wordpressFetch<Post>(`/wp-json/wp/v2/posts/${id}`);
 }
 
-export async function getPostBySlug(slug: string): Promise<Post> {
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { slug }).then(
-    (posts) => posts[0]
-  );
+export async function getPostBySlug(slug: string): Promise<Post | undefined> {
+  try {
+    const posts = await wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { slug });
+    return posts[0];
+  } catch (error) {
+    console.warn("WordPress unavailable, post not found");
+    return undefined;
+  }
 }
 
 export async function getAllCategories(): Promise<Category[]> {
@@ -311,10 +315,14 @@ export async function getPageById(id: number): Promise<Page> {
   return wordpressFetch<Page>(`/wp-json/wp/v2/pages/${id}`);
 }
 
-export async function getPageBySlug(slug: string): Promise<Page> {
-  return wordpressFetch<Page[]>("/wp-json/wp/v2/pages", { slug }).then(
-    (pages) => pages[0]
-  );
+export async function getPageBySlug(slug: string): Promise<Page | undefined> {
+  try {
+    const pages = await wordpressFetch<Page[]>("/wp-json/wp/v2/pages", { slug });
+    return pages[0];
+  } catch (error) {
+    console.warn("WordPress unavailable, page not found");
+    return undefined;
+  }
 }
 
 export async function getAllAuthors(): Promise<Author[]> {
@@ -366,24 +374,39 @@ export async function getFeaturedMediaById(id: number): Promise<FeaturedMedia> {
 }
 
 export async function searchCategories(query: string): Promise<Category[]> {
-  return wordpressFetch<Category[]>("/wp-json/wp/v2/categories", {
-    search: query,
-    per_page: 100,
-  });
+  try {
+    return await wordpressFetch<Category[]>("/wp-json/wp/v2/categories", {
+      search: query,
+      per_page: 100,
+    });
+  } catch (error) {
+    console.warn("WordPress unavailable, returning empty categories");
+    return [];
+  }
 }
 
 export async function searchTags(query: string): Promise<Tag[]> {
-  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", {
-    search: query,
-    per_page: 100,
-  });
+  try {
+    return await wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", {
+      search: query,
+      per_page: 100,
+    });
+  } catch (error) {
+    console.warn("WordPress unavailable, returning empty tags");
+    return [];
+  }
 }
 
 export async function searchAuthors(query: string): Promise<Author[]> {
-  return wordpressFetch<Author[]>("/wp-json/wp/v2/users", {
-    search: query,
-    per_page: 100,
-  });
+  try {
+    return await wordpressFetch<Author[]>("/wp-json/wp/v2/users", {
+      search: query,
+      per_page: 100,
+    });
+  } catch (error) {
+    console.warn("WordPress unavailable, returning empty authors");
+    return [];
+  }
 }
 
 // Function specifically for generateStaticParams - fetches ALL posts

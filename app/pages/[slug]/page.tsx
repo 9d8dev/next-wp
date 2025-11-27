@@ -1,6 +1,7 @@
 import { getPageBySlug, getAllPages } from "@/lib/wordpress";
 import { Section, Container, Prose } from "@/components/craft";
 import { siteConfig } from "@/site.config";
+import { notFound } from "next/navigation";
 
 import type { Metadata } from "next";
 
@@ -71,6 +72,10 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const page = await getPageBySlug(slug);
+
+  if (!page) {
+    notFound();
+  }
 
   return (
     <Section>
