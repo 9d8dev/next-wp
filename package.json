@@ -29,7 +29,6 @@
     "react-dom": "19.1.0",
     "react-hook-form": "^7.66.1",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.6",
     "zod": "^3.25.76"
   },
@@ -39,7 +38,6 @@
     "@types/node": "^20.19.25",
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
-    "autoprefixer": "^10.4.22",
     "eslint": "^9.39.1",
     "eslint-config-next": "^15.5.6",
     "postcss": "^8.5.6",
