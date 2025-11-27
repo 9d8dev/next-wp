@@ -119,6 +119,8 @@ next-wp/
 
 Railway deploys the complete stack with one click: MySQL + WordPress + Next.js.
 
+![CleanShot 2025-11-26 at 23 39 02@2x](https://github.com/user-attachments/assets/388427e2-72c4-4caf-8bfd-d86c981b0bb2)
+
 #### What's Included
 
 The Railway template uses a custom WordPress Docker image (`ghcr.io/9d8dev/next-wp-wordpress`) with:
@@ -183,12 +185,12 @@ By default, the template deploys from the `9d8dev/next-wp` repository. To custom
 4. Select your GitHub account/organization
 5. Click **"Eject service"**
 
+![CleanShot 2025-11-27 at 00 01 29@2x](https://github.com/user-attachments/assets/9e89bcc6-fcb8-412b-9611-f2ee85081ccb)
+
 Railway creates a copy of the repository in your GitHub. You can then:
 - Clone the repo locally
 - Make customizations (styling, components, pages)
 - Push changes → Railway auto-deploys
-
-> For template creators, see [RAILWAY-SETUP.md](RAILWAY-SETUP.md) for detailed instructions on creating your own Railway template.
 
 ### Vercel
 
