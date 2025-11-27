@@ -10,6 +10,26 @@ A modern headless WordPress starter built with Next.js 16, React 19, and TypeScr
 
 > **[Live Demo](https://wp.9d8.dev)** | **[Video Tutorial](https://www.youtube.com/watch?v=JZc1-BcOvYw)** | **[Headless Theme (761)](https://github.com/9d8dev/761)**
 
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [Prerequisites](#prerequisites)
+- [Environment Variables](#environment-variables)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Deployment](#deployment)
+  - [Railway (Recommended)](#railway-recommended)
+  - [Vercel](#vercel)
+  - [Local Development](#local-development)
+- [WordPress API Functions](#wordpress-api-functions)
+- [Cache Revalidation](#cache-revalidation)
+- [Customization](#customization)
+- [Troubleshooting](#troubleshooting)
+- [Scripts](#scripts)
+- [Contributing](#contributing)
+- [License](#license)
+- [Credits](#credits)
+
 ## Quick Start
 
 ```bash
