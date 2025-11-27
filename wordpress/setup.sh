@@ -32,7 +32,7 @@ fi
 # Configure the plugin if NEXTJS_URL is set
 if [ -n "$NEXTJS_URL" ]; then
   echo "Configuring Next.js Revalidation plugin..."
-  wp option update next_revalidate_settings "{\"nextjs_url\":\"${NEXTJS_URL}\",\"webhook_secret\":\"${WORDPRESS_WEBHOOK_SECRET:-}\",\"enable_notifications\":false,\"cooldown\":2}" --format=json --allow-root
+  wp option update next_revalidation_settings "{\"next_url\":\"${NEXTJS_URL}\",\"webhook_secret\":\"${WORDPRESS_WEBHOOK_SECRET:-}\",\"enable_notifications\":false,\"revalidation_cooldown\":2}" --format=json --allow-root
   echo "Plugin configured with Next.js URL: $NEXTJS_URL"
 fi
 
