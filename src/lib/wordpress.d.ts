@@ -218,6 +218,30 @@ export interface SearchResult {
   };
 }
 
+// Menu types
+export interface WPMenuItem {
+  id: number;
+  title: {
+    rendered: string;
+  };
+  url: string;
+  target: string;
+  classes: string[];
+  description: string;
+  parent: number;
+  menu_order: number;
+}
+
+export interface MenuItem {
+  id: number;
+  title: string;
+  url: string;
+  target: string;
+  classes: string[];
+  description: string;
+  children: MenuItem[];
+}
+
 // Component Props Types
 export interface FilterBarProps {
   authors: Author[];

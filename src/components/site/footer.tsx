@@ -1,16 +1,19 @@
 import {Container, Section} from "@/components/craft";
 import Link from "next/link";
 import {getSiteConfig} from "@root/site.config";
+import {getAllMenus} from "@root/menu.config";
 import Image from "next/image";
 import Logo from "@root/public/logo.svg";
 import Balancer from "react-wrap-balancer";
-import {contentMenu, mainMenu} from "@root/menu.config";
 import {ThemeToggle} from "@/components/theme/theme-toggle";
 
 type Props = {};
 
 export async function Footer(props: Props) {
     const config = await getSiteConfig();
+    const menus = await getAllMenus();
+    const mainMenu = menus.primary || [];
+    const contentMenu = menus.footer || [];
 
     return (
         <footer>
@@ -33,25 +36,27 @@ export async function Footer(props: Props) {
                     </div>
                     <div className="flex flex-col gap-2 text-sm">
                         <h5 className="font-medium text-base">Website</h5>
-                        {Object.entries(mainMenu).map(([key, href]) => (
+                        {mainMenu.map((item) => (
                             <Link
                                 className="hover:underline underline-offset-4"
-                                key={href}
-                                href={href}
+                                key={item.id}
+                                href={item.url}
+                                target={item.target || undefined}
                             >
-                                {key.charAt(0).toUpperCase() + key.slice(1)}
+                                {item.title}
                             </Link>
                         ))}
                     </div>
                     <div className="flex flex-col gap-2 text-sm">
                         <h5 className="font-medium text-base">Blog</h5>
-                        {Object.entries(contentMenu).map(([key, href]) => (
+                        {contentMenu.map((item) => (
                             <Link
                                 className="hover:underline underline-offset-4"
-                                key={href}
-                                href={href}
+                                key={item.id}
+                                href={item.url}
+                                target={item.target || undefined}
                             >
-                                {key.charAt(0).toUpperCase() + key.slice(1)}
+                                {item.title}
                             </Link>
                         ))}
                     </div>

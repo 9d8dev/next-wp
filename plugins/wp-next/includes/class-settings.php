@@ -12,7 +12,7 @@ class WP_Next_Settings {
         'custom_endpoint' => '',       // Leave empty to use default endpoint
 
         // Hide Backend Settings
-        'enable_hide_backend' => false,
+        'enable_hide_backend' => true,
         'hide_backend_path' => 'manager',     // Custom path for accessing login (defaults to 'manager')
 
         // Hide Frontend Settings

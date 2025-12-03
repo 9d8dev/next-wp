@@ -1,12 +1,24 @@
-// Define the menu items
-export const mainMenu = {
-  home: "/",
-  about: "https://github.com/9d8dev/next-wp",
-  blog: "/posts",
-};
+import {getMenusByLocations} from "@/lib/wordpress-menus";
 
-export const contentMenu = {
-  categories: "/posts/categories",
-  tags: "/posts/tags",
-  authors: "/posts/authors",
-};
+/**
+ * Get all menus in parallel
+ */
+export async function getAllMenus() {
+    return await getMenusByLocations(["primary", "footer"]);
+}
+
+/**
+ * Get main navigation menu
+ */
+export async function getMainMenu() {
+    const menus = await getMenusByLocations(["primary"]);
+    return menus.primary || [];
+}
+
+/**
+ * Get footer menu
+ */
+export async function getFooterMenu() {
+    const menus = await getMenusByLocations(["footer"]);
+    return menus.footer || [];
+}

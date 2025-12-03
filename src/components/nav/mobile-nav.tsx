@@ -15,10 +15,15 @@ import {ScrollArea} from "@/components/ui/scroll-area";
 import {Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,} from "@/components/ui/sheet";
 import {Separator} from "@/components/ui/separator";
 
-import {contentMenu, mainMenu} from "@root/menu.config";
+import {MenuItem} from "@/lib/wordpress.d";
 import {siteConfig} from "@root/site.config";
 
-export function MobileNav() {
+interface MobileNavProps {
+  mainMenu: MenuItem[];
+  contentMenu: MenuItem[];
+}
+
+export function MobileNav({ mainMenu, contentMenu }: MobileNavProps) {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -49,16 +54,16 @@ export function MobileNav() {
           <div className="flex flex-col space-y-3">
             <h3 className="text-small mt-6">Menu</h3>
             <Separator />
-            {Object.entries(mainMenu).map(([key, href]) => (
-              <MobileLink key={key} href={href} onOpenChange={setOpen}>
-                {key.charAt(0).toUpperCase() + key.slice(1)}
+            {mainMenu.map((item) => (
+              <MobileLink key={item.id} href={item.url} onOpenChange={setOpen}>
+                {item.title}
               </MobileLink>
             ))}
             <h3 className="text-small pt-6">Blog Menu</h3>
             <Separator />
-            {Object.entries(contentMenu).map(([key, href]) => (
-              <MobileLink key={key} href={href} onOpenChange={setOpen}>
-                {key.charAt(0).toUpperCase() + key.slice(1)}
+            {contentMenu.map((item) => (
+              <MobileLink key={item.id} href={item.url} onOpenChange={setOpen}>
+                {item.title}
               </MobileLink>
             ))}
           </div>

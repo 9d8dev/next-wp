@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Logo from "@root/public/logo.svg";
 import {getSiteConfig} from "@root/site.config";
-import {mainMenu} from "@root/menu.config";
+import {getAllMenus} from "@root/menu.config";
 import {Button} from "@/components/ui/button";
 import {MobileNav} from "@/components/nav/mobile-nav";
 import React from "react";
@@ -16,6 +16,9 @@ type Props = {
 
 export async function Header({className, children, id}: Props) {
     const config = await getSiteConfig();
+    const menus = await getAllMenus();
+    console.log('menus',menus)
+    const mainMenu = menus.primary || [];
 
     return (
         <nav
@@ -43,10 +46,14 @@ export async function Header({className, children, id}: Props) {
                 {children}
                 <div className="flex items-center gap-2">
                     <div className="mx-2 hidden md:flex">
-                        {Object.entries(mainMenu).map(([key, href]) => (
-                            <Button key={href} asChild variant="ghost" size="sm">
-                                <Link href={href}>
-                                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                        {mainMenu.map((item) => (
+                            <Button key={item.id} asChild variant="ghost" size="sm">
+                                <Link
+                                    href={item.url}
+                                    target={item.target || undefined}
+                                    className={item.classes.join(" ")}
+                                >
+                                    {item.title}
                                 </Link>
                             </Button>
                         ))}
@@ -54,7 +61,10 @@ export async function Header({className, children, id}: Props) {
                     <Button asChild className="hidden sm:flex">
                         <Link href="https://github.com/9d8dev/next-wp">Get Started</Link>
                     </Button>
-                    <MobileNav/>
+                    <MobileNav
+                        mainMenu={menus.primary || []}
+                        contentMenu={menus.footer || []}
+                    />
                 </div>
             </div>
         </nav>
