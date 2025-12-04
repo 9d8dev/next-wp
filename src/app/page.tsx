@@ -85,18 +85,6 @@ const ToDelete = () => {
         </Link>
         <Link
           className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
-          href="/pages"
-        >
-          <File size={32} />
-          <span>
-            Pages{" "}
-            <span className="block text-sm text-muted-foreground">
-              Custom pages from your WordPress
-            </span>
-          </span>
-        </Link>
-        <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
           href="/posts/authors"
         >
           <User size={32} />

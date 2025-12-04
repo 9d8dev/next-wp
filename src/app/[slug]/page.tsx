@@ -1,8 +1,8 @@
-import {getAllPages, getPageBySlug} from "@/lib/wordpress";
-import {Container, Prose, Section} from "@/components/craft";
-import {siteConfig} from "@root/site.config";
+import { getAllPages, getPageBySlug } from "@/lib/wordpress";
+import { Container, Section } from "@/components/craft";
+import { siteConfig } from "@root/site.config";
 
-import type {Metadata} from "next";
+import type { Metadata } from "next";
 import HtmlRenderer from "@/components/HtmlRenderer";
 
 // Revalidate pages every hour
@@ -42,11 +42,14 @@ export async function generateMetadata({
   return {
     title: page.title.rendered,
     description: description,
+    alternates: {
+      canonical: `/${page.slug}`,
+    },
     openGraph: {
       title: page.title.rendered,
       description: description,
       type: "article",
-      url: `${siteConfig.site_domain}/pages/${page.slug}`,
+      url: `${siteConfig.site_domain}/${page.slug}`,
       images: [
         {
           url: ogUrl.toString(),
@@ -72,19 +75,19 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const page = await getPageBySlug(slug);
-    console.log('page', page)
+
+  if (!page) {
+    return null;
+  }
+
   return (
     <Section>
       <Container>
-        {/*<Prose>*/}
-        {/*  <h2>{page.title.rendered}</h2>*/}
-        {/*  <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />*/}
-        {/*</Prose>*/}
-          <HtmlRenderer
-              htmlContent={page.content.rendered}
-              className="page-content max-w-4xl mx-auto"
-              debug={true}
-          />
+        <HtmlRenderer
+          htmlContent={page.content.rendered}
+          className="page-content max-w-4xl mx-auto"
+          debug={true}
+        />
       </Container>
     </Section>
   );
