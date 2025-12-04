@@ -1,6 +1,7 @@
 import { getAllPages, getPageBySlug } from "@/lib/wordpress";
 import { Container, Section } from "@/components/craft";
 import { siteConfig } from "@root/site.config";
+import { notFound } from "next/navigation";
 
 import type { Metadata } from "next";
 import HtmlRenderer from "@/components/HtmlRenderer";
@@ -77,7 +78,7 @@ export default async function Page({
   const page = await getPageBySlug(slug);
 
   if (!page) {
-    return null;
+    notFound();
   }
 
   return (
