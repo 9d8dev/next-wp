@@ -62,6 +62,19 @@ class WP_Next_Custom_Routes {
             $response['favicon'] = self::get_favicon_url();
         }
 
+        // Front page ID - for Next.js home page
+        $show_on_front = get_option('show_on_front');
+        $front_page_id = get_option('page_on_front');
+        if ($show_on_front === 'page' && $front_page_id) {
+            $response['front_page_id'] = (int) $front_page_id;
+        }
+
+        // Blog page ID - for Next.js posts archive (if using static page)
+        $blog_page_id = get_option('page_for_posts');
+        if ($blog_page_id) {
+            $response['blog_page_id'] = (int) $blog_page_id;
+        }
+
         return new WP_REST_Response($response, 200);
     }
 

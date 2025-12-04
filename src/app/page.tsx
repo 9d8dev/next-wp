@@ -1,137 +1,83 @@
-// Craft Imports
-import { Section, Container, Prose } from "@/components/craft";
-import Balancer from "react-wrap-balancer";
+import { Container, Section } from "@/components/craft";
+import { siteConfig } from "@root/site.config";
+import type { Metadata } from "next";
+import HtmlRenderer from "@/components/HtmlRenderer";
+import { getFrontPage } from "@/lib/wp-home";
 
-// Next.js Imports
-import Link from "next/link";
+export const revalidate = 3600;
 
-// Icons
-import { File, Pen, Tag, Diamond, User, Folder } from "lucide-react";
-import { WordPressIcon } from "@/components/icons/wordpress";
-import { NextJsIcon } from "@/components/icons/nextjs";
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getFrontPage();
 
-// This page is using the craft.tsx component and design system
-export default function Home() {
+  if (!page) {
+    return {
+      title: "Home",
+      description: "Welcome to our site",
+      alternates: {
+        canonical: "/",
+      },
+    };
+  }
+
+  return {
+    title: page.title.rendered,
+    description: page.excerpt?.rendered
+      ? page.excerpt.rendered.replace(/<[^>]*>/g, "").trim()
+      : page.content.rendered.replace(/<[^>]*>/g, "").trim().slice(0, 200) +
+        "...",
+    alternates: {
+      canonical: "/",
+    },
+    openGraph: {
+      title: page.title.rendered,
+      description: page.excerpt?.rendered
+        ? page.excerpt.rendered.replace(/<[^>]*>/g, "").trim()
+        : page.content.rendered.replace(/<[^>]*>/g, "").trim().slice(0, 200) +
+          "...",
+      type: "website",
+      url: siteConfig.site_domain,
+    },
+  };
+}
+
+export default async function Home() {
+  const page = await getFrontPage();
+
+  if (!page) {
+    return (
+      <Section>
+        <Container className="max-w-4xl mx-auto">
+          <div className="border border-yellow-400 bg-yellow-50 dark:bg-yellow-950 dark:border-yellow-700 rounded-lg p-8 space-y-4">
+            <h2 className="text-xl font-semibold text-yellow-900 dark:text-yellow-100">
+              ⚠️ Front Page Not Configured
+            </h2>
+            <p className="text-yellow-800 dark:text-yellow-200">
+              To set a front page, please:
+            </p>
+            <ol className="list-decimal list-inside space-y-2 text-yellow-800 dark:text-yellow-200 ml-2">
+              <li>Log in to your WordPress admin</li>
+              <li>Go to <strong>Settings → Reading</strong></li>
+              <li>Under "Your homepage displays", select <strong>"A static page"</strong></li>
+              <li>Choose a page from the dropdown and save</li>
+            </ol>
+            <p className="text-sm text-yellow-700 dark:text-yellow-300 pt-4">
+              Once configured, this page will display your front page content from WordPress.
+            </p>
+          </div>
+        </Container>
+      </Section>
+    );
+  }
+
   return (
     <Section>
       <Container>
-        <ToDelete />
+        <HtmlRenderer
+          htmlContent={page.content.rendered}
+          className="page-content max-w-4xl mx-auto"
+          debug={true}
+        />
       </Container>
     </Section>
   );
 }
-
-// This is just some example TSX
-const ToDelete = () => {
-  return (
-    <main className="space-y-6">
-      <Prose>
-        <h1>
-          <Balancer>Headless WordPress built with the Next.js</Balancer>
-        </h1>
-
-        <p>
-          This is <a href="https://github.com/9d8dev/next-wp">next-wp</a>,
-          created as a way to build WordPress sites with Next.js at rapid speed.
-          This starter is designed with{" "}
-          <a href="https://ui.shadcn.com">shadcn/ui</a>,{" "}
-          <a href="https://craft-ds.com">craft-ds</a>, and Tailwind CSS. Use{" "}
-          <a href="https://components.work">brijr/components</a> to build your
-          site with prebuilt components. The data fetching and typesafety is
-          handled in <code>lib/wordpress.ts</code> and{" "}
-          <code>lib/wordpress.d.ts</code>.
-        </p>
-      </Prose>
-
-      <div className="flex justify-between items-center gap-4">
-        {/* Vercel Clone Starter */}
-        <div className="flex items-center gap-3">
-          <a
-            className="h-auto block"
-            href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F9d8dev%2Fnext-wp&env=WORDPRESS_URL,WORDPRESS_HOSTNAME&envDescription=Add%20WordPress%20URL%20with%20Rest%20API%20enabled%20(ie.%20https%3A%2F%2Fwp.example.com)%20abd%20the%20hostname%20for%20Image%20rendering%20in%20Next%20JS%20(ie.%20wp.example.com)&project-name=next-wp&repository-name=next-wp&demo-title=Next%20JS%20and%20WordPress%20Starter&demo-url=https%3A%2F%2Fwp.9d8.dev"
-          >
-            {/* eslint-disable-next-line */}
-            <img
-              className="not-prose my-4"
-              src="https://vercel.com/button"
-              alt="Deploy with Vercel"
-              width={105}
-              height={32.62}
-            />
-          </a>
-          <p className="!text-sm sr-only sm:not-sr-only text-muted-foreground">
-            Deploy with Vercel in seconds.
-          </p>
-        </div>
-
-        <div className="flex gap-2 items-center">
-          <WordPressIcon className="text-foreground" width={32} height={32} />
-          <NextJsIcon className="text-foreground" width={32} height={32} />
-        </div>
-      </div>
-
-      <div className="grid md:grid-cols-3 gap-4 mt-6">
-        <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
-          href="/posts"
-        >
-          <Pen size={32} />
-          <span>
-            Posts{" "}
-            <span className="block text-sm text-muted-foreground">
-              All posts from your WordPress
-            </span>
-          </span>
-        </Link>
-        <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
-          href="/posts/authors"
-        >
-          <User size={32} />
-          <span>
-            Authors{" "}
-            <span className="block text-sm text-muted-foreground">
-              List of the authors from your WordPress
-            </span>
-          </span>
-        </Link>
-        <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
-          href="/posts/tags"
-        >
-          <Tag size={32} />
-          <span>
-            Tags{" "}
-            <span className="block text-sm text-muted-foreground">
-              Content by tags from your WordPress
-            </span>
-          </span>
-        </Link>
-        <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
-          href="/posts/categories"
-        >
-          <Diamond size={32} />
-          <span>
-            Categories{" "}
-            <span className="block text-sm text-muted-foreground">
-              Categories from your WordPress
-            </span>
-          </span>
-        </Link>
-        <a
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
-          href="https://github.com/9d8dev/next-wp/blob/main/README.md"
-        >
-          <Folder size={32} />
-          <span>
-            Documentation{" "}
-            <span className="block text-sm text-muted-foreground">
-              How to use `next-wp`
-            </span>
-          </span>
-        </a>
-      </div>
-    </main>
-  );
-};

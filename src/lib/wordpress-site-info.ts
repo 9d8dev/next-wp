@@ -5,6 +5,8 @@ export interface SiteInfo {
     title: string;
     description: string;
     favicon?: string;
+    front_page_id?: number;
+    blog_page_id?: number;
 }
 
 class SiteInfoError extends Error {
