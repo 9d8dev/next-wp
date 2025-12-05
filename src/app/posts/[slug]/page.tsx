@@ -1,10 +1,10 @@
 import {
-  getPostBySlug,
   getFeaturedMediaById,
   getAuthorById,
   getCategoryById,
   getAllPostSlugs,
 } from "@/lib/wordpress";
+import { getPostBySlug } from "@/lib/wordpress-enhanced";
 
 import { Section, Container, Article, Prose } from "@/components/craft";
 import { badgeVariants } from "@/components/ui/badge";

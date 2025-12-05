@@ -1,8 +1,8 @@
 // WordPress front page (home) helpers
 // Gets the front page from WordPress via custom wp-next plugin endpoint
 
-import {getPageById} from "./wordpress";
 import {getSiteInfo} from "./wordpress-site-info";
+import {getPageById} from "./wordpress-enhanced";
 import type {Page} from "./wordpress.d";
 
 /**

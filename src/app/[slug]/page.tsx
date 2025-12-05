@@ -1,4 +1,5 @@
-import { getAllPages, getPageBySlug } from "@/lib/wordpress";
+import { getAllPages } from "@/lib/wordpress";
+import { getPageBySlug } from "@/lib/wordpress-enhanced";
 import { Container, Section } from "@/components/craft";
 import { siteConfig } from "@root/site.config";
 import { notFound } from "next/navigation";
