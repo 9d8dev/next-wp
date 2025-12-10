@@ -311,7 +311,7 @@ const categoryFields: Array<keyof Category> = [
   "id", "count", "description", "link", "name", "slug", "taxonomy", "parent",
 ];
 
-export const getAllCategories = (queryParams: WordPressQuery<Category>) => wordpressFetchAll<Category>(
+export const getAllCategories = (queryParams?: WordPressQuery<Category>) => wordpressFetchAll<Category>(
   "/wp-json/wp/v2/categories",
   {
     hide_empty: true,
@@ -354,7 +354,7 @@ export async function getTagsByPost(postId: number): Promise<Tag[]> {
   );
 }
 
-export const getAllTags = (queryParams: WordPressQuery<Tag>) => wordpressFetchAll<Tag>(
+export const getAllTags = (queryParams?: WordPressQuery<Tag>) => wordpressFetchAll<Tag>(
   "/wp-json/wp/v2/tags", 
   {
     hide_empty: true,
@@ -416,7 +416,7 @@ const authorFields: Array<keyof Author> = [
   "id", "name", "url", "description", "link", "slug", "avatar_urls",
 ];
 
-export const getAllAuthors = (queryParams: WordPressQuery<Author>) => wordpressFetchAll<Author>(
+export const getAllAuthors = (queryParams?: WordPressQuery<Author>) => wordpressFetchAll<Author>(
   "/wp-json/wp/v2/users",
   {
     has_published_posts: true,
