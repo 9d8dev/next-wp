@@ -30,7 +30,7 @@ export async function generateMetadata({
   }
 
   const ogUrl = new URL(`${siteConfig.site_domain}/api/og`);
-  const title = post.title;
+  const { title } = post;
   ogUrl.searchParams.append("title", title);
   // Strip HTML tags for description
   const description = post.excerpt;

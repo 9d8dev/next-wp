@@ -121,8 +121,8 @@ const transformMedia = (wpMedia: WPMedia): Media => ({
   status: wpMedia.status,
   link: wpMedia.link,
   guid: wpMedia.guid?.rendered,
-  title: wpMedia.title.rendered,
-  caption: wpMedia.caption.rendered,
+  title: wpMedia.title?.rendered,
+  caption: wpMedia.caption?.rendered,
   altText: wpMedia.alt_text,
   mediaType: wpMedia.media_type,
   mimeType: wpMedia.mime_type,
@@ -164,7 +164,7 @@ function transformPost(wpPost: WPPost): Post {
     guid: wpPost.guid?.rendered,
     title: wpPost.title.rendered,
     content: wpPost.content?.rendered,
-    excerpt: extractExcerptText(wpPost.excerpt.rendered),
+    excerpt: extractExcerptText(wpPost.excerpt?.rendered),
     type: wpPost.type,
     sticky: wpPost.sticky,
     template: wpPost.template,
@@ -196,8 +196,8 @@ function transformPage(wpPage: WPPage): Page {
     link: wpPage.link,
     guid: wpPage.guid.rendered,
     title: wpPage.title.rendered,
-    content: wpPage.content.rendered,
-    excerpt: wpPage.content.rendered,
+    content: wpPage.content?.rendered,
+    excerpt: extractExcerptText(wpPage.excerpt?.rendered),
     parent: wpPage.parent,
     menuOrder: wpPage.menu_order,
     template: wpPage.template,
@@ -428,6 +428,8 @@ const pageFields: Array<keyof WPPage> = [
   "ping_status",
   "template",
   "meta",
+  "_links",
+  "_embedded",
 ];
 
 export const getAllPages = (queryParams: WordPressQuery<WPPage>) =>
@@ -443,16 +445,23 @@ export const getAllPages = (queryParams: WordPressQuery<WPPage>) =>
 export const getPageById = (id: number) =>
   wordpressFetch<WPPage>(
     `/wp-json/wp/v2/pages/${id}`,
-    { _fields: pageFields },
+    {
+      _embed: true,
+      _fields: pageFields,
+    },
     [`page-${id}`]
-  );
+  ).then(transformPage);
 
 export const getPageBySlug = (slug: string) =>
   wordpressFetch<WPPage[]>(
     "/wp-json/wp/v2/pages",
-    { slug, _fields: pageFields },
+    {
+      _embed: true,
+      _fields: pageFields,
+      slug,
+    },
     [`page-${slug}`]
-  ).then((pages) => pages[0]);
+  ).then((pages) => transformPage(pages[0]));
 
 const authorFields: Array<keyof Author> = [
   "id",
