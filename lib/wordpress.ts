@@ -22,10 +22,12 @@ import { extractExcerptText } from "./utils";
 const baseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
 
 if (!baseUrl) {
-  throw new Error("NEXT_PUBLIC_WORDPRESS_URL environment variable is not defined");
+  throw new Error(
+    "NEXT_PUBLIC_WORDPRESS_URL environment variable is not defined"
+  );
 }
 
-class WordPressAPIError extends Error {
+export class WordPressAPIError extends Error {
   constructor(message: string, public status: number, public endpoint: string) {
     super(message);
     this.name = "WordPressAPIError";
@@ -36,7 +38,7 @@ class WordPressAPIError extends Error {
 async function wordpressFetch<T>(
   path: string,
   query?: WordPressQuery<T>,
-  cacheTags: CacheTag[] = [],
+  cacheTags: CacheTag[] = []
 ): Promise<T> {
   const url = `${baseUrl}${path}${
     query ? `?${querystring.stringify(query, { arrayFormat: "comma" })}` : ""
@@ -68,13 +70,13 @@ async function wordpressFetch<T>(
 async function wordpressFetchWithPagination<T>(
   path: string,
   query?: WordPressQuery<T>,
-  cacheTags: CacheTag[] = [],
+  cacheTags: CacheTag[] = []
 ): Promise<WordPressResponse<T>> {
   const url = `${baseUrl}${path}${
     query ? `?${querystring.stringify(query, { arrayFormat: "comma" })}` : ""
   }`;
   const userAgent = "Next.js WordPress Client";
-  
+
   const response = await fetch(url, {
     headers: {
       "User-Agent": userAgent,
@@ -107,17 +109,18 @@ async function wordpressFetchWithPagination<T>(
 async function wordpressFetchAll<T>(
   path: string,
   queryParams?: WordPressQuery<T>,
-  cacheTags: CacheTag[] = [],
+  cacheTags: CacheTag[] = []
 ): Promise<T[]> {
-  const getPage = (page: number) => wordpressFetchWithPagination<T[]>(
-    path,
-    <WordPressQuery<T[]>> {
-      ...queryParams,
-      per_page: 100,
-      page,
-    },
-    cacheTags,
-  );
+  const getPage = (page: number) =>
+    wordpressFetchWithPagination<T[]>(
+      path,
+      <WordPressQuery<T[]>>{
+        ...queryParams,
+        per_page: 100,
+        page,
+      },
+      cacheTags
+    );
 
   const { headers, data } = await getPage(1);
 
@@ -135,30 +138,31 @@ async function wordpressFetchAll<T>(
 }
 
 const transformMedia = (wpMedia: WPMedia): Media => ({
-    id: wpMedia.id,
-    date: new Date(wpMedia.date),
-    modified: new Date(wpMedia.date),
-    slug: wpMedia.slug,
-    status: wpMedia.status,
-    link: wpMedia.link,
-    guid: wpMedia.guid?.rendered,
-    title: wpMedia.title.rendered,
-    caption: wpMedia.caption.rendered,
-    altText: wpMedia.alt_text,
-    mediaType: wpMedia.media_type,
-    mimeType: wpMedia.mime_type,
-    mediaDetails: wpMedia.media_details,
-    sourceUrl: wpMedia.source_url,
-    authorID: wpMedia.author,
+  id: wpMedia.id,
+  date: new Date(wpMedia.date),
+  modified: new Date(wpMedia.date),
+  slug: wpMedia.slug,
+  status: wpMedia.status,
+  link: wpMedia.link,
+  guid: wpMedia.guid?.rendered,
+  title: wpMedia.title.rendered,
+  caption: wpMedia.caption.rendered,
+  altText: wpMedia.alt_text,
+  mediaType: wpMedia.media_type,
+  mimeType: wpMedia.mime_type,
+  mediaDetails: wpMedia.media_details,
+  sourceUrl: wpMedia.source_url,
+  authorID: wpMedia.author,
 });
 
 function transformPost(wpPost: WPPost): Post {
   if (!wpPost._embedded) {
-    throw Error("Can't transform WPPost without embedded data")
+    throw Error("Can't transform WPPost without embedded data");
   }
 
-  let categories: Category[] = [], tags: Tag [] = [];
-  
+  let categories: Category[] = [],
+    tags: Tag[] = [];
+
   if (wpPost._embedded["wp:term"]) {
     for (let terms of wpPost._embedded["wp:term"]) {
       if (!terms.length) continue;
@@ -190,8 +194,13 @@ function transformPost(wpPost: WPPost): Post {
     template: wpPost.template,
     format: wpPost.format,
     meta: wpPost.meta,
-    author: wpPost._embedded["author"][0]?.id !== undefined ? wpPost._embedded["author"][0]: undefined,
-    featuredMedia: wpPost._embedded["wp:featuredmedia"] && transformMedia(wpPost._embedded["wp:featuredmedia"][0]),
+    author:
+      wpPost._embedded["author"][0]?.id !== undefined
+        ? wpPost._embedded["author"][0]
+        : undefined,
+    featuredMedia:
+      wpPost._embedded["wp:featuredmedia"] &&
+      transformMedia(wpPost._embedded["wp:featuredmedia"][0]),
     categories,
     tags,
   };
@@ -199,7 +208,7 @@ function transformPost(wpPost: WPPost): Post {
 
 function transformPage(wpPage: WPPage): Page {
   if (!wpPage._embedded) {
-    throw Error("Can't transform WPPage without embedded data")
+    throw Error("Can't transform WPPage without embedded data");
   }
 
   return {
@@ -217,31 +226,78 @@ function transformPage(wpPage: WPPage): Page {
     menuOrder: wpPage.menu_order,
     template: wpPage.template,
     meta: wpPage.meta,
-    author: wpPage._embedded["author"][0]?.id !== undefined ? wpPage._embedded["author"][0]: undefined,
-    featuredMedia: wpPage._embedded["wp:featuredmedia"] && transformMedia(wpPage._embedded["wp:featuredmedia"][0]),
+    author:
+      wpPage._embedded["author"][0]?.id !== undefined
+        ? wpPage._embedded["author"][0]
+        : undefined,
+    featuredMedia:
+      wpPage._embedded["wp:featuredmedia"] &&
+      transformMedia(wpPage._embedded["wp:featuredmedia"][0]),
   };
 }
 
-const postFields: Array<keyof WPPost> = [ 
-  "id", "date", "date_gmt", "modified", "modified_gmt", "slug", "status", "link", 
-  "guid", "title", "content", "excerpt", "author", "featured_media", "comment_status", 
-  "ping_status", "sticky", "template", "format", "categories", "tags", "meta",
-  "author_meta", "featured_img", "featured_img_caption", "_links", "_embedded",
+const postFields: Array<keyof WPPost> = [
+  "id",
+  "date",
+  "date_gmt",
+  "modified",
+  "modified_gmt",
+  "slug",
+  "status",
+  "link",
+  "guid",
+  "title",
+  "content",
+  "excerpt",
+  "author",
+  "featured_media",
+  "comment_status",
+  "ping_status",
+  "sticky",
+  "template",
+  "format",
+  "categories",
+  "tags",
+  "meta",
+  "author_meta",
+  "featured_img",
+  "featured_img_caption",
+  "_links",
+  "_embedded",
 ];
 
 const postCardFields: Array<keyof WPPost> = [
-  "id", "date", "slug", "title", "excerpt", "author", "featured_media",
-  "categories", "tags", "_links", "_embedded",
+  "id",
+  "date",
+  "slug",
+  "title",
+  "excerpt",
+  "author",
+  "featured_media",
+  "categories",
+  "tags",
+  "_links",
+  "_embedded",
 ];
 
-export type CardPost = Pick<Post, "id" | "date" | "slug" | "title" | "excerpt" | "author" | "featuredMedia" |
-  "categories" | "tags">;
+export type CardPost = Pick<
+  Post,
+  | "id"
+  | "date"
+  | "slug"
+  | "title"
+  | "excerpt"
+  | "author"
+  | "featuredMedia"
+  | "categories"
+  | "tags"
+>;
 
 // New function for paginated posts
 export async function getPostsPaginated(
   page: number = 1,
   perPage: number = 9,
-  filterParams?: WordPressQuery<WPPost>,
+  filterParams?: WordPressQuery<WPPost>
 ): Promise<WordPressResponse<CardPost[]>> {
   const query: WordPressQuery<WPPost> = {
     _fields: postCardFields,
@@ -265,173 +321,226 @@ export async function getPostsPaginated(
     cacheTags.push(`posts-category-${filterParams.categories}`);
   }
 
-  const response = await wordpressFetchWithPagination<WPPost[]>("/wp-json/wp/v2/posts", query, cacheTags);
-  
+  const response = await wordpressFetchWithPagination<WPPost[]>(
+    "/wp-json/wp/v2/posts",
+    query,
+    cacheTags
+  );
+
   return {
     headers: response.headers,
-    data: response.data.map(transformPost)
+    data: response.data.map(transformPost),
   };
 }
 
-export async function getAllPosts(queryParams: WordPressQuery<WPPost>) {
-  return wordpressFetchAll<WPPost>("/wp-json/wp/v2/posts", {
-    _fields: postFields,
-    ...queryParams,
-  }, ["posts"]);
-}
+export const getAllPosts = (queryParams: WordPressQuery<WPPost>) =>
+  wordpressFetchAll<WPPost>(
+    "/wp-json/wp/v2/posts",
+    {
+      _fields: postFields,
+      ...queryParams,
+    },
+    ["posts"]
+  );
 
-export const getPostById = (id: number) => wordpressFetch<WPPost>(
-  `/wp-json/wp/v2/posts/${id}`, 
-  { 
-    _embed: true,
-    _fields: postFields,
-  }, 
-  [`post-${id}`]
-).then(transformPost);
+export const getPostById = (id: number) =>
+  wordpressFetch<WPPost>(
+    `/wp-json/wp/v2/posts/${id}`,
+    {
+      _embed: true,
+      _fields: postFields,
+    },
+    [`post-${id}`]
+  ).then(transformPost);
 
-export const getPostBySlug = (slug: string) => wordpressFetch<WPPost[]>(
-  "/wp-json/wp/v2/posts", 
-  {
-    slug,
-    _embed: true,
-    _fields: postFields,
-  }, 
-  [`post-${slug}`]
-).then(
-  (posts) => transformPost(posts[0])
-);
+export const getPostBySlug = (slug: string) =>
+  wordpressFetch<WPPost[]>(
+    "/wp-json/wp/v2/posts",
+    {
+      slug,
+      _embed: true,
+      _fields: postFields,
+    },
+    [`post-${slug}`]
+  ).then((posts) => transformPost(posts[0]));
 
-const categoryFields: Array<keyof Category> = [ 
-  "id", "count", "description", "link", "name", "slug", "taxonomy", "parent",
+const categoryFields: Array<keyof Category> = [
+  "id",
+  "count",
+  "description",
+  "link",
+  "name",
+  "slug",
+  "taxonomy",
+  "parent",
 ];
 
-export const getAllCategories = (queryParams?: WordPressQuery<Category>) => wordpressFetchAll<Category>(
-  "/wp-json/wp/v2/categories",
-  {
-    hide_empty: true,
-    _fields: categoryFields,
-    ...queryParams,
-  },
-  ["categories"]
-);
+export const getAllCategories = (queryParams?: WordPressQuery<Category>) =>
+  wordpressFetchAll<Category>(
+    "/wp-json/wp/v2/categories",
+    {
+      hide_empty: true,
+      _fields: categoryFields,
+      ...queryParams,
+    },
+    ["categories"]
+  );
 
-export async function getCategoryById(id: number): Promise<Category> {
-  return wordpressFetch<Category>(
-    `/wp-json/wp/v2/categories/${id}`, 
-    { _fields: categoryFields }, 
+export const getCategoryById = (id: number) =>
+  wordpressFetch<Category>(
+    `/wp-json/wp/v2/categories/${id}`,
+    { _fields: categoryFields },
     [`category-${id}`]
   );
-}
 
-export async function getCategoryBySlug(slug: string): Promise<Category> {
-  return wordpressFetch<Category[]>(
+export const getCategoryBySlug = (slug: string) =>
+  wordpressFetch<Category[]>(
     "/wp-json/wp/v2/categories",
     { slug, _fields: categoryFields },
     ["categories"]
-  ).then(
-    (categories) => categories[0]
-  );
-}
+  ).then((categories) => categories[0]);
 
-const tagFields: Array<keyof Tag> = [ 
-  "id", "count", "description", "link", "name", "slug", "taxonomy",
+const tagFields: Array<keyof Tag> = [
+  "id",
+  "count",
+  "description",
+  "link",
+  "name",
+  "slug",
+  "taxonomy",
 ];
 
-export const getAllTags = (queryParams?: WordPressQuery<Tag>) => wordpressFetchAll<Tag>(
-  "/wp-json/wp/v2/tags", 
-  {
-    hide_empty: true,
-    _fields: tagFields,
-    ...queryParams,
-  }, 
-  ["tags"],
-);
-
-export async function getTagById(id: number): Promise<Tag> {
-  return wordpressFetch<Tag>(
-    `/wp-json/wp/v2/tags/${id}`, 
-    { _fields: tagFields }, 
-    [`tag-${id}`],
-  );
-}
-
-export async function getTagBySlug(slug: string): Promise<Tag> {
-  return wordpressFetch<Tag[]>(
+export const getAllTags = (queryParams?: WordPressQuery<Tag>) =>
+  wordpressFetchAll<Tag>(
     "/wp-json/wp/v2/tags",
-    { slug, _fields: tagFields },
-    ["tags"],
-  ).then(
-    (tags) => tags[0]
+    {
+      hide_empty: true,
+      _fields: tagFields,
+      ...queryParams,
+    },
+    ["tags"]
   );
-}
 
-const pageFields: Array<keyof WPPage> = [ 
-  "id", "date", "date_gmt", "modified", "modified_gmt", "slug", "status", "link", 
-  "guid", "title", "content", "excerpt", "author", "featured_media", "parent", 
-  "menu_order", "comment_status", "ping_status", "template", "meta",
+export const getTagById = (id: number) =>
+  wordpressFetch<Tag>(`/wp-json/wp/v2/tags/${id}`, { _fields: tagFields }, [
+    `tag-${id}`,
+  ]);
+
+export const getTagBySlug = (slug: string) =>
+  wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { slug, _fields: tagFields }, [
+    "tags",
+  ]).then((tags) => tags[0]);
+
+const pageFields: Array<keyof WPPage> = [
+  "id",
+  "date",
+  "date_gmt",
+  "modified",
+  "modified_gmt",
+  "slug",
+  "status",
+  "link",
+  "guid",
+  "title",
+  "content",
+  "excerpt",
+  "author",
+  "featured_media",
+  "parent",
+  "menu_order",
+  "comment_status",
+  "ping_status",
+  "template",
+  "meta",
 ];
 
-export async function getAllPages(queryParams: WordPressQuery<WPPage>) {
-  return wordpressFetchAll<WPPage>( "/wp-json/wp/v2/pages", { 
-    _fields: pageFields, ...queryParams 
-  }, ["pages"]);
-}
+export const getAllPages = (queryParams: WordPressQuery<WPPage>) =>
+  wordpressFetchAll<WPPage>(
+    "/wp-json/wp/v2/pages",
+    {
+      _fields: pageFields,
+      ...queryParams,
+    },
+    ["pages"]
+  );
 
-export async function getPageById(id: number): Promise<WPPage> {
-  return wordpressFetch<WPPage>(
+export const getPageById = (id: number) =>
+  wordpressFetch<WPPage>(
     `/wp-json/wp/v2/pages/${id}`,
     { _fields: pageFields },
-    [`page-${id}`],
+    [`page-${id}`]
   );
-}
 
-export async function getPageBySlug(slug: string): Promise<WPPage> {
-  return wordpressFetch<WPPage[]>(
+export const getPageBySlug = (slug: string) =>
+  wordpressFetch<WPPage[]>(
     "/wp-json/wp/v2/pages",
     { slug, _fields: pageFields },
-    [`page-${slug}`],
-  ).then(
-    (pages) => pages[0]
-  );
-}
+    [`page-${slug}`]
+  ).then((pages) => pages[0]);
 
-const authorFields: Array<keyof Author> = [ 
-  "id", "name", "url", "description", "link", "slug", "avatar_urls",
+const authorFields: Array<keyof Author> = [
+  "id",
+  "name",
+  "url",
+  "description",
+  "link",
+  "slug",
+  "avatar_urls",
 ];
 
-export const getAllAuthors = (queryParams?: WordPressQuery<Author>) => wordpressFetchAll<Author>(
-  "/wp-json/wp/v2/users",
-  {
-    has_published_posts: true,
-    _fields: authorFields,
-    ...queryParams,
-  },
-  ["authors"],
-);
-
-export async function getAuthorById(id: number): Promise<Author> {
-  return wordpressFetch<Author>(`/wp-json/wp/v2/users/${id}`, { _fields: authorFields }, [`author-${id}`]);
-}
-
-export async function getAuthorBySlug(slug: string): Promise<Author> {
-  return wordpressFetch<Author[]>("/wp-json/wp/v2/users", { slug, _fields: authorFields }, ["authors"]).then(
-    (users) => users[0]
+export const getAllAuthors = (queryParams?: WordPressQuery<Author>) =>
+  wordpressFetchAll<Author>(
+    "/wp-json/wp/v2/users",
+    {
+      has_published_posts: true,
+      _fields: authorFields,
+      ...queryParams,
+    },
+    ["authors"]
   );
-}
+
+export const getAuthorById = (id: number) =>
+  wordpressFetch<Author>(
+    `/wp-json/wp/v2/users/${id}`,
+    { _fields: authorFields },
+    [`author-${id}`]
+  );
+
+export const getAuthorBySlug = (slug: string) =>
+  wordpressFetch<Author[]>(
+    "/wp-json/wp/v2/users",
+    { slug, _fields: authorFields },
+    ["authors"]
+  ).then((users) => users[0]);
 
 const mediaFields: Array<keyof WPMedia> = [
-  "id", "date", "date_gmt", "modified", "modified_gmt", "slug", "status", "link",
-  "guid", "title", "author", "caption", "alt_text", "media_type", "mime_type",
-  "media_details", "source_url",
+  "id",
+  "date",
+  "date_gmt",
+  "modified",
+  "modified_gmt",
+  "slug",
+  "status",
+  "link",
+  "guid",
+  "title",
+  "author",
+  "caption",
+  "alt_text",
+  "media_type",
+  "mime_type",
+  "media_details",
+  "source_url",
 ];
 
-export async function getMediaById(id: number): Promise<WPMedia> {
-  return wordpressFetch<WPMedia>(`/wp-json/wp/v2/media/${id}`, {
-    _fields: mediaFields,
-  }, ["media", `media-${id}`]);
-}
+export const getMediaById = (id: number) =>
+  wordpressFetch<WPMedia>(
+    `/wp-json/wp/v2/media/${id}`,
+    {
+      _fields: mediaFields,
+    },
+    ["media", `media-${id}`]
+  );
 
-// Function specifically for generateStaticParams - fetches ALL posts
-export const getAllPostSlugs = () => getAllPosts({ _fields: [ "slug" ] })
-
-export { WordPressAPIError };
+// Function specifically for generateStaticParams - fetches ALL post slugs
+export const getAllPostSlugs = () => getAllPosts({ _fields: ["slug"] });
