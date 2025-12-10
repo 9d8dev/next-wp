@@ -18,5 +18,5 @@ export function extractExcerptText(excerpt: string): string {
     return '';
   }
   const matches = excerpt.match(/<p>([\s\S]*)<\/p>/);
-  return matches ? stripHtmlTags(matches[1]) : '';
+  return matches ? stripHtmlTags(matches[1]).trim() : '';
 }

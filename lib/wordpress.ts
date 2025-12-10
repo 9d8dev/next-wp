@@ -226,7 +226,7 @@ const postFields: Array<keyof WPPost> = [
   "id", "date", "date_gmt", "modified", "modified_gmt", "slug", "status", "link", 
   "guid", "title", "content", "excerpt", "author", "featured_media", "comment_status", 
   "ping_status", "sticky", "template", "format", "categories", "tags", "meta",
-  "author_meta", "featured_img", "featured_img_caption",
+  "author_meta", "featured_img", "featured_img_caption", "_links", "_embedded",
 ];
 
 const postCardFields: Array<keyof WPPost> = [
@@ -280,18 +280,27 @@ export async function getAllPosts(queryParams: WordPressQuery<WPPost>) {
   }, ["posts"]);
 }
 
-export async function getPostById(id: number): Promise<WPPost> {
-  return wordpressFetch<WPPost>(`/wp-json/wp/v2/posts/${id}`, { _fields: postFields }, [`post-${id}`]);
-}
-
-export async function getPostBySlug(slug: string): Promise<WPPost> {
-  return wordpressFetch<WPPost[]>("/wp-json/wp/v2/posts", {
-    slug,
+export const getPostById = (id: number) => wordpressFetch<WPPost>(
+  `/wp-json/wp/v2/posts/${id}`, 
+  { 
+    _embed: true,
     _fields: postFields,
-  }, [`post-${slug}`]).then(
-    (posts) => posts[0]
-  );
-}
+  }, 
+  [`post-${id}`]
+).then(transformPost);
+
+export const getPostBySlug = (slug: string) => wordpressFetch<WPPost[]>(
+  "/wp-json/wp/v2/posts", 
+  {
+    slug,
+    _embed: true,
+    _fields: postFields,
+  }, 
+  [`post-${slug}`]
+).then(
+  (posts) => transformPost(posts[0])
+);
+
 
 export async function getPostsByCategory(categoryId: number): Promise<WPPost[]> {
   return wordpressFetch<WPPost[]>("/wp-json/wp/v2/posts", {
