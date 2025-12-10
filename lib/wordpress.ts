@@ -34,39 +34,15 @@ export class WordPressAPIError extends Error {
   }
 }
 
-// Keep original function for backward compatibility
-async function wordpressFetch<T>(
+const wordpressFetch = <T>(
   path: string,
   query?: WordPressQuery<T>,
   cacheTags: CacheTag[] = []
-): Promise<T> {
-  const url = `${baseUrl}${path}${
-    query ? `?${querystring.stringify(query, { arrayFormat: "comma" })}` : ""
-  }`;
-  const userAgent = "Next.js WordPress Client";
+) =>
+  wordpressFetchWithPagination<T>(path, query, cacheTags).then(
+    ({ data }) => data
+  );
 
-  const response = await fetch(url, {
-    headers: {
-      "User-Agent": userAgent,
-    },
-    next: {
-      tags: ["wordpress", ...cacheTags],
-      revalidate: 86400, // 1 day cache
-    },
-  });
-
-  if (!response.ok) {
-    throw new WordPressAPIError(
-      `WordPress API request failed: ${response.statusText}`,
-      response.status,
-      url
-    );
-  }
-
-  return response.json();
-}
-
-// New function for paginated requests
 async function wordpressFetchWithPagination<T>(
   path: string,
   query?: WordPressQuery<T>,
