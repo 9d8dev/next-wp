@@ -13,6 +13,7 @@ interface WPEntity {
   };
   title: RenderedTitle;
   author: number;
+  _links?: Record<string, Array<Record<string, any>>>;
 }
 
 interface RenderedContent {
@@ -85,7 +86,7 @@ export interface WPPost extends WPEntity {
   _embedded?: {
     author: Author[];
     "wp:featuredmedia"?: WPMedia[];
-    "wp:term": Array<Category[] | Tag[]>; 
+    "wp:term": Array<Category[] | Tag[]>;
   };
 }
 
@@ -103,7 +104,7 @@ export interface WPPage extends WPEntity {
     author: Author[];
     "wp:featuredmedia"?: WPMedia[];
     up?: WPPage;
-    "wp:term": Array<unknown[]>; 
+    "wp:term": Array<unknown[]>;
   };
 }
 
@@ -234,7 +235,7 @@ export interface SearchResult {
   };
 }
 
-type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
+type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
 
 // Transformed content types
 interface Entity {
@@ -274,7 +275,6 @@ export interface Post extends PostMetaEntity {
   tags: Tag[];
   meta: Record<string, unknown>;
 }
-
 
 export interface Page extends PostMetaEntity {
   parent: number;
@@ -328,7 +328,17 @@ interface EntityQuery<T> extends BaseQuery<T> {
   author_exclude?: number | string | Array<number | string>; // Ensure result set excludes posts assigned to specific authors.
   before?: string; // Limit response to posts published before a given ISO8601 compliant date.
   modified_before?: string; // Limit response to posts modified before a given ISO8601 compliant date.
-  orderby?: "author" | "date" | "id" | "include" | "modified" | "parent" | "relevance" | "slug" | "include_slugs" | "title";
+  orderby?:
+    | "author"
+    | "date"
+    | "id"
+    | "include"
+    | "modified"
+    | "parent"
+    | "relevance"
+    | "slug"
+    | "include_slugs"
+    | "title";
   search_columns?: Array<string>; // Array of column names to be searched.
   status?: "publish" | "future" | "draft" | "pending" | "private"; // Limit result set to posts assigned one or more statuses.
 }
@@ -358,7 +368,15 @@ export interface MediaQuery extends EntityQuery<WPMedia> {
 interface TaxonomyQuery<T> extends BaseQuery<T> {
   hide_empty?: boolean; // Whether to hide terms not assigned to any posts.
   post?: number; // Limit result set to terms assigned to a specific post.
-  orderby?: "id" | "include" | "name" | "slug" | "include_slugs" | "term_group" | "description" | "count";
+  orderby?:
+    | "id"
+    | "include"
+    | "name"
+    | "slug"
+    | "include_slugs"
+    | "term_group"
+    | "description"
+    | "count";
 }
 export type TagQuery = TaxonomyQuery<Tag>;
 export interface CategoryQuery extends TaxonomyQuery<Category> {
@@ -374,16 +392,22 @@ interface AuthorQuery<T> extends BaseQuery<Author> {
 
 type Flatten<T> = T extends any[] ? T[number] : T;
 
-export type WordPressQuery<T> =
-  Flatten<T> extends WPPost ? PostQuery :
-  Flatten<T> extends WPPage ? PageQuery :
-  Flatten<T> extends WPMedia ? MediaQuery :
-  Flatten<T> extends Tag ? TagQuery :
-  Flatten<T> extends Category ? CategoryQuery :
-  Flatten<T> extends Author ? AuthorQuery :
-  BaseQuery<Flatten<T>>;
+export type WordPressQuery<T> = Flatten<T> extends WPPost
+  ? PostQuery
+  : Flatten<T> extends WPPage
+  ? PageQuery
+  : Flatten<T> extends WPMedia
+  ? MediaQuery
+  : Flatten<T> extends Tag
+  ? TagQuery
+  : Flatten<T> extends Category
+  ? CategoryQuery
+  : Flatten<T> extends Author
+  ? AuthorQuery
+  : BaseQuery<Flatten<T>>;
 
-export type CacheTag = "wordpress"
+export type CacheTag =
+  | "wordpress"
   | "posts"
   | `post-${number | string}`
   | `posts-category-${number | string}`
