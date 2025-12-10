@@ -516,7 +516,7 @@ export const getMediaById = (id: number) =>
       _fields: mediaFields,
     },
     ["media", `media-${id}`]
-  );
+  ).then(transformMedia);
 
 // Function specifically for generateStaticParams - fetches ALL post slugs
 export const getAllPostSlugs = () => getAllPosts({ _fields: ["slug"] });
