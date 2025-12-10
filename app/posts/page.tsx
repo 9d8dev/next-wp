@@ -3,9 +3,6 @@ import {
   getAllAuthors,
   getAllTags,
   getAllCategories,
-  searchAuthors,
-  searchTags,
-  searchCategories,
 } from "@/lib/wordpress";
 
 import {
@@ -53,9 +50,9 @@ export default async function Page({
   // Fetch data based on search parameters using efficient pagination
   const [postsResponse, authors, tags, categories] = await Promise.all([
     getPostsPaginated(page, postsPerPage, { author, tags: tag, categories: category, search }),
-    search ? searchAuthors(search) : getAllAuthors(),
-    search ? searchTags(search) : getAllTags(),
-    search ? searchCategories(search) : getAllCategories(),
+    getAllAuthors({ search }),
+    getAllTags({ search }),
+    getAllCategories({ search }),
   ]);
 
   const { data: posts, headers } = postsResponse;
