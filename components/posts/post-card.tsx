@@ -1,30 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { cn, extractExcerptText } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 import {
-  getMediaById,
-  getCategoryById,
   CardPost,
 } from "@/lib/wordpress";
 
-export async function PostCard({ post }: { post: CardPost }) {
-  const media = post._embedded?.["wp:featuredmedia"] ?
-    post._embedded?.["wp:featuredmedia"][0]
-    : post.featured_media
-    ? await getMediaById(post.featured_media)
-    : null;
-  const date = new Date(post.date).toLocaleDateString("en-US", {
+export function PostCard({ post }: { post: CardPost }) {
+  const media = post.featuredMedia;
+  const date = post.date.toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
   });
-  const category = post._embedded?.["wp:term"][0] && post._embedded?.["wp:term"][0][0].taxonomy === "category" ?
-    post._embedded?.["wp:term"][0][0]
-    : post.categories?.[0]
-    ? await getCategoryById(post.categories[0])
-    : null;
+  const category = post.categories[0]
 
   return (
     <Link
@@ -35,12 +25,12 @@ export async function PostCard({ post }: { post: CardPost }) {
       )}
     >
       <div className="flex flex-col gap-4">
-        {media?.source_url && (
+        {media?.sourceUrl && (
           <div className="h-48 w-full overflow-hidden relative rounded-md border flex items-center justify-center bg-muted">
             <Image
               className="h-full w-full object-cover"
-              src={media.source_url}
-              alt={media.alt_text || post.title?.rendered || "Post thumbnail"}
+              src={media.sourceUrl}
+              alt={media.altText || post.title || "Post thumbnail"}
               width={400}
               height={200}
             />
@@ -48,13 +38,13 @@ export async function PostCard({ post }: { post: CardPost }) {
         )}
         <div
           dangerouslySetInnerHTML={{
-            __html: post.title?.rendered || "Untitled Post",
+            __html: post.title || "Untitled Post",
           }}
           className="text-xl text-primary font-medium group-hover:underline decoration-muted-foreground underline-offset-4 decoration-dotted transition-all"
         ></div>
         <div className="text-sm">
-          {post.excerpt?.rendered
-              ? extractExcerptText(post.excerpt.rendered).split(" ").slice(0, 24).join(" ").trim() + "..."
+          {post.excerpt
+              ? post.excerpt.split(" ").slice(0, 24).join(" ").trim() + "..."
               : "No excerpt available"}
         </div>
       </div>

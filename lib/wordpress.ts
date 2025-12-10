@@ -17,6 +17,7 @@ import type {
   Media,
   Page,
 } from "./wordpress.d";
+import { extractExcerptText } from "./utils";
 
 const baseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
 
@@ -140,7 +141,7 @@ const transformMedia = (wpMedia: WPMedia): Media => ({
     slug: wpMedia.slug,
     status: wpMedia.status,
     link: wpMedia.link,
-    guid: wpMedia.guid.rendered,
+    guid: wpMedia.guid?.rendered,
     title: wpMedia.title.rendered,
     caption: wpMedia.caption.rendered,
     altText: wpMedia.alt_text,
@@ -160,6 +161,7 @@ function transformPost(wpPost: WPPost): Post {
   
   if (wpPost._embedded["wp:term"]) {
     for (let terms of wpPost._embedded["wp:term"]) {
+      if (!terms.length) continue;
       switch (terms[0].taxonomy) {
         case "category":
           categories = terms as Category[];
@@ -179,10 +181,10 @@ function transformPost(wpPost: WPPost): Post {
     slug: wpPost.slug,
     status: wpPost.status,
     link: wpPost.link,
-    guid: wpPost.guid.rendered,
+    guid: wpPost.guid?.rendered,
     title: wpPost.title.rendered,
-    content: wpPost.content.rendered,
-    excerpt: wpPost.content.rendered,
+    content: wpPost.content?.rendered,
+    excerpt: extractExcerptText(wpPost.excerpt.rendered),
     type: wpPost.type,
     sticky: wpPost.sticky,
     template: wpPost.template,
@@ -232,8 +234,8 @@ const postCardFields: Array<keyof WPPost> = [
   "categories", "tags", "_links", "_embedded",
 ];
 
-export type CardPost = Pick<WPPost, "id" | "date" | "slug" | "title" | "excerpt" | "author" | "featured_media" |
-  "categories" | "tags" | "_links" | "_embedded">;
+export type CardPost = Pick<Post, "id" | "date" | "slug" | "title" | "excerpt" | "author" | "featuredMedia" |
+  "categories" | "tags">;
 
 // New function for paginated posts
 export async function getPostsPaginated(
@@ -263,7 +265,12 @@ export async function getPostsPaginated(
     cacheTags.push(`posts-category-${filterParams.categories}`);
   }
 
-  return wordpressFetchWithPagination<WPPost[]>("/wp-json/wp/v2/posts", query, cacheTags);
+  const response = await wordpressFetchWithPagination<WPPost[]>("/wp-json/wp/v2/posts", query, cacheTags);
+  
+  return {
+    headers: response.headers,
+    data: response.data.map(transformPost)
+  };
 }
 
 export async function getAllPosts(queryParams: WordPressQuery<WPPost>) {
