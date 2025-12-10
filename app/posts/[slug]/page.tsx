@@ -12,6 +12,7 @@ import Link from "next/link";
 import Balancer from "react-wrap-balancer";
 
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
   return getAllPostSlugs();
@@ -69,6 +70,8 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
+
+  if (!post) notFound();
 
   const { featuredMedia, author } = post;
   const date = post.date.toLocaleDateString("en-US", {

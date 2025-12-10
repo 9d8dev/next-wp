@@ -3,6 +3,7 @@ import { Section, Container, Prose } from "@/components/craft";
 import { siteConfig } from "@/site.config";
 
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 // Revalidate pages every hour
 export const revalidate = 3600;
@@ -66,6 +67,8 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const page = await getPageBySlug(slug);
+
+  if (!page) notFound();
 
   return (
     <Section>

@@ -338,7 +338,7 @@ export const getPostBySlug = (slug: string) =>
       _fields: postFields,
     },
     [`post-${slug}`]
-  ).then((posts) => transformPost(posts[0]));
+  ).then((posts) => posts[0] && transformPost(posts[0]));
 
 const categoryFields: Array<keyof Category> = [
   "id",
@@ -461,7 +461,7 @@ export const getPageBySlug = (slug: string) =>
       slug,
     },
     [`page-${slug}`]
-  ).then((pages) => transformPage(pages[0]));
+  ).then((pages) => pages[0] && transformPage(pages[0]));
 
 const authorFields: Array<keyof Author> = [
   "id",
