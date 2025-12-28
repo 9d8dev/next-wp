@@ -53,6 +53,10 @@ Local copy of craft-ds (v0.3.2) providing layout primitives:
 - `Prose` - Typography styles for rich content
 - `Box` - Flex/grid layout with responsive props
 
+### Utility Functions
+- `lib/utils.ts` - `cn()` function for merging Tailwind classes (clsx + tailwind-merge)
+- `lib/metadata.ts` - `generateContentMetadata()` for SEO metadata, `stripHtml()` for excerpt cleaning
+
 ## Code Style
 
 ### TypeScript
