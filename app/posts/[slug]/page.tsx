@@ -5,11 +5,11 @@ import {
   getCategoryById,
   getAllPostSlugs,
 } from "@/lib/wordpress";
+import { generateContentMetadata, stripHtml } from "@/lib/metadata";
 
 import { Section, Container, Article, Prose } from "@/components/craft";
 import { badgeVariants } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { siteConfig } from "@/site.config";
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -31,36 +31,12 @@ export async function generateMetadata({
     return {};
   }
 
-  const ogUrl = new URL(`${siteConfig.site_domain}/api/og`);
-  ogUrl.searchParams.append("title", post.title.rendered);
-  // Strip HTML tags for description
-  const description = post.excerpt.rendered.replace(/<[^>]*>/g, "").trim();
-  ogUrl.searchParams.append("description", description);
-
-  return {
+  return generateContentMetadata({
     title: post.title.rendered,
-    description: description,
-    openGraph: {
-      title: post.title.rendered,
-      description: description,
-      type: "article",
-      url: `${siteConfig.site_domain}/posts/${post.slug}`,
-      images: [
-        {
-          url: ogUrl.toString(),
-          width: 1200,
-          height: 630,
-          alt: post.title.rendered,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: post.title.rendered,
-      description: description,
-      images: [ogUrl.toString()],
-    },
-  };
+    description: stripHtml(post.excerpt.rendered),
+    slug: post.slug,
+    basePath: "posts",
+  });
 }
 
 export default async function Page({

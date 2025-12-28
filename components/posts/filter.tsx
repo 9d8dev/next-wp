@@ -7,23 +7,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"; // Ensure this is the correct import path
-import { Button } from "@/components/ui/button"; // Add this import for the Button component
-
-interface Author {
-  id: number;
-  name: string;
-}
-
-interface Tag {
-  id: number;
-  name: string;
-}
-
-interface Category {
-  id: number;
-  name: string;
-}
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import type { Author, Tag, Category } from "@/lib/wordpress.d";
 
 interface FilterPostsProps {
   authors: Author[];
