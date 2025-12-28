@@ -11,7 +11,9 @@
       "Bash(pnpm remove:*)",
       "Bash(pnpm build:*)",
       "Bash(mkdir:*)",
-      "Bash(WORDPRESS_URL=\"\" WORDPRESS_HOSTNAME=\"\" pnpm build:*)"
+      "Bash(WORDPRESS_URL=\"\" WORDPRESS_HOSTNAME=\"\" pnpm build:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []

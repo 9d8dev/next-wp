@@ -1,8 +1,7 @@
 import { getAllTags } from "@/lib/wordpress";
-import { Section, Container, Prose } from "@/components/craft";
-import { Metadata } from "next";
-import BackButton from "@/components/back";
-import Link from "next/link";
+import { ArchiveList } from "@/components/archive-list";
+import type { Tag } from "@/lib/wordpress.d";
+import type { Metadata } from "next";
 
 export const revalidate = 3600;
 
@@ -18,24 +17,12 @@ export default async function Page() {
   const tags = await getAllTags();
 
   return (
-    <Section>
-      <Container className="space-y-6">
-        <Prose className="mb-8">
-          <h2>All Tags</h2>
-          {tags.length > 0 ? (
-            <ul className="grid">
-              {tags.map((tag: any) => (
-                <li key={tag.id}>
-                  <Link href={`/posts/?tag=${tag.id}`}>{tag.name}</Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-muted-foreground">No tags available yet.</p>
-          )}
-        </Prose>
-        <BackButton />
-      </Container>
-    </Section>
+    <ArchiveList<Tag>
+      title="All Tags"
+      items={tags}
+      getItemHref={(t) => `/posts/?tag=${t.id}`}
+      getItemLabel={(t) => t.name}
+      emptyMessage="No tags available yet."
+    />
   );
 }

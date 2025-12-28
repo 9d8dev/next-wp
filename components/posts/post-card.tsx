@@ -4,25 +4,15 @@ import Link from "next/link";
 import { Post } from "@/lib/wordpress.d";
 import { cn } from "@/lib/utils";
 
-import {
-  getFeaturedMediaById,
-  getAuthorById,
-  getCategoryById,
-} from "@/lib/wordpress";
-
-export async function PostCard({ post }: { post: Post }) {
-  const media = post.featured_media
-    ? await getFeaturedMediaById(post.featured_media)
-    : null;
-  const author = post.author ? await getAuthorById(post.author) : null;
+export function PostCard({ post }: { post: Post }) {
+  // Use embedded data instead of separate API calls
+  const media = post._embedded?.["wp:featuredmedia"]?.[0] ?? null;
+  const category = post._embedded?.["wp:term"]?.[0]?.[0] ?? null;
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
   });
-  const category = post.categories?.[0]
-    ? await getCategoryById(post.categories[0])
-    : null;
 
   return (
     <Link
