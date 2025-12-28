@@ -15,10 +15,12 @@ Headless WordPress starter using Next.js 16 App Router with TypeScript.
 ### Data Layer (`lib/wordpress.ts`)
 - All WordPress REST API interactions centralized here
 - Type definitions in `lib/wordpress.d.ts` (Post, Page, Category, Tag, Author, FeaturedMedia)
+- Two fetch patterns: `wordpressFetch` (throws on error) vs `wordpressFetchGraceful` (returns fallback)
 - `WordPressAPIError` class for consistent error handling
 - Cache tags for granular revalidation: `['wordpress', 'posts', 'post-{id}', 'posts-page-{n}']`
 - Pagination via `getPostsPaginated()` returns `{ data, headers: { total, totalPages } }`
 - Default cache: 1 hour (`revalidate: 3600`)
+- Graceful degradation: builds succeed even when WordPress is unavailable
 
 ### Routing
 - Dynamic: `/posts/[slug]`, `/pages/[slug]`
@@ -30,16 +32,26 @@ Headless WordPress starter using Next.js 16 App Router with TypeScript.
 - `generateStaticParams()` uses `getAllPostSlugs()` for static generation
 - URL-based state for search/filters via `searchParams`
 - Debounced search (300ms) in `SearchInput` component
+- Next.js 15+ async params pattern: `params: Promise<{ slug: string }>`
 
 ### Revalidation Flow
 1. WordPress plugin sends webhook to `/api/revalidate`
 2. Validates `x-webhook-secret` header against `WORDPRESS_WEBHOOK_SECRET`
 3. Calls `revalidateTag()` for specific content types (posts, categories, tags, authors)
+4. Also calls `revalidatePath("/", "layout")` for full site refresh
 
 ### Configuration Files
 - `site.config.ts` - Site metadata (domain, name, description)
-- `menu.config.ts` - Navigation menu structure
-- `next.config.ts` - Image remotePatterns, /admin redirect to WordPress
+- `menu.config.ts` - Navigation menu structure (`mainMenu`, `contentMenu`)
+- `next.config.ts` - Image remotePatterns, /admin redirect to WordPress, standalone output
+
+### Layout Components (`components/craft.tsx`)
+Local copy of craft-ds (v0.3.2) providing layout primitives:
+- `Section` - Page sections with vertical padding
+- `Container` - Max-width container with horizontal padding
+- `Article` - Prose container for WordPress content (max-width prose)
+- `Prose` - Typography styles for rich content
+- `Box` - Flex/grid layout with responsive props
 
 ## Code Style
 
@@ -69,4 +81,4 @@ WORDPRESS_WEBHOOK_SECRET="secret-key"     # Webhook validation
 - Next.js 16 with React 19
 - Tailwind CSS v4 with `@tailwindcss/postcss`
 - shadcn/ui components (Radix primitives)
-- brijr/craft for layout (`Section`, `Container`, `Article`, `Prose`)
+- craft-ds for layout (`Section`, `Container`, `Article`, `Prose`)
