@@ -9,6 +9,8 @@ A modern headless WordPress starter built with Next.js 16, React 19, and TypeScr
 ![Next WP Screenshot](https://github.com/user-attachments/assets/8b268c36-eb0d-459f-b9f1-b5f129bd29bc)
 
 > **[Live Demo](https://wp.9d8.dev)** | **[Video Tutorial](https://www.youtube.com/watch?v=JZc1-BcOvYw)** | **[Headless Theme (761)](https://github.com/9d8dev/761)**
+>
+> Need a WooCommerce version? Try [next-woo](https://github.com/9d8dev/next-woo)
 
 ## Table of Contents
 
