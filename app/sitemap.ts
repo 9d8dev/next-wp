@@ -1,9 +1,9 @@
 import { MetadataRoute } from "next";
-import { getAllPosts } from "@/lib/wordpress";
+import { getAllPostsForSitemap } from "@/lib/wordpress";
 import { siteConfig } from "@/site.config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await getAllPosts();
+  const posts = await getAllPostsForSitemap();
 
   const staticUrls: MetadataRoute.Sitemap = [
     {
@@ -25,19 +25,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     },
     {
-      url: `${siteConfig.site_domain}/authors`,
+      url: `${siteConfig.site_domain}/posts/authors`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
-      url: `${siteConfig.site_domain}/categories`,
+      url: `${siteConfig.site_domain}/posts/categories`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
-      url: `${siteConfig.site_domain}/tags`,
+      url: `${siteConfig.site_domain}/posts/tags`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,

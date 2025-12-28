@@ -191,7 +191,11 @@ export async function getPostsPaginated(
   );
 }
 
-export async function getAllPosts(filterParams?: {
+/**
+ * Fetches recent posts (up to 100). For paginated access use getPostsPaginated().
+ * For fetching ALL posts (e.g., sitemap), use getAllPostsForSitemap().
+ */
+export async function getRecentPosts(filterParams?: {
   author?: string;
   tag?: string;
   category?: string;
@@ -230,7 +234,7 @@ export async function getAllCategories(): Promise<Category[]> {
   return wordpressFetchGraceful<Category[]>(
     "/wp-json/wp/v2/categories",
     [],
-    undefined,
+    { per_page: 100 },
     ["wordpress", "categories"]
   );
 }
@@ -260,10 +264,12 @@ export async function getTagsByPost(postId: number): Promise<Tag[]> {
 }
 
 export async function getAllTags(): Promise<Tag[]> {
-  return wordpressFetchGraceful<Tag[]>("/wp-json/wp/v2/tags", [], undefined, [
-    "wordpress",
-    "tags",
-  ]);
+  return wordpressFetchGraceful<Tag[]>(
+    "/wp-json/wp/v2/tags",
+    [],
+    { per_page: 100 },
+    ["wordpress", "tags"]
+  );
 }
 
 export async function getTagById(id: number): Promise<Tag> {
@@ -277,10 +283,12 @@ export async function getTagBySlug(slug: string): Promise<Tag> {
 }
 
 export async function getAllPages(): Promise<Page[]> {
-  return wordpressFetchGraceful<Page[]>("/wp-json/wp/v2/pages", [], undefined, [
-    "wordpress",
-    "pages",
-  ]);
+  return wordpressFetchGraceful<Page[]>(
+    "/wp-json/wp/v2/pages",
+    [],
+    { per_page: 100 },
+    ["wordpress", "pages"]
+  );
 }
 
 export async function getPageById(id: number): Promise<Page> {
@@ -300,7 +308,7 @@ export async function getAllAuthors(): Promise<Author[]> {
   return wordpressFetchGraceful<Author[]>(
     "/wp-json/wp/v2/users",
     [],
-    undefined,
+    { per_page: 100 },
     ["wordpress", "authors"]
   );
 }
@@ -366,7 +374,7 @@ export async function searchAuthors(query: string): Promise<Author[]> {
   });
 }
 
-// Function specifically for generateStaticParams - fetches ALL posts
+// Fetches ALL post slugs for generateStaticParams
 // Returns empty array if WordPress is unavailable (allows build to succeed)
 export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
   if (!isConfigured) return [];
@@ -390,6 +398,41 @@ export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
     return allSlugs;
   } catch {
     console.warn("WordPress unavailable, skipping static generation for posts");
+    return [];
+  }
+}
+
+// Fetches ALL posts for sitemap generation (paginates through all pages)
+// Returns slug and modified date for each post
+export async function getAllPostsForSitemap(): Promise<
+  { slug: string; modified: string }[]
+> {
+  if (!isConfigured) return [];
+
+  try {
+    const allPosts: { slug: string; modified: string }[] = [];
+    let page = 1;
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await wordpressFetchPaginated<Post[]>(
+        "/wp-json/wp/v2/posts",
+        { per_page: 100, page, _fields: "slug,modified" }
+      );
+
+      allPosts.push(
+        ...response.data.map((post) => ({
+          slug: post.slug,
+          modified: post.modified,
+        }))
+      );
+      hasMore = page < response.headers.totalPages;
+      page++;
+    }
+
+    return allPosts;
+  } catch {
+    console.warn("WordPress unavailable, skipping sitemap generation");
     return [];
   }
 }
