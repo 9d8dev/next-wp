@@ -49,7 +49,12 @@ export default async function Page({
 
   // Fetch data based on search parameters using efficient pagination
   const [postsResponse, authors, tags, categories] = await Promise.all([
-    getPostsPaginated(page, postsPerPage, { author, tags: tag, categories: category, search }),
+    getPostsPaginated(page, postsPerPage, {
+      author,
+      tags: tag,
+      categories: category,
+      search,
+    }),
     getAllAuthors({ search }),
     getAllTags({ search }),
     getAllCategories({ search }),
@@ -93,7 +98,6 @@ export default async function Page({
               selectedCategory={category}
             />
           </div>
-
           {posts.length > 0 ? (
             <div className="grid md:grid-cols-3 gap-4">
               {posts.map((post) => (
@@ -105,7 +109,6 @@ export default async function Page({
               <p>No posts found</p>
             </div>
           )}
-
           {totalPages > 1 && (
             <div className="flex justify-center items-center py-8">
               <Pagination>
