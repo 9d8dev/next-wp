@@ -7,6 +7,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pnpm build` - Build for production
 - `pnpm start` - Start production server
 - `pnpm lint` - Run ESLint
+- `pnpm test` - Run all tests (Vitest)
+- `pnpm test:watch` - Run tests in watch mode
+- `pnpm vitest run __tests__/lib/utils.test.ts` - Run a single test file
+- `pnpm vitest run -t "test name"` - Run a specific test by name
 
 ## Architecture Overview
 
@@ -56,6 +60,12 @@ Local copy of craft-ds (v0.3.2) providing layout primitives:
 ### Utility Functions
 - `lib/utils.ts` - `cn()` function for merging Tailwind classes (clsx + tailwind-merge)
 - `lib/metadata.ts` - `generateContentMetadata()` for SEO metadata, `stripHtml()` for excerpt cleaning
+
+### Testing (`__tests__/`)
+- Vitest with `@` path alias matching `tsconfig.json`
+- Tests mirror source structure: `__tests__/lib/utils.test.ts` tests `lib/utils.ts`
+- Tests cover: `lib/utils`, `lib/metadata`, `lib/wordpress`, `api/revalidate`
+- WordPress API tests mock `global.fetch` to avoid external calls
 
 ## Code Style
 
