@@ -27,6 +27,7 @@ A modern headless WordPress starter built with Next.js 16, React 19, and TypeScr
 - [Cache Revalidation](#cache-revalidation)
 - [Customization](#customization)
 - [Troubleshooting](#troubleshooting)
+- [Testing](#testing)
 - [Scripts](#scripts)
 - [Contributing](#contributing)
 - [License](#license)
@@ -327,6 +328,24 @@ This project uses shadcn/ui with Tailwind CSS. Customize colors in your CSS or u
 - Install a CORS plugin on WordPress, or
 - Configure your server to allow requests from your Next.js domain
 
+## Testing
+
+The project uses [Vitest](https://vitest.dev/) for unit testing.
+
+```bash
+pnpm test          # Run all tests
+pnpm test:watch    # Run in watch mode
+```
+
+Tests cover the core modules:
+
+| Module | What's tested |
+|---|---|
+| `lib/utils` | `cn()` class merging with Tailwind deduplication |
+| `lib/metadata` | `stripHtml`, `truncateHtml`, OG/Twitter metadata generation |
+| `lib/wordpress` | API fetch layer, pagination, error handling, graceful fallbacks |
+| `api/revalidate` | Webhook secret validation, content type routing, cache revalidation |
+
 ## Scripts
 
 ```bash
@@ -334,6 +353,7 @@ pnpm dev       # Start development server
 pnpm build     # Build for production
 pnpm start     # Start production server
 pnpm lint      # Run ESLint
+pnpm test      # Run tests
 ```
 
 ## Contributing
