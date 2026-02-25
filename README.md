@@ -86,6 +86,9 @@ WORDPRESS_WEBHOOK_SECRET="your-secret-key-here"    # Secret for cache revalidati
 
 ```
 next-wp/
+├── __tests__/                # Vitest test suite
+│   ├── api/                 # API route tests
+│   └── lib/                 # Library tests
 ├── app/                      # Next.js App Router
 │   ├── api/
 │   │   ├── og/              # OG image generation
@@ -113,7 +116,7 @@ next-wp/
 ├── plugin/                  # WordPress revalidation plugin
 ├── menu.config.ts           # Navigation configuration
 ├── site.config.ts           # Site metadata
-└── CLAUDE.md               # AI assistant guidelines
+└── vitest.config.ts         # Test configuration
 ```
 
 ## Deployment
@@ -228,29 +231,50 @@ All WordPress interactions are centralized in `lib/wordpress.ts`:
 
 ### Posts
 ```typescript
-getAllPosts(filters?)        // Get all posts (max 100)
-getPostsPaginated(page, perPage, filters?)  // Paginated posts
-getPostBySlug(slug)          // Single post by slug
-getPostById(id)              // Single post by ID
+getRecentPosts(filters?)                    // Recent posts (max 100)
+getPostsPaginated(page, perPage, filters?)  // Paginated posts with headers
+getPostBySlug(slug)                         // Single post by slug (with _embed)
+getPostById(id)                             // Single post by ID
+getAllPostSlugs()                            // All slugs (for static generation)
+getAllPostsForSitemap()                      // All slugs + modified dates
 ```
 
 ### Taxonomies
 ```typescript
-getAllCategories()           // All categories
-getCategoryBySlug(slug)      // Category by slug
-getAllTags()                 // All tags
-getTagBySlug(slug)           // Tag by slug
-getPostsByCategory(id)       // Posts in category
-getPostsByTag(id)            // Posts with tag
+getAllCategories()                           // All categories
+getCategoryById(id)                         // Category by ID
+getCategoryBySlug(slug)                     // Category by slug
+getAllTags()                                // All tags
+getTagById(id)                              // Tag by ID
+getTagBySlug(slug)                          // Tag by slug
+getPostsByCategory(id)                      // Posts in category
+getPostsByTag(id)                           // Posts with tag
+getTagsByPost(postId)                       // Tags on a post
 ```
 
 ### Authors & Pages
 ```typescript
-getAllAuthors()              // All authors
-getAuthorBySlug(slug)        // Author by slug
-getPostsByAuthor(id)         // Posts by author
-getAllPages()                // All pages
-getPageBySlug(slug)          // Page by slug
+getAllAuthors()                              // All authors
+getAuthorById(id)                           // Author by ID
+getAuthorBySlug(slug)                       // Author by slug
+getPostsByAuthor(id)                        // Posts by author
+getAllPages()                               // All pages
+getPageById(id)                             // Page by ID
+getPageBySlug(slug)                         // Page by slug
+```
+
+### Paginated Queries
+```typescript
+getPostsByCategoryPaginated(categoryId, page, perPage)
+getPostsByTagPaginated(tagId, page, perPage)
+getPostsByAuthorPaginated(authorId, page, perPage)
+```
+
+### Search
+```typescript
+searchCategories(query)                     // Search categories
+searchTags(query)                           // Search tags
+searchAuthors(query)                        // Search authors
 ```
 
 ### Example Usage
@@ -297,11 +321,17 @@ export const siteConfig = {
 Edit `menu.config.ts` for navigation links:
 
 ```typescript
-export const mainMenu = [
-  { href: "/", label: "Home" },
-  { href: "/posts", label: "Blog" },
+export const mainMenu = {
+  home: "/",
+  blog: "/posts",
   // Add more links...
-];
+};
+
+export const contentMenu = {
+  categories: "/posts/categories",
+  tags: "/posts/tags",
+  authors: "/posts/authors",
+};
 ```
 
 ### Theming
