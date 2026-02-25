@@ -225,7 +225,7 @@ export async function getPostBySlug(slug: string): Promise<Post | undefined> {
   const posts = await wordpressFetchGraceful<Post[]>(
     "/wp-json/wp/v2/posts",
     [],
-    { slug }
+    { slug, _embed: true }
   );
   return posts[0];
 }

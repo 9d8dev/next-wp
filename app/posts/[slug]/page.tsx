@@ -1,10 +1,4 @@
-import {
-  getPostBySlug,
-  getFeaturedMediaById,
-  getAuthorById,
-  getCategoryById,
-  getAllPostSlugs,
-} from "@/lib/wordpress";
+import { getPostBySlug, getAllPostSlugs } from "@/lib/wordpress";
 import { generateContentMetadata, stripHtml } from "@/lib/metadata";
 
 import { Section, Container, Article, Prose } from "@/components/craft";
@@ -51,16 +45,14 @@ export default async function Page({
     notFound();
   }
 
-  const featuredMedia = post.featured_media
-    ? await getFeaturedMediaById(post.featured_media)
-    : null;
-  const author = await getAuthorById(post.author);
+  const author = post._embedded?.author?.[0];
+  const featuredMedia = post._embedded?.["wp:featuredmedia"]?.[0];
+  const category = post._embedded?.["wp:term"]?.[0]?.[0];
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
   });
-  const category = await getCategoryById(post.categories[0]);
 
   return (
     <Section>
@@ -73,23 +65,28 @@ export default async function Page({
           </h1>
           <div className="flex justify-between items-center gap-4 text-sm mb-4">
             <h5>
-              Published {date} by{" "}
-              {author.name && (
-                <span>
-                  <a href={`/posts/?author=${author.id}`}>{author.name}</a>{" "}
-                </span>
+              Published {date}
+              {author?.name && (
+                <>
+                  {" "}by{" "}
+                  <span>
+                    <a href={`/posts/?author=${author.id}`}>{author.name}</a>
+                  </span>
+                </>
               )}
             </h5>
 
-            <Link
-              href={`/posts/?category=${category.id}`}
-              className={cn(
-                badgeVariants({ variant: "outline" }),
-                "no-underline!"
-              )}
-            >
-              {category.name}
-            </Link>
+            {category && (
+              <Link
+                href={`/posts/?category=${category.id}`}
+                className={cn(
+                  badgeVariants({ variant: "outline" }),
+                  "no-underline!"
+                )}
+              >
+                {category.name}
+              </Link>
+            )}
           </div>
           {featuredMedia?.source_url && (
             <div className="h-96 my-12 md:h-[500px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
