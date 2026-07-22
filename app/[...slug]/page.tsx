@@ -12,19 +12,15 @@ import {
   linkToPath,
 } from "@/lib/wordpress";
 import type { Post, Page as WPPage } from "@/lib/wordpress.d";
-import { generateContentMetadata, stripHtml } from "@/lib/metadata";
+import { generateContentMetadata, stripHtml, decodeHtml } from "@/lib/metadata";
 
-import { Section, Container, Article, Prose } from "@/components/craft";
-import { PostCard } from "@/components/posts/post-card";
-import { badgeVariants } from "@/components/ui/badge";
+import { StoryCard, Dateline } from "@/components/magazine/story";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { cn } from "@/lib/utils";
+  postSection,
+  postDate,
+  postImage,
+  postAuthor,
+} from "@/lib/magazine";
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -243,77 +239,74 @@ export default async function CatchAllPage({
 }
 
 // --- Views ---
+// WordPress content often repeats the title as an <h1>; drop the first one since
+// the page already renders the title in the magazine header.
+function stripLeadingH1(html: string): string {
+  return html.replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/i, "");
+}
+
 function PostView({ post }: { post: Post }) {
-  const author = post._embedded?.author?.[0];
-  const featuredMedia = post._embedded?.["wp:featuredmedia"]?.[0];
-  const category = post._embedded?.["wp:term"]?.[0]?.[0];
-  const date = new Date(post.date).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  const authorName = postAuthor(post);
+  const authorSlug = post._embedded?.author?.[0]?.slug;
+  const image = postImage(post);
 
   return (
-    <Section>
-      <Container>
-        <Prose>
-          <h1>
-            <span dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
-          </h1>
-          <div className="flex justify-between items-center gap-4 text-sm mb-4">
-            <h5>
-              Published {date}
-              {author?.name && (
-                <>
-                  {" "}
-                  by{" "}
-                  <span>
-                    <a href={`/author/${author.slug}/`}>{author.name}</a>
-                  </span>
-                </>
-              )}
-            </h5>
-
-            {category && (
-              <Link
-                href={`/posts/?category=${category.id}`}
-                className={cn(
-                  badgeVariants({ variant: "outline" }),
-                  "no-underline!"
-                )}
-              >
-                {category.name}
-              </Link>
-            )}
-          </div>
-          {featuredMedia?.source_url && (
-            <div className="h-96 my-12 md:h-[500px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                className="w-full h-full object-cover"
-                src={featuredMedia.source_url}
-                alt={post.title.rendered}
-              />
-            </div>
+    <article className="mx-auto max-w-3xl px-6 py-10 md:py-14">
+      <Dateline section={postSection(post)} date={postDate(post)} />
+      <h1
+        className="mt-4 font-display text-[2rem] font-semibold leading-[1.08] break-words sm:text-4xl md:text-5xl"
+        dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+      />
+      {authorName && (
+        <p className="mt-5 border-t border-line pt-4 font-kicker text-[0.72rem] uppercase tracking-[0.09em] text-brown">
+          By{" "}
+          {authorSlug ? (
+            <a
+              href={`/author/${authorSlug}/`}
+              className="hover:text-saffron-deep"
+            >
+              {authorName}
+            </a>
+          ) : (
+            authorName
           )}
-        </Prose>
+        </p>
+      )}
 
-        <Article dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
-      </Container>
-    </Section>
+      {image && (
+        <figure className="my-8 overflow-hidden rounded-sm border border-line bg-card md:my-10">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={image}
+            alt=""
+            className="max-h-[540px] w-full object-cover"
+          />
+        </figure>
+      )}
+
+      <div
+        className="prose prose-lg mt-8 max-w-none"
+        dangerouslySetInnerHTML={{
+          __html: stripLeadingH1(post.content.rendered),
+        }}
+      />
+    </article>
   );
 }
 
 function PageView({ page }: { page: WPPage }) {
   return (
-    <Section>
-      <Container>
-        <Prose>
-          <h2>{page.title.rendered}</h2>
-          <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
-        </Prose>
-      </Container>
-    </Section>
+    <article className="mx-auto max-w-3xl px-6 py-10 md:py-14">
+      <h1 className="font-display text-[2rem] font-semibold leading-[1.08] break-words sm:text-4xl md:text-5xl">
+        {page.title.rendered}
+      </h1>
+      <div
+        className="prose prose-lg mt-8 max-w-none"
+        dangerouslySetInnerHTML={{
+          __html: stripLeadingH1(page.content.rendered),
+        }}
+      />
+    </article>
   );
 }
 
@@ -333,57 +326,57 @@ function ArchiveView({
   totalPages: number;
 }) {
   // Mirror WordPress archive pagination: /{archive}/page/N/ (page 1 is bare).
-  // basePath already ends with a trailing slash.
   const pageUrl = (n: number) => (n > 1 ? `${basePath}page/${n}/` : basePath);
 
   return (
-    <Section>
-      <Container>
-        <div className="space-y-8">
-          <Prose>
-            <h2>{title}</h2>
-            {description && (
-              <p className="text-muted-foreground">{description}</p>
-            )}
-          </Prose>
+    <div className="mx-auto max-w-6xl px-6 py-10 md:py-12">
+      <header className="border-b-2 border-ink pb-4">
+        <p className="kicker text-brown">
+          Archive{page > 1 ? ` · Page ${page}` : ""}
+        </p>
+        <h1 className="mt-2 font-display text-4xl font-semibold break-words md:text-5xl">
+          {decodeHtml(title)}
+        </h1>
+        {description && (
+          <p className="mt-3 max-w-2xl leading-relaxed text-ink/75">
+            {description}
+          </p>
+        )}
+      </header>
 
-          {posts.length > 0 ? (
-            <div className="grid md:grid-cols-3 gap-4">
-              {posts.map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
-            </div>
-          ) : (
-            <div className="h-24 w-full border rounded-lg bg-accent/25 flex items-center justify-center">
-              <p>No posts found</p>
-            </div>
-          )}
-
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center py-8">
-              <Pagination>
-                <PaginationContent>
-                  {page > 1 && (
-                    <PaginationItem>
-                      <PaginationPrevious href={pageUrl(page - 1)} />
-                    </PaginationItem>
-                  )}
-                  <PaginationItem>
-                    <span className="px-4 text-sm">
-                      Page {page} of {totalPages}
-                    </span>
-                  </PaginationItem>
-                  {page < totalPages && (
-                    <PaginationItem>
-                      <PaginationNext href={pageUrl(page + 1)} />
-                    </PaginationItem>
-                  )}
-                </PaginationContent>
-              </Pagination>
-            </div>
-          )}
+      {posts.length > 0 ? (
+        <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <StoryCard key={post.id} post={post} variant="feature" />
+          ))}
         </div>
-      </Container>
-    </Section>
+      ) : (
+        <p className="mt-10 border-t border-line pt-8 text-brown">
+          No stories filed here yet.
+        </p>
+      )}
+
+      {totalPages > 1 && (
+        <nav className="mt-12 flex items-center justify-between border-t border-line pt-6 font-kicker text-[0.72rem] font-semibold uppercase tracking-[0.09em]">
+          {page > 1 ? (
+            <Link href={pageUrl(page - 1)} className="text-saffron hover:text-saffron-deep">
+              ← Newer
+            </Link>
+          ) : (
+            <span className="text-brown/40">← Newer</span>
+          )}
+          <span className="text-brown">
+            Page {page} of {totalPages}
+          </span>
+          {page < totalPages ? (
+            <Link href={pageUrl(page + 1)} className="text-saffron hover:text-saffron-deep">
+              Older →
+            </Link>
+          ) : (
+            <span className="text-brown/40">Older →</span>
+          )}
+        </nav>
+      )}
+    </div>
   );
 }

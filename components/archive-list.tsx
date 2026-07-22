@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Section, Container, Prose } from "@/components/craft";
 import BackButton from "@/components/back";
+import { decodeHtml } from "@/lib/metadata";
 
 interface ArchiveListProps<T> {
   title: string;
@@ -18,24 +18,40 @@ export function ArchiveList<T extends { id: number | string }>({
   emptyMessage,
 }: ArchiveListProps<T>) {
   return (
-    <Section>
-      <Container className="space-y-6">
-        <Prose className="mb-8">
-          <h2>{title}</h2>
-          {items.length > 0 ? (
-            <ul className="grid">
-              {items.map((item) => (
-                <li key={item.id}>
-                  <Link href={getItemHref(item)}>{getItemLabel(item)}</Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-muted-foreground">{emptyMessage}</p>
-          )}
-        </Prose>
+    <div className="mx-auto max-w-6xl px-6 py-10 md:py-12">
+      <header className="border-b-2 border-ink pb-4">
+        <p className="kicker text-brown">Index</p>
+        <h1 className="mt-2 font-display text-4xl font-semibold md:text-5xl">
+          {title}
+        </h1>
+      </header>
+
+      {items.length > 0 ? (
+        <ul className="mt-8 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((item) => (
+            <li key={item.id} className="border-b border-line">
+              <Link
+                href={getItemHref(item)}
+                className="group flex items-center justify-between gap-3 py-3 font-display text-lg transition-colors hover:text-saffron-deep"
+              >
+                <span>{decodeHtml(getItemLabel(item))}</span>
+                <span
+                  aria-hidden
+                  className="text-saffron opacity-0 transition-opacity group-hover:opacity-100"
+                >
+                  →
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-8 text-brown">{emptyMessage}</p>
+      )}
+
+      <div className="mt-12">
         <BackButton />
-      </Container>
-    </Section>
+      </div>
+    </div>
   );
 }

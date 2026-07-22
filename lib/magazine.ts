@@ -1,12 +1,13 @@
 import type { Post } from "@/lib/wordpress.d";
 import { linkToPath } from "@/lib/wordpress";
+import { decodeHtml } from "@/lib/metadata";
 
 // Editorial helpers for the magazine layout.
 
 // The story's section (primary category), e.g. "News", "Guide".
 export function postSection(post: Post): string {
   const term = post._embedded?.["wp:term"]?.[0]?.[0];
-  return term?.name ?? "News";
+  return term?.name ? decodeHtml(term.name) : "News";
 }
 
 // Dateline date, e.g. "12 Jul 2026".
