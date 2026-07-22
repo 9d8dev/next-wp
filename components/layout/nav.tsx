@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/nav/mobile-nav";
-import { mainMenu } from "@/menu.config";
+import { MainNav } from "@/components/layout/main-nav";
 import { siteConfig } from "@/site.config";
 import { cn } from "@/lib/utils";
 import Logo from "@/public/logo.svg";
@@ -39,15 +39,7 @@ export function Nav({ className, children, id }: NavProps) {
         </Link>
         {children}
         <div className="flex items-center gap-2">
-          <div className="mx-2 hidden md:flex">
-            {Object.entries(mainMenu).map(([key, href]) => (
-              <Button key={href} asChild variant="ghost" size="sm">
-                <Link href={href}>
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
-                </Link>
-              </Button>
-            ))}
-          </div>
+          <MainNav />
           <Button asChild className="hidden sm:flex">
             <Link href="https://www.gujrera.com">GujRERA Portal</Link>
           </Button>

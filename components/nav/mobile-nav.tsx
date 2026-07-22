@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 
-import { mainMenu, contentMenu } from "@/menu.config";
+import { mainMenu } from "@/menu.config";
 import { siteConfig } from "@/site.config";
 
 export function MobileNav() {
@@ -55,17 +55,22 @@ export function MobileNav() {
           <div className="flex flex-col space-y-3">
             <h3 className="text-small mt-6">Menu</h3>
             <Separator />
-            {Object.entries(mainMenu).map(([key, href]) => (
-              <MobileLink key={key} href={href} onOpenChange={setOpen}>
-                {key.charAt(0).toUpperCase() + key.slice(1)}
-              </MobileLink>
-            ))}
-            <h3 className="text-small pt-6">Blog Menu</h3>
-            <Separator />
-            {Object.entries(contentMenu).map(([key, href]) => (
-              <MobileLink key={key} href={href} onOpenChange={setOpen}>
-                {key.charAt(0).toUpperCase() + key.slice(1)}
-              </MobileLink>
+            {mainMenu.map((item) => (
+              <div key={item.href} className="flex flex-col space-y-3">
+                <MobileLink href={item.href} onOpenChange={setOpen}>
+                  {item.label}
+                </MobileLink>
+                {item.children?.map((child) => (
+                  <MobileLink
+                    key={child.href}
+                    href={child.href}
+                    onOpenChange={setOpen}
+                    className="pl-4 text-base text-muted-foreground"
+                  >
+                    {child.label}
+                  </MobileLink>
+                ))}
+              </div>
             ))}
           </div>
         </ScrollArea>
