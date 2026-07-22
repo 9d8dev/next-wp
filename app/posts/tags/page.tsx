@@ -1,4 +1,4 @@
-import { getAllTags } from "@/lib/wordpress";
+import { getAllTags, linkToPath } from "@/lib/wordpress";
 import { ArchiveList } from "@/components/archive-list";
 import type { Tag } from "@/lib/wordpress.d";
 import type { Metadata } from "next";
@@ -20,7 +20,7 @@ export default async function Page() {
     <ArchiveList<Tag>
       title="All Tags"
       items={tags}
-      getItemHref={(t) => `/posts/?tag=${t.id}`}
+      getItemHref={(t) => linkToPath(t.link)}
       getItemLabel={(t) => t.name}
       emptyMessage="No tags available yet."
     />

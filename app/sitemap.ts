@@ -45,7 +45,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const postUrls: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `${siteConfig.site_domain}/posts/${post.slug}`,
+    // post.path mirrors the WordPress permalink, e.g. "/news/foo/".
+    url: `${siteConfig.site_domain}${post.path}`,
     lastModified: new Date(post.modified),
     changeFrequency: "weekly",
     priority: 0.5,

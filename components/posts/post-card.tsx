@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { Post } from "@/lib/wordpress.d";
 import { cn } from "@/lib/utils";
+import { linkToPath } from "@/lib/wordpress";
 import { truncateHtml } from "@/lib/metadata";
 
 export function PostCard({ post }: { post: Post }) {
@@ -17,7 +18,7 @@ export function PostCard({ post }: { post: Post }) {
 
   return (
     <Link
-      href={`/posts/${post.slug}`}
+      href={linkToPath(post.link)}
       className={cn(
         "border p-4 bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8",
         "hover:bg-accent/75 transition-all"

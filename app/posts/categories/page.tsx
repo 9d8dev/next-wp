@@ -1,4 +1,4 @@
-import { getAllCategories } from "@/lib/wordpress";
+import { getAllCategories, linkToPath } from "@/lib/wordpress";
 import { ArchiveList } from "@/components/archive-list";
 import type { Category } from "@/lib/wordpress.d";
 import type { Metadata } from "next";
@@ -20,7 +20,7 @@ export default async function Page() {
     <ArchiveList<Category>
       title="All Categories"
       items={categories}
-      getItemHref={(c) => `/posts/?category=${c.id}`}
+      getItemHref={(c) => linkToPath(c.link)}
       getItemLabel={(c) => c.name}
       emptyMessage="No categories available yet."
     />

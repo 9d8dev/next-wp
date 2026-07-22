@@ -47,6 +47,74 @@ export interface WordPressResponse<T> {
 const USER_AGENT = "Next.js WordPress Client";
 const CACHE_TTL = 3600; // 1 hour
 
+/**
+ * Normalizes a WordPress `link` (absolute URL or bare path) into a canonical
+ * site path with a leading and trailing slash, e.g.
+ * "https://www.gujrera.com/news/foo/" -> "/news/foo/".
+ * The WordPress REST API `link` field is the single source of truth for URLs,
+ * so this is used both to emit links and to verify resolved content.
+ */
+export function linkToPath(link: string): string {
+  let path: string;
+  try {
+    path = new URL(link, "http://placeholder.local").pathname;
+  } catch {
+    return "/";
+  }
+  if (!path.startsWith("/")) path = `/${path}`;
+  if (path !== "/" && !path.endsWith("/")) path += "/";
+  return path;
+}
+
+// Splits a normalized path into non-empty segments: "/a/b/" -> ["a", "b"].
+export function pathToSegments(path: string): string[] {
+  return path.replace(/^\/+|\/+$/g, "").split("/").filter(Boolean);
+}
+
+// Retry config for transient upstream failures. Shared WordPress hosts commonly
+// return 5xx/429 under bursty load (e.g. build-time static generation), so we
+// retry those with exponential backoff + jitter to spread requests out.
+const MAX_RETRIES = 3;
+const RETRY_BASE_MS = 500;
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function isRetryableStatus(status: number): boolean {
+  return status === 429 || status >= 500;
+}
+
+// fetch wrapper that retries transient failures (5xx / 429 / network errors).
+async function fetchWithRetry(
+  url: string,
+  init: RequestInit & { next?: { tags?: string[]; revalidate?: number } }
+): Promise<Response> {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    if (attempt > 0) {
+      // Exponential backoff with jitter: ~0.5s, ~1s, ~2s (+/- randomness).
+      // Kept tiny under test to exercise the retry path without slow waits.
+      const base = process.env.VITEST ? 1 : RETRY_BASE_MS;
+      const backoff = base * 2 ** (attempt - 1);
+      await sleep(backoff + Math.random() * base);
+    }
+
+    try {
+      const response = await fetch(url, init);
+      if (isRetryableStatus(response.status) && attempt < MAX_RETRIES) {
+        continue;
+      }
+      return response;
+    } catch (error) {
+      // Network-level failure (DNS, socket, TLS) - retry unless out of attempts.
+      lastError = error;
+      if (attempt >= MAX_RETRIES) throw error;
+    }
+  }
+
+  throw lastError;
+}
+
 // Core fetch - throws on error (for functions that require data)
 async function wordpressFetch<T>(
   path: string,
@@ -59,7 +127,7 @@ async function wordpressFetch<T>(
 
   const url = `${baseUrl}${path}${query ? `?${querystring.stringify(query)}` : ""}`;
 
-  const response = await fetch(url, {
+  const response = await fetchWithRetry(url, {
     headers: { "User-Agent": USER_AGENT },
     next: { tags, revalidate: CACHE_TTL },
   });
@@ -104,7 +172,7 @@ async function wordpressFetchPaginated<T>(
 
   const url = `${baseUrl}${path}${query ? `?${querystring.stringify(query)}` : ""}`;
 
-  const response = await fetch(url, {
+  const response = await fetchWithRetry(url, {
     headers: { "User-Agent": USER_AGENT },
     next: { tags, revalidate: CACHE_TTL },
   });
@@ -403,27 +471,28 @@ export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
 }
 
 // Fetches ALL posts for sitemap generation (paginates through all pages)
-// Returns slug and modified date for each post
+// Returns the real permalink path, slug, and modified date for each post.
 export async function getAllPostsForSitemap(): Promise<
-  { slug: string; modified: string }[]
+  { slug: string; modified: string; path: string }[]
 > {
   if (!isConfigured) return [];
 
   try {
-    const allPosts: { slug: string; modified: string }[] = [];
+    const allPosts: { slug: string; modified: string; path: string }[] = [];
     let page = 1;
     let hasMore = true;
 
     while (hasMore) {
       const response = await wordpressFetchPaginated<Post[]>(
         "/wp-json/wp/v2/posts",
-        { per_page: 100, page, _fields: "slug,modified" }
+        { per_page: 100, page, _fields: "slug,modified,link" }
       );
 
       allPosts.push(
         ...response.data.map((post) => ({
           slug: post.slug,
           modified: post.modified,
+          path: linkToPath(post.link),
         }))
       );
       hasMore = page < response.headers.totalPages;
@@ -475,6 +544,109 @@ export async function getPostsByAuthorPaginated(
     page,
     author: authorId,
   });
+}
+
+// --- Path-based resolvers (mirror WordPress permalinks) ---
+// Each resolves an incoming site path back to WordPress content by looking up
+// the trailing slug, then verifying the item's real `link` matches the request
+// path. This is immune to the category-permalink / Yoast primary-category rules
+// because the `link` field is authoritative.
+
+/**
+ * Resolves a post permalink path, e.g. "/news/foo/" or "/p/ahmedabad/foo/".
+ * The last path segment is the (globally unique) post slug.
+ */
+export async function getPostByPath(path: string): Promise<Post | undefined> {
+  const normalized = linkToPath(path);
+  const segments = pathToSegments(normalized);
+  const slug = segments[segments.length - 1];
+  if (!slug) return undefined;
+
+  const posts = await wordpressFetchGraceful<Post[]>(
+    "/wp-json/wp/v2/posts",
+    [],
+    { slug, _embed: true },
+    ["wordpress", "posts", `post-slug-${slug}`]
+  );
+
+  return posts.find((post) => linkToPath(post.link) === normalized);
+}
+
+/**
+ * Resolves a category archive path, e.g. "/category/tp-schemes/ahmedabad-tp/".
+ * The last segment is the category slug (globally unique in WordPress).
+ */
+export async function getCategoryByPath(
+  path: string
+): Promise<Category | undefined> {
+  const normalized = linkToPath(path);
+  const segments = pathToSegments(normalized);
+  const slug = segments[segments.length - 1];
+  if (!slug) return undefined;
+
+  const categories = await wordpressFetchGraceful<Category[]>(
+    "/wp-json/wp/v2/categories",
+    [],
+    { slug },
+    ["wordpress", "categories"]
+  );
+
+  return categories.find((category) => linkToPath(category.link) === normalized);
+}
+
+/**
+ * Resolves a tag archive path, e.g. "/tag/airport/".
+ */
+export async function getTagByPath(path: string): Promise<Tag | undefined> {
+  const normalized = linkToPath(path);
+  const segments = pathToSegments(normalized);
+  const slug = segments[segments.length - 1];
+  if (!slug) return undefined;
+
+  const tags = await wordpressFetchGraceful<Tag[]>(
+    "/wp-json/wp/v2/tags",
+    [],
+    { slug },
+    ["wordpress", "tags"]
+  );
+
+  return tags.find((tag) => linkToPath(tag.link) === normalized);
+}
+
+// --- Static-params helpers for the catch-all route ---
+
+/**
+ * Recent post paths as segment arrays for generateStaticParams, e.g.
+ * [["news", "foo"], ["p", "ahmedabad", "bar"]]. Only recent posts are
+ * pre-rendered; the rest render on-demand (dynamicParams = true).
+ */
+export async function getRecentPostPaths(
+  limit: number = 100
+): Promise<string[][]> {
+  const posts = await wordpressFetchGraceful<Pick<Post, "link">[]>(
+    "/wp-json/wp/v2/posts",
+    [],
+    { per_page: limit, _fields: "link" },
+    ["wordpress", "posts"]
+  );
+
+  return posts
+    .map((post) => pathToSegments(linkToPath(post.link)))
+    .filter((segments) => segments.length > 0);
+}
+
+// All page paths as segment arrays for generateStaticParams (20 pages, cheap).
+export async function getAllPagePaths(): Promise<string[][]> {
+  const pages = await wordpressFetchGraceful<Pick<Page, "link">[]>(
+    "/wp-json/wp/v2/pages",
+    [],
+    { per_page: 100, _fields: "link" },
+    ["wordpress", "pages"]
+  );
+
+  return pages
+    .map((page) => pathToSegments(linkToPath(page.link)))
+    .filter((segments) => segments.length > 0);
 }
 
 export { WordPressAPIError };

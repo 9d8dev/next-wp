@@ -137,12 +137,20 @@ describe("WordPress API", () => {
   });
 
   describe("getAllPostsForSitemap", () => {
-    it("returns slug and modified for all posts", async () => {
+    it("returns slug, modified, and permalink path for all posts", async () => {
       mockFetch.mockResolvedValueOnce(
         mockResponse(
           [
-            { slug: "a", modified: "2025-01-01" },
-            { slug: "b", modified: "2025-01-02" },
+            {
+              slug: "a",
+              modified: "2025-01-01",
+              link: "https://www.gujrera.com/news/a/",
+            },
+            {
+              slug: "b",
+              modified: "2025-01-02",
+              link: "https://www.gujrera.com/p/ahmedabad/b/",
+            },
           ],
           {
             headers: { "X-WP-Total": "2", "X-WP-TotalPages": "1" },
@@ -154,8 +162,8 @@ describe("WordPress API", () => {
       const result = await getAllPostsForSitemap();
 
       expect(result).toEqual([
-        { slug: "a", modified: "2025-01-01" },
-        { slug: "b", modified: "2025-01-02" },
+        { slug: "a", modified: "2025-01-01", path: "/news/a/" },
+        { slug: "b", modified: "2025-01-02", path: "/p/ahmedabad/b/" },
       ]);
     });
 
@@ -252,6 +260,125 @@ describe("WordPress API", () => {
 
       const { getAuthorById } = await import("@/lib/wordpress");
       await expect(getAuthorById(999)).rejects.toThrow("Not Found");
+    });
+  });
+
+  describe("fetch retry", () => {
+    it("retries on 5xx then succeeds", async () => {
+      const post = { id: 1, slug: "hello" };
+      mockFetch
+        .mockResolvedValueOnce(
+          mockResponse(null, { ok: false, status: 503, statusText: "Unavailable" })
+        )
+        .mockResolvedValueOnce(
+          mockResponse(null, { ok: false, status: 500, statusText: "Server Error" })
+        )
+        .mockResolvedValueOnce(mockResponse(post));
+
+      const { getPostById } = await import("@/lib/wordpress");
+      const result = await getPostById(1);
+
+      expect(result).toEqual(post);
+      expect(mockFetch).toHaveBeenCalledTimes(3);
+    });
+
+    it("does not retry on 4xx", async () => {
+      mockFetch.mockResolvedValue(
+        mockResponse(null, { ok: false, status: 404, statusText: "Not Found" })
+      );
+
+      const { getPostById } = await import("@/lib/wordpress");
+      await expect(getPostById(999)).rejects.toThrow("Not Found");
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("gives up after max retries on persistent 5xx", async () => {
+      mockFetch.mockResolvedValue(
+        mockResponse(null, { ok: false, status: 500, statusText: "Server Error" })
+      );
+
+      const { getPostById } = await import("@/lib/wordpress");
+      await expect(getPostById(1)).rejects.toThrow("Server Error");
+      // 1 initial attempt + 3 retries.
+      expect(mockFetch).toHaveBeenCalledTimes(4);
+    });
+  });
+
+  describe("linkToPath", () => {
+    it("strips the origin from an absolute WordPress link", async () => {
+      const { linkToPath } = await import("@/lib/wordpress");
+      expect(linkToPath("https://www.gujrera.com/news/foo/")).toBe("/news/foo/");
+    });
+
+    it("preserves a nested category permalink", async () => {
+      const { linkToPath } = await import("@/lib/wordpress");
+      expect(linkToPath("https://www.gujrera.com/p/ahmedabad/bar/")).toBe(
+        "/p/ahmedabad/bar/"
+      );
+    });
+
+    it("adds a trailing slash when missing", async () => {
+      const { linkToPath } = await import("@/lib/wordpress");
+      expect(linkToPath("https://www.gujrera.com/news/foo")).toBe("/news/foo/");
+    });
+
+    it("accepts a bare path", async () => {
+      const { linkToPath } = await import("@/lib/wordpress");
+      expect(linkToPath("/tag/airport/")).toBe("/tag/airport/");
+    });
+
+    it("maps the root to /", async () => {
+      const { linkToPath } = await import("@/lib/wordpress");
+      expect(linkToPath("https://www.gujrera.com/")).toBe("/");
+    });
+  });
+
+  describe("pathToSegments", () => {
+    it("splits a nested path into non-empty segments", async () => {
+      const { pathToSegments } = await import("@/lib/wordpress");
+      expect(pathToSegments("/p/ahmedabad/bar/")).toEqual([
+        "p",
+        "ahmedabad",
+        "bar",
+      ]);
+    });
+
+    it("returns an empty array for the root", async () => {
+      const { pathToSegments } = await import("@/lib/wordpress");
+      expect(pathToSegments("/")).toEqual([]);
+    });
+  });
+
+  describe("getPostByPath", () => {
+    it("resolves a post when its link matches the request path", async () => {
+      const post = {
+        id: 1,
+        slug: "foo",
+        link: "https://www.gujrera.com/news/foo/",
+      };
+      mockFetch.mockResolvedValueOnce(mockResponse([post]));
+
+      const { getPostByPath } = await import("@/lib/wordpress");
+      const result = await getPostByPath("/news/foo/");
+
+      expect(result).toEqual(post);
+      const fetchUrl = mockFetch.mock.calls[0][0] as string;
+      expect(fetchUrl).toContain("slug=foo");
+    });
+
+    it("returns undefined when the resolved link does not match the path", async () => {
+      // Slug matches, but the post really lives under a different category.
+      const post = {
+        id: 1,
+        slug: "foo",
+        link: "https://www.gujrera.com/guide/foo/",
+      };
+      mockFetch.mockResolvedValueOnce(mockResponse([post]));
+
+      const { getPostByPath } = await import("@/lib/wordpress");
+      const result = await getPostByPath("/news/foo/");
+
+      expect(result).toBeUndefined();
     });
   });
 });

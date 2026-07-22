@@ -4,28 +4,32 @@ import type { Metadata } from "next";
 interface ContentMetadataOptions {
   title: string;
   description: string;
-  slug: string;
-  basePath: "posts" | "pages";
+  /** Canonical site path (mirrors the WordPress permalink), e.g. "/news/foo/". */
+  path: string;
 }
 
 export function generateContentMetadata({
   title,
   description,
-  slug,
-  basePath,
+  path,
 }: ContentMetadataOptions): Metadata {
   const ogUrl = new URL(`${siteConfig.site_domain}/api/og`);
   ogUrl.searchParams.append("title", title);
   ogUrl.searchParams.append("description", description);
 
+  const canonicalUrl = `${siteConfig.site_domain}${path}`;
+
   return {
     title,
     description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
       title,
       description,
       type: "article",
-      url: `${siteConfig.site_domain}/${basePath}/${slug}`,
+      url: canonicalUrl,
       images: [
         {
           url: ogUrl.toString(),

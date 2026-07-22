@@ -1,4 +1,4 @@
-import { getAllPages } from "@/lib/wordpress";
+import { getAllPages, linkToPath } from "@/lib/wordpress";
 import { ArchiveList } from "@/components/archive-list";
 import type { Page as WPPage } from "@/lib/wordpress.d";
 import type { Metadata } from "next";
@@ -20,7 +20,7 @@ export default async function Page() {
     <ArchiveList<WPPage>
       title="All Pages"
       items={pages}
-      getItemHref={(p) => `/pages/${p.slug}`}
+      getItemHref={(p) => linkToPath(p.link)}
       getItemLabel={(p) => p.title.rendered}
       emptyMessage="No pages available yet."
     />

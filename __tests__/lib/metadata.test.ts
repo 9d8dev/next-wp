@@ -56,34 +56,33 @@ describe("generateContentMetadata", () => {
     const metadata = generateContentMetadata({
       title: "Test Post",
       description: "A test description",
-      slug: "test-post",
-      basePath: "posts",
+      path: "/news/test-post/",
     });
 
     expect(metadata.title).toBe("Test Post");
     expect(metadata.description).toBe("A test description");
   });
 
-  it("builds correct OpenGraph URL", () => {
+  it("builds correct OpenGraph and canonical URL from the path", () => {
     const metadata = generateContentMetadata({
       title: "Test",
       description: "Desc",
-      slug: "my-slug",
-      basePath: "posts",
+      path: "/news/my-slug/",
     });
 
     expect(metadata.openGraph).toBeDefined();
     const og = metadata.openGraph as Record<string, unknown>;
-    expect(og.url).toContain("/posts/my-slug");
+    expect(og.url).toContain("/news/my-slug/");
     expect(og.type).toBe("article");
+    const alternates = metadata.alternates as Record<string, unknown>;
+    expect(alternates.canonical).toContain("/news/my-slug/");
   });
 
   it("includes OG image with correct dimensions", () => {
     const metadata = generateContentMetadata({
       title: "Test",
       description: "Desc",
-      slug: "slug",
-      basePath: "pages",
+      path: "/some-page/",
     });
 
     const og = metadata.openGraph as Record<string, unknown>;
@@ -96,8 +95,7 @@ describe("generateContentMetadata", () => {
     const metadata = generateContentMetadata({
       title: "Test",
       description: "Desc",
-      slug: "slug",
-      basePath: "posts",
+      path: "/news/slug/",
     });
 
     const twitter = metadata.twitter as Record<string, unknown>;
@@ -109,8 +107,7 @@ describe("generateContentMetadata", () => {
     const metadata = generateContentMetadata({
       title: "Hello & World",
       description: "A <test>",
-      slug: "slug",
-      basePath: "posts",
+      path: "/news/slug/",
     });
 
     const og = metadata.openGraph as Record<string, unknown>;
