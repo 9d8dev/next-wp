@@ -143,13 +143,15 @@ bogus post/page paths correctly 404. Also updated `lib/metadata.ts`
 - Result: `pnpm build` now has **zero fetch failures** and a **full sitemap
   (4346 URLs)** with real WP permalink paths. 57 tests pass.
 
-### Open item — post/page pages render dynamically (`ƒ`), not static (`●`)
-The catch-all reads `searchParams` (archive `?page=`), which opts the whole route
-into dynamic rendering — so `generateStaticParams` no longer pre-renders recent
-posts (the "pre-render recent posts" half of the chosen strategy). Data is still
-cached (`revalidate: 3600` + tags), so there's no host load per request after the
-first, but HTML is re-rendered per request.
-**Fix to unlock static pre-render:** mirror WordPress's own archive pagination
-(`/category/foo/page/2/`) by parsing a trailing `page/N` segment in the dispatcher
-instead of `?page=`, then drop `searchParams`. This makes posts/pages `●` static
-and aligns archive URLs with WordPress too. (Not yet done — pending decision.)
+### 8. Static pre-rendering + WP-style archive pagination  ✅ DONE
+Previously the catch-all read `searchParams` (archive `?page=`), which forced the
+whole route dynamic (`ƒ`) and defeated `generateStaticParams`.
+- [x] 8.1 Parse a trailing `page/N` segment for category/tag archives
+      (`parsePagination`) instead of `?page=`; dropped `searchParams` entirely.
+- [x] 8.2 Pager now emits WordPress's `/{archive}/page/N/` URLs (page 1 is bare).
+- [x] 8.3 Out-of-range archive pages `notFound()` (mirrors WP's 404).
+- [x] 8.4 `ARCHIVE_PER_PAGE = 10` to match WordPress's default archive page size.
+- Result: `/[...slug]` is now `● (SSG)` with ~119 pre-rendered paths (recent posts
+  + pages); archives render on-demand and cache. Build clean, 57 tests pass.
+  Verified live: `/category/p/ahmedabad/page/2/` → 200, out-of-range → 404,
+  posts/pages/tags → 200, no `?page=` links remain.

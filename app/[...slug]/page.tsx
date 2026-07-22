@@ -33,7 +33,9 @@ export const revalidate = 3600;
 // on-demand and is then cached (WordPress has ~4300 posts).
 export const dynamicParams = true;
 
-const ARCHIVE_PER_PAGE = 9;
+// Matches WordPress's default archive page size so /page/N/ contains the same
+// posts as the WordPress site.
+const ARCHIVE_PER_PAGE = 10;
 
 // --- Route classification (mirrors WordPress permalink structure) ---
 type Resolved =
@@ -49,6 +51,25 @@ function classify(segments: string[]): Resolved {
   // carry a category prefix (>= 2 segments).
   if (segments.length === 1) return { kind: "page" };
   return { kind: "post" };
+}
+
+// WordPress paginates archives at /{archive}/page/N/ (page 1 is the bare URL).
+// Split a trailing "page/N" off category/tag paths; posts and pages never
+// paginate, so they are left untouched. Reading pagination from the path (not
+// a query string) keeps this route statically prerenderable.
+function parsePagination(slug: string[]): { segments: string[]; page: number } {
+  const isArchive = slug[0] === "category" || slug[0] === "tag";
+  if (isArchive && slug.length >= 3) {
+    const last = slug[slug.length - 1];
+    const prev = slug[slug.length - 2];
+    if (prev === "page" && /^\d+$/.test(last)) {
+      return {
+        segments: slug.slice(0, -2),
+        page: Math.max(1, parseInt(last, 10)),
+      };
+    }
+  }
+  return { segments: slug, page: 1 };
 }
 
 function pathFromParams(slug: string[]): string {
@@ -72,8 +93,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string[] }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const path = pathFromParams(slug);
-  const { kind } = classify(slug);
+  const { segments } = parsePagination(slug);
+  const path = pathFromParams(segments);
+  const { kind } = classify(segments);
 
   if (kind === "post") {
     const post = await getPostByPath(path);
@@ -86,7 +108,7 @@ export async function generateMetadata({
   }
 
   if (kind === "page") {
-    const page = await getPageBySlug(slug[0]);
+    const page = await getPageBySlug(segments[0]);
     if (!page) return {};
     const description = page.excerpt?.rendered
       ? stripHtml(page.excerpt.rendered)
@@ -121,16 +143,13 @@ export async function generateMetadata({
 // --- Page dispatcher ---
 export default async function CatchAllPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string[] }>;
-  searchParams: Promise<{ page?: string }>;
 }) {
   const { slug } = await params;
-  const { page: pageParam } = await searchParams;
-  const path = pathFromParams(slug);
-  const { kind } = classify(slug);
-  const page = pageParam ? Math.max(1, parseInt(pageParam, 10) || 1) : 1;
+  const { segments, page } = parsePagination(slug);
+  const path = pathFromParams(segments);
+  const { kind } = classify(segments);
 
   if (kind === "post") {
     const post = await getPostByPath(path);
@@ -139,7 +158,7 @@ export default async function CatchAllPage({
   }
 
   if (kind === "page") {
-    const wpPage = await getPageBySlug(slug[0]);
+    const wpPage = await getPageBySlug(segments[0]);
     if (!wpPage) notFound();
     return <PageView page={wpPage} />;
   }
@@ -152,6 +171,8 @@ export default async function CatchAllPage({
       page,
       ARCHIVE_PER_PAGE
     );
+    // Mirror WordPress: out-of-range archive pages 404.
+    if (page > 1 && posts.length === 0) notFound();
     return (
       <ArchiveView
         title={category.name}
@@ -172,6 +193,7 @@ export default async function CatchAllPage({
     page,
     ARCHIVE_PER_PAGE
   );
+  if (page > 1 && posts.length === 0) notFound();
   return (
     <ArchiveView
       title={tag.name}
@@ -274,7 +296,9 @@ function ArchiveView({
   page: number;
   totalPages: number;
 }) {
-  const pageUrl = (n: number) => (n > 1 ? `${basePath}?page=${n}` : basePath);
+  // Mirror WordPress archive pagination: /{archive}/page/N/ (page 1 is bare).
+  // basePath already ends with a trailing slash.
+  const pageUrl = (n: number) => (n > 1 ? `${basePath}page/${n}/` : basePath);
 
   return (
     <Section>
