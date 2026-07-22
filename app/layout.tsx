@@ -1,6 +1,12 @@
 import "./globals.css";
 
-import { Inter as FontSans } from "next/font/google";
+import {
+  Fraunces,
+  Noto_Sans,
+  Noto_Sans_Gujarati,
+  Noto_Serif_Gujarati,
+  Archivo,
+} from "next/font/google";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
 import { Analytics } from "@vercel/analytics/react";
@@ -10,10 +16,43 @@ import { cn } from "@/lib/utils";
 
 import type { Metadata } from "next";
 
-const font = FontSans({
+// Display — characterful old-style serif for headlines/leads.
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-fraunces",
+  display: "swap",
 });
+// Body — clean, bilingual reading face.
+const notoSans = Noto_Sans({
+  subsets: ["latin"],
+  variable: "--font-noto-sans",
+  display: "swap",
+});
+// Gujarati script support for body + headlines.
+const notoSansGujarati = Noto_Sans_Gujarati({
+  subsets: ["gujarati", "latin"],
+  variable: "--font-noto-sans-gujarati",
+  display: "swap",
+});
+const notoSerifGujarati = Noto_Serif_Gujarati({
+  subsets: ["gujarati"],
+  variable: "--font-noto-serif-gujarati",
+  display: "swap",
+});
+// Kicker/meta — grotesque for datelines, labels, bylines.
+const archivo = Archivo({
+  subsets: ["latin"],
+  variable: "--font-archivo",
+  display: "swap",
+});
+
+const fontVariables = cn(
+  fraunces.variable,
+  notoSans.variable,
+  notoSansGujarati.variable,
+  notoSerifGujarati.variable,
+  archivo.variable
+);
 
 export const metadata: Metadata = {
   title: {
@@ -35,7 +74,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body className={cn("min-h-screen font-sans antialiased", font.variable)}>
+      <body
+        className={cn(
+          "min-h-screen bg-paper font-sans text-ink antialiased",
+          fontVariables
+        )}
+      >
         <Nav />
         {children}
         <Footer />

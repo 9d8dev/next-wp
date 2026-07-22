@@ -1,42 +1,53 @@
-import { Section, Container } from "@/components/craft";
+import Link from "next/link";
 import { mainMenu } from "@/menu.config";
 import { siteConfig } from "@/site.config";
-import Logo from "@/public/gujrera-logo.png";
-import Image from "next/image";
-import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer>
-      <Section>
-        <Container className="grid md:grid-cols-[1.5fr_1fr] gap-12">
-          <div className="flex flex-col gap-6 not-prose">
-            <Link href="/">
-              <h3 className="sr-only">{siteConfig.site_name}</h3>
-              <Image src={Logo} alt={siteConfig.site_name} className="h-10 w-auto" />
+    <footer className="mt-16 bg-ink text-paper">
+      <div className="mx-auto max-w-6xl px-6 py-12">
+        <div className="grid gap-10 md:grid-cols-[1.5fr_1fr]">
+          <div>
+            <Link
+              href="/"
+              className="font-display text-2xl font-semibold text-paper transition-colors hover:text-saffron"
+            >
+              Gujrera
             </Link>
-            <p>{siteConfig.site_description}</p>
+            <p className="mt-3 max-w-sm text-sm leading-relaxed text-paper/70">
+              {siteConfig.site_description}
+            </p>
+            <a
+              href="https://www.gujrera.com"
+              className="mt-4 inline-block font-kicker text-[0.72rem] font-semibold uppercase tracking-[0.09em] text-saffron hover:text-saffron-deep"
+            >
+              GujRERA Portal →
+            </a>
           </div>
-          <div className="flex flex-col gap-2 text-sm">
-            <h5 className="font-medium text-base">Menu</h5>
+
+          <nav className="flex flex-col gap-2.5">
+            <h2 className="font-kicker text-[0.72rem] font-bold uppercase tracking-[0.12em] text-paper/50">
+              Sections
+            </h2>
             {mainMenu.map((item) => (
               <Link
-                className="hover:underline underline-offset-4"
                 key={item.href}
                 href={item.href}
+                className="text-[0.95rem] text-paper/85 transition-colors hover:text-saffron"
               >
                 {item.label}
               </Link>
             ))}
-          </div>
-        </Container>
-        <Container className="border-t not-prose">
-          <p className="text-muted-foreground">
+          </nav>
+        </div>
+
+        <div className="mt-10 border-t border-paper/15 pt-6">
+          <p className="font-kicker text-[0.72rem] uppercase tracking-[0.08em] text-paper/50">
             &copy; {new Date().getFullYear()} {siteConfig.site_name}. All rights
             reserved.
           </p>
-        </Container>
-      </Section>
+        </div>
+      </div>
     </footer>
   );
 }
