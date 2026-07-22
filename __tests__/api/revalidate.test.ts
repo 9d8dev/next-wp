@@ -106,9 +106,6 @@ describe("POST /api/revalidate", () => {
     expect(mockRevalidateTag).toHaveBeenCalledWith("wordpress", { expire: 0 });
     expect(mockRevalidateTag).toHaveBeenCalledWith("posts", { expire: 0 });
     expect(mockRevalidateTag).toHaveBeenCalledWith("post-42", { expire: 0 });
-    expect(mockRevalidateTag).toHaveBeenCalledWith("posts-page-1", {
-      expire: 0,
-    });
     expect(mockRevalidatePath).toHaveBeenCalledWith("/", "layout");
   });
 

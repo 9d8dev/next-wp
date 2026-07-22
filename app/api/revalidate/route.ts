@@ -42,12 +42,12 @@ export async function POST(request: NextRequest) {
       revalidateTag("wordpress", { expire: 0 });
 
       if (contentType === "post") {
+        // The "posts" tag is applied to every posts query (all pages, all
+        // filters), so this invalidates every paginated/filtered post list.
         revalidateTag("posts", { expire: 0 });
         if (contentId) {
           revalidateTag(`post-${contentId}`, { expire: 0 });
         }
-        // Clear all post pages when any post changes
-        revalidateTag("posts-page-1", { expire: 0 });
       } else if (contentType === "category") {
         revalidateTag("categories", { expire: 0 });
         if (contentId) {
