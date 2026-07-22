@@ -2,7 +2,7 @@ import { Section, Container } from "@/components/craft";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { mainMenu } from "@/menu.config";
 import { siteConfig } from "@/site.config";
-import Logo from "@/public/logo.svg";
+import Logo from "@/public/gujrera-logo.png";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,13 +14,7 @@ export function Footer() {
           <div className="flex flex-col gap-6 not-prose">
             <Link href="/">
               <h3 className="sr-only">{siteConfig.site_name}</h3>
-              <Image
-                src={Logo}
-                alt="Logo"
-                className="dark:invert"
-                width={42}
-                height={26.44}
-              />
+              <Image src={Logo} alt={siteConfig.site_name} className="h-10 w-auto" />
             </Link>
             <p>{siteConfig.site_description}</p>
           </div>

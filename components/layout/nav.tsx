@@ -3,7 +3,7 @@ import { MobileNav } from "@/components/nav/mobile-nav";
 import { MainNav } from "@/components/layout/main-nav";
 import { siteConfig } from "@/site.config";
 import { cn } from "@/lib/utils";
-import Logo from "@/public/logo.svg";
+import Logo from "@/public/gujrera-logo.png";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,18 +24,17 @@ export function Nav({ className, children, id }: NavProps) {
         className="max-w-5xl mx-auto py-4 px-6 sm:px-8 flex justify-between items-center"
       >
         <Link
-          className="hover:opacity-75 transition-all flex gap-4 items-center"
+          className="hover:opacity-75 transition-all flex items-center"
           href="/"
         >
           <Image
             src={Logo}
-            alt="Logo"
+            alt={siteConfig.site_name}
             loading="eager"
-            className="dark:invert"
-            width={42}
-            height={26.44}
+            priority
+            className="h-9 w-auto"
           />
-          <h2 className="text-sm">{siteConfig.site_name}</h2>
+          <h2 className="sr-only">{siteConfig.site_name}</h2>
         </Link>
         {children}
         <div className="flex items-center gap-2">
