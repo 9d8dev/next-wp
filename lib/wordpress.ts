@@ -613,6 +613,27 @@ export async function getTagByPath(path: string): Promise<Tag | undefined> {
   return tags.find((tag) => linkToPath(tag.link) === normalized);
 }
 
+/**
+ * Resolves an author archive path, e.g. "/author/urwdy/".
+ */
+export async function getAuthorByPath(
+  path: string
+): Promise<Author | undefined> {
+  const normalized = linkToPath(path);
+  const segments = pathToSegments(normalized);
+  const slug = segments[segments.length - 1];
+  if (!slug) return undefined;
+
+  const authors = await wordpressFetchGraceful<Author[]>(
+    "/wp-json/wp/v2/users",
+    [],
+    { slug },
+    ["wordpress", "authors"]
+  );
+
+  return authors.find((author) => linkToPath(author.link) === normalized);
+}
+
 // --- Static-params helpers for the catch-all route ---
 
 /**

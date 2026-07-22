@@ -3,8 +3,10 @@ import {
   getPageBySlug,
   getCategoryByPath,
   getTagByPath,
+  getAuthorByPath,
   getPostsByCategoryPaginated,
   getPostsByTagPaginated,
+  getPostsByAuthorPaginated,
   getRecentPostPaths,
   getAllPagePaths,
   linkToPath,
@@ -41,12 +43,14 @@ const ARCHIVE_PER_PAGE = 10;
 type Resolved =
   | { kind: "category" }
   | { kind: "tag" }
+  | { kind: "author" }
   | { kind: "page" }
   | { kind: "post" };
 
 function classify(segments: string[]): Resolved {
   if (segments[0] === "category") return { kind: "category" };
   if (segments[0] === "tag") return { kind: "tag" };
+  if (segments[0] === "author") return { kind: "author" };
   // No hierarchical pages exist, so a single segment is a page; posts always
   // carry a category prefix (>= 2 segments).
   if (segments.length === 1) return { kind: "page" };
@@ -58,7 +62,8 @@ function classify(segments: string[]): Resolved {
 // paginate, so they are left untouched. Reading pagination from the path (not
 // a query string) keeps this route statically prerenderable.
 function parsePagination(slug: string[]): { segments: string[]; page: number } {
-  const isArchive = slug[0] === "category" || slug[0] === "tag";
+  const isArchive =
+    slug[0] === "category" || slug[0] === "tag" || slug[0] === "author";
   if (isArchive && slug.length >= 3) {
     const last = slug[slug.length - 1];
     const prev = slug[slug.length - 2];
@@ -131,6 +136,16 @@ export async function generateMetadata({
     });
   }
 
+  if (kind === "author") {
+    const author = await getAuthorByPath(path);
+    if (!author) return {};
+    return generateContentMetadata({
+      title: author.name,
+      description: stripHtml(author.description) || `Posts by ${author.name}`,
+      path: linkToPath(author.link),
+    });
+  }
+
   const tag = await getTagByPath(path);
   if (!tag) return {};
   return generateContentMetadata({
@@ -185,6 +200,27 @@ export default async function CatchAllPage({
     );
   }
 
+  if (kind === "author") {
+    const author = await getAuthorByPath(path);
+    if (!author) notFound();
+    const { data: posts, headers } = await getPostsByAuthorPaginated(
+      author.id,
+      page,
+      ARCHIVE_PER_PAGE
+    );
+    if (page > 1 && posts.length === 0) notFound();
+    return (
+      <ArchiveView
+        title={author.name}
+        description={stripHtml(author.description)}
+        posts={posts}
+        basePath={linkToPath(author.link)}
+        page={page}
+        totalPages={headers.totalPages}
+      />
+    );
+  }
+
   // tag
   const tag = await getTagByPath(path);
   if (!tag) notFound();
@@ -232,7 +268,7 @@ function PostView({ post }: { post: Post }) {
                   {" "}
                   by{" "}
                   <span>
-                    <a href={`/posts/?author=${author.id}`}>{author.name}</a>
+                    <a href={`/author/${author.slug}/`}>{author.name}</a>
                   </span>
                 </>
               )}

@@ -1,4 +1,4 @@
-import { getAllAuthors } from "@/lib/wordpress";
+import { getAllAuthors, linkToPath } from "@/lib/wordpress";
 import { ArchiveList } from "@/components/archive-list";
 import type { Author } from "@/lib/wordpress.d";
 import type { Metadata } from "next";
@@ -20,7 +20,7 @@ export default async function Page() {
     <ArchiveList<Author>
       title="All Authors"
       items={authors}
-      getItemHref={(a) => `/posts/?author=${a.id}`}
+      getItemHref={(a) => linkToPath(a.link)}
       getItemLabel={(a) => a.name}
       emptyMessage="No authors available yet."
     />

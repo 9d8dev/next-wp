@@ -143,6 +143,16 @@ bogus post/page paths correctly 404. Also updated `lib/metadata.ts`
 - Result: `pnpm build` now has **zero fetch failures** and a **full sitemap
   (4346 URLs)** with real WP permalink paths. 57 tests pass.
 
+### 9. Polish  ✅ DONE
+- [x] 9.1 Author archives mirrored: `/author/{slug}/` + `/page/N/` (getAuthorByPath
+      resolver + dispatcher branch, out-of-range 404). Authors index and post-view
+      author links now point at `/author/{slug}/`.
+- [x] 9.2 Real homepage (`app/page.tsx`): hero from site config + latest-posts grid,
+      replacing the next-wp starter boilerplate.
+- [x] 9.3 De-branded: footer copyright → `© {year} {site_name}`; nav CTA →
+      "GujRERA Portal"; root layout metadata → site name/description with a
+      `%s | {site_name}` title template. No `9d8` / `next-wp` strings remain.
+
 ### 8. Static pre-rendering + WP-style archive pagination  ✅ DONE
 Previously the catch-all read `searchParams` (archive `?page=`), which forced the
 whole route dynamic (`ƒ`) and defeated `generateStaticParams`.

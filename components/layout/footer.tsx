@@ -52,8 +52,8 @@ export function Footer() {
         <Container className="border-t not-prose flex flex-col md:flex-row md:gap-2 gap-6 justify-between md:items-center">
           <ThemeToggle />
           <p className="text-muted-foreground">
-            &copy; <a href="https://9d8.dev">9d8</a>. All rights reserved.
-            2025-present.
+            &copy; {new Date().getFullYear()} {siteConfig.site_name}. All rights
+            reserved.
           </p>
         </Container>
       </Section>

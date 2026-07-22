@@ -49,7 +49,7 @@ export function Nav({ className, children, id }: NavProps) {
             ))}
           </div>
           <Button asChild className="hidden sm:flex">
-            <Link href="https://github.com/9d8dev/next-wp">Get Started</Link>
+            <Link href="https://www.gujrera.com">GujRERA Portal</Link>
           </Button>
           <MobileNav />
         </div>
