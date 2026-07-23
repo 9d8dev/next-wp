@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/nav/mobile-nav";
 import { MainNav } from "@/components/layout/main-nav";
 import { siteConfig } from "@/site.config";
@@ -51,16 +50,7 @@ export function Nav() {
             </Link>
             <MainNav />
           </div>
-          <div className="flex items-center gap-2">
-            <Button
-              asChild
-              size="sm"
-              className="hidden rounded-sm font-kicker text-[0.7rem] font-semibold uppercase tracking-[0.08em] sm:inline-flex"
-            >
-              <Link href="https://www.gujrera.com">GujRERA Portal</Link>
-            </Button>
-            <MobileNav />
-          </div>
+          <MobileNav />
         </div>
       </nav>
     </header>

@@ -17,12 +17,6 @@ export function Footer() {
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-paper/70">
               {siteConfig.site_description}
             </p>
-            <a
-              href="https://www.gujrera.com"
-              className="mt-4 inline-block font-kicker text-[0.72rem] font-semibold uppercase tracking-[0.09em] text-saffron hover:text-saffron-deep"
-            >
-              GujRERA Portal →
-            </a>
           </div>
 
           <nav className="flex flex-col gap-2.5">
