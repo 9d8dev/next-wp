@@ -197,6 +197,12 @@ html {
     box-shadow: 0 0 0 3px rgb(29 95 87 / 12%);
 }
 
+.scene-city {
+    background:
+        linear-gradient(90deg, transparent 0 3%, #1b424b 3% 10%, transparent 10% 12%, #1b424b 12% 20%, transparent 20% 23%, #1b424b 23% 31%, transparent 31% 34%, #1b424b 34% 44%, transparent 44% 47%, #1b424b 47% 57%, transparent 57% 60%, #1b424b 60% 69%, transparent 69% 73%, #1b424b 73% 84%, transparent 84% 87%, #1b424b 87% 96%, transparent 96%);
+    clip-path: polygon(0 40%, 3% 40%, 3% 8%, 10% 8%, 10% 34%, 12% 34%, 12% 14%, 20% 14%, 20% 44%, 23% 44%, 23% 23%, 31% 23%, 31% 38%, 34% 38%, 34% 5%, 44% 5%, 44% 35%, 47% 35%, 47% 17%, 57% 17%, 57% 45%, 60% 45%, 60% 10%, 69% 10%, 69% 38%, 73% 38%, 73% 19%, 84% 19%, 84% 43%, 87% 43%, 87% 7%, 96% 7%, 96% 38%, 100% 38%, 100% 100%, 0 100%);
+}
+
 .scene-cloud {
     position: absolute;
     height: 3rem;
@@ -241,21 +247,21 @@ html {
 }
 
 .scene-bus {
-    animation: bus-arrival 10s ease-in-out infinite;
+    animation: bus-arrival 12s ease-in-out infinite;
 }
 
 .scene-person {
-    animation: passenger-exit 10s ease-in-out infinite;
+    animation: passenger-exit 12s ease-in-out infinite;
 }
 
 .scene-car {
-    animation: training-car-exit 10s ease-in-out infinite;
+    animation: training-car-exit 12s ease-in-out infinite;
 }
 
 @keyframes bus-arrival {
     0%, 8% { transform: translateX(0); }
-    25%, 58% { transform: translateX(155%); }
-    70%, 100% { transform: translateX(430%); }
+    25%, 58% { transform: translateX(190%); }
+    70%, 100% { transform: translateX(480%); }
 }
 
 @keyframes passenger-exit {
@@ -266,7 +272,7 @@ html {
 
 @keyframes training-car-exit {
     0%, 48% { transform: translateX(0); }
-    62%, 100% { transform: translateX(270%); }
+    62%, 100% { transform: translateX(300%); }
 }
 
 @keyframes cloud-drift {
@@ -279,7 +285,7 @@ html {
     .scene-bus, .scene-person, .scene-car, .scene-cloud-one, .scene-cloud-two {
         animation: none;
     }
-    .scene-bus { transform: translateX(155%); }
+    .scene-bus { transform: translateX(190%); }
     .scene-person { opacity: 1; }
     .scene-car { transform: translateX(80%); }
 }
