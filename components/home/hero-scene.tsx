@@ -44,7 +44,7 @@ export function HeroScene() {
           <rect x="15" y="19" width="192" height="31" rx="8" fill="#18181b" />
           <path d="M26 24h32v21H26zM64 24h32v21H64zM102 24h32v21h-32zM140 24h32v21h-32z" fill="#f4f4f5" opacity=".85" />
           <path d="M181 24h18v21h-18z" fill="#f4f4f5" opacity=".5" />
-          <text x="18" y="67" fill="#09090b" fontSize="10" fontWeight="800" letterSpacing="2">FAHRSCHULE BZ UCAR</text>
+          <text x="18" y="67" fill="#09090b" fontSize="10" fontWeight="800" letterSpacing="2">Fahrschule Bz Ucar</text>
           <circle cx="45" cy="82" r="10" fill="#000000" stroke="#ffffff" strokeWidth="4" />
           <circle cx="194" cy="82" r="10" fill="#000000" stroke="#ffffff" strokeWidth="4" />
         </svg>
@@ -61,7 +61,7 @@ export function HeroScene() {
       <div className={`scene-building hero-procedural-fallback absolute bottom-[29%] right-[8%] z-10 w-36 sm:w-48 ${videoFailed ? "" : "hidden"}`}>
         <div className="relative rounded-t-[1.1rem] bg-[#ffffff] p-3 text-[#09090b] shadow-2xl">
           <div className="mb-2 flex items-center gap-2 text-[9px] font-black tracking-[0.18em]"><span className="h-2 w-2 rounded-full bg-[#d90429]" /> FAHRSCHULE</div>
-          <div className="rounded-lg bg-white px-2 py-3 text-center text-lg font-black tracking-tight sm:text-2xl">BZ UCAR</div>
+          <div className="rounded-lg bg-white px-2 py-3 text-center text-lg font-black tracking-tight sm:text-2xl">Fahrschule Bz Ucar</div>
           <div className="mt-3 grid h-10 grid-cols-3 gap-1 rounded bg-[#27272a] p-1"><i /><i /><i /></div>
         </div>
       </div>
@@ -72,7 +72,7 @@ export function HeroScene() {
           <path d="m78 21 25 16h94l-8-12c-2-3-6-4-10-4H78Z" fill="#f4f4f5" />
           <path d="M45 48h165" stroke="#f87171" strokeWidth="3" />
           <circle cx="65" cy="76" r="14" fill="#000000" stroke="#d90429" strokeWidth="6" /><circle cx="204" cy="76" r="14" fill="#000000" stroke="#d90429" strokeWidth="6" />
-          <text x="125" y="63" fill="#fff" fontSize="10" fontWeight="800" textAnchor="middle">B â€¢ UCAR</text>
+          <text x="125" y="63" fill="#fff" fontSize="10" fontWeight="800" textAnchor="middle">Fahrschule Bz Ucar</text>
         </svg>
       </div>
 
@@ -86,7 +86,7 @@ export function HeroScene() {
         </p>
       </div>
       <div className="absolute bottom-5 left-6 z-30 flex items-center gap-3 text-xs text-white/80 drop-shadow-lg sm:bottom-7 sm:left-8">
-        <span className="rounded-full bg-white/10 px-3 py-1.5 backdrop-blur-sm">Bz Ucar</span>
+        <span className="rounded-full bg-white/10 px-3 py-1.5 backdrop-blur-sm">Fahrschule Bz Ucar</span>
         <span className="flex items-center gap-1.5"><ArrowUpRight size={13} className="text-[#ffffff]" /> Deine Route</span>
       </div>
 

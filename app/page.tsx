@@ -23,8 +23,7 @@ export default function Home() {
         <div className="relative mx-auto max-w-7xl px-6 pb-20 pt-8 lg:px-8 lg:pb-28 lg:pt-12">
           <div className="mb-16 flex items-center justify-between border-b border-white/10 pb-5">
             <Link href="/" className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ef233c] text-sm font-black text-white">BZ</span>
-              <span className="text-sm font-extrabold tracking-[.08em]">UCAR<span className="text-[#ef233c]">.</span></span>
+              <span className="text-sm font-extrabold tracking-[.08em]">Fahrschule Bz Ucar<span className="text-[#ef233c]">.</span></span>
             </Link>
             <div className="hidden items-center gap-8 text-xs font-bold text-white/65 md:flex">
               <Link href="#fuehrerscheine" className="transition hover:text-[#ef233c]">F&uuml;hrerscheine</Link>
@@ -66,7 +65,7 @@ export default function Home() {
 
       <section id="vorteile" className="bg-[#111113] px-6 py-24 text-white lg:px-8 lg:py-32">
         <div className="mx-auto grid max-w-7xl gap-16 lg:grid-cols-[.75fr_1.25fr] lg:items-start">
-          <div><p className="mb-4 text-[10px] font-black uppercase tracking-[.28em] text-[#ef233c]">Warum Bz Ucar?</p><h2 className="text-5xl font-black leading-[.95] tracking-[-.07em] sm:text-7xl">Nicht nur<br /><span className="text-[#d90429]">bestehen.</span><br />Verstehen.</h2><p className="mt-7 max-w-sm text-sm leading-relaxed text-white/60">Eine gute Fahrschule bringt dir nicht nur bei, wie du die Pr&uuml;fung bestehst. Sie gibt dir Sicherheit f&uuml;r alle Wege danach.</p></div>
+          <div><p className="mb-4 text-[10px] font-black uppercase tracking-[.28em] text-[#ef233c]">Warum Fahrschule Bz Ucar?</p><h2 className="text-5xl font-black leading-[.95] tracking-[-.07em] sm:text-7xl">Nicht nur<br /><span className="text-[#d90429]">bestehen.</span><br />Verstehen.</h2><p className="mt-7 max-w-sm text-sm leading-relaxed text-white/60">Eine gute Fahrschule bringt dir nicht nur bei, wie du die Pr&uuml;fung bestehst. Sie gibt dir Sicherheit f&uuml;r alle Wege danach.</p></div>
           <div className="grid gap-0">{benefits.map(({ title, text }, index) => <div key={title} className="grid grid-cols-[3rem_1fr] gap-5 border-t border-white/15 py-7"><span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-[#ef233c] text-sm font-black">0{index + 1}</span><div><h3 className="text-xl font-bold">{title}</h3><p className="mt-2 max-w-md text-sm leading-relaxed text-white/55">{text}</p></div></div>)}</div>
         </div>
       </section>

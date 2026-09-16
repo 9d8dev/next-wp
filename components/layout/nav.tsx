@@ -25,9 +25,6 @@ export function Nav({ className, children, id }: NavProps) {
           className="hover:opacity-75 transition-all flex gap-4 items-center"
           href="/"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#d90429] text-lg font-black text-white">
-            BZ
-          </div>
           <h2 className="text-sm font-bold tracking-tight">{siteConfig.site_name}</h2>
         </Link>
         {children}
