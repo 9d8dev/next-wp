@@ -176,3 +176,159 @@
         @apply bg-background text-foreground;
     }
 }
+
+html {
+    scroll-behavior: smooth;
+}
+
+.form-field {
+    width: 100%;
+    border: 1px solid #d8e2dd;
+    border-radius: 0.85rem;
+    background: #fbfcfa;
+    padding: 0.8rem 0.95rem;
+    color: #09090b;
+    outline: none;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.form-field:focus {
+    border-color: #09090b;
+    box-shadow: 0 0 0 3px rgb(29 95 87 / 12%);
+}
+
+.modern-site {
+    font-family: var(--font-sans), "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+.modern-site h1,
+.modern-site h2,
+.modern-site h3 {
+    text-wrap: balance;
+}
+
+.course-card {
+    min-height: 26rem;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.course-card:hover {
+    transform: translateY(-0.35rem);
+    box-shadow: 0 1.5rem 3rem rgb(16 35 43 / 12%);
+}
+
+.course-card-lime {
+    background: #ef233c;
+    color: #09090b;
+}
+
+.course-card-coral {
+    background: #d90429;
+    color: #fff;
+}
+
+.course-card-blue {
+    background: #f4f4f5;
+    color: #09090b;
+}
+
+.scene-city {
+    background:
+        linear-gradient(90deg, transparent 0 3%, #27272a 3% 10%, transparent 10% 12%, #27272a 12% 20%, transparent 20% 23%, #27272a 23% 31%, transparent 31% 34%, #27272a 34% 44%, transparent 44% 47%, #27272a 47% 57%, transparent 57% 60%, #27272a 60% 69%, transparent 69% 73%, #27272a 73% 84%, transparent 84% 87%, #27272a 87% 96%, transparent 96%);
+    clip-path: polygon(0 40%, 3% 40%, 3% 8%, 10% 8%, 10% 34%, 12% 34%, 12% 14%, 20% 14%, 20% 44%, 23% 44%, 23% 23%, 31% 23%, 31% 38%, 34% 38%, 34% 5%, 44% 5%, 44% 35%, 47% 35%, 47% 17%, 57% 17%, 57% 45%, 60% 45%, 60% 10%, 69% 10%, 69% 38%, 73% 38%, 73% 19%, 84% 19%, 84% 43%, 87% 43%, 87% 7%, 96% 7%, 96% 38%, 100% 38%, 100% 100%, 0 100%);
+}
+
+.scene-cloud {
+    position: absolute;
+    height: 3rem;
+    width: 9rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 10%);
+    filter: blur(1px);
+}
+
+.scene-cloud::before,
+.scene-cloud::after {
+    position: absolute;
+    bottom: 0;
+    content: "";
+    border-radius: 999px;
+    background: inherit;
+}
+
+.scene-cloud::before {
+    left: 1.5rem;
+    height: 4rem;
+    width: 4rem;
+}
+
+.scene-cloud::after {
+    right: 1.3rem;
+    height: 3.5rem;
+    width: 3.5rem;
+}
+
+.scene-cloud-one {
+    left: 18%;
+    top: 22%;
+    animation: cloud-drift 18s ease-in-out infinite alternate;
+}
+
+.scene-cloud-two {
+    right: 12%;
+    top: 36%;
+    transform: scale(.65);
+    animation: cloud-drift 23s ease-in-out -5s infinite alternate-reverse;
+}
+
+.scene-bus {
+    animation: bus-arrival 12s ease-in-out infinite;
+}
+
+.scene-person {
+    animation: passenger-exit 12s ease-in-out infinite;
+}
+
+.scene-car {
+    animation: training-car-exit 12s ease-in-out infinite;
+}
+
+.hero-reference-video {
+    filter: saturate(.9) contrast(1.05);
+}
+
+.hero-video-overlay {
+    background: linear-gradient(135deg, rgb(13 39 48 / 30%), rgb(8 26 32 / 62%));
+}
+
+@keyframes bus-arrival {
+    0%, 8% { transform: translateX(0); }
+    25%, 58% { transform: translateX(190%); }
+    70%, 100% { transform: translateX(480%); }
+}
+
+@keyframes passenger-exit {
+    0%, 24% { opacity: 0; transform: translateY(1rem); }
+    34%, 55% { opacity: 1; transform: translateY(0); }
+    65%, 100% { opacity: 0; transform: translate(4rem, 0); }
+}
+
+@keyframes training-car-exit {
+    0%, 48% { transform: translateX(0); }
+    62%, 100% { transform: translateX(300%); }
+}
+
+@keyframes cloud-drift {
+    from { transform: translateX(-1rem); }
+    to { transform: translateX(2rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .scene-bus, .scene-person, .scene-car, .scene-cloud-one, .scene-cloud-two {
+        animation: none;
+    }
+    .scene-bus { transform: translateX(190%); }
+    .scene-person { opacity: 1; }
+    .scene-car { transform: translateX(80%); }
+}
