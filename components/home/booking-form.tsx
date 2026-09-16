@@ -74,7 +74,7 @@ export function BookingForm() {
         <textarea value={form.message} onChange={(event) => updateField("message", event.target.value)} placeholder="Was möchtest du uns noch mitteilen?" rows={3} className="form-field resize-none" />
       </label>
       {state === "error" && <p role="alert" className="rounded-xl bg-[#fff0ed] px-4 py-3 text-sm text-[#a53b2d]">{error}</p>}
-      <button disabled={state === "sending"} className="mt-2 rounded-full bg-[#1d5f57] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#174e48] disabled:cursor-wait disabled:opacity-60" type="submit">
+      <button disabled={state === "sending"} className="mt-2 rounded-full bg-[#d90429] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#ef233c] disabled:cursor-wait disabled:opacity-60" type="submit">
         {state === "sending" ? "Wird gesendet …" : "Probestunde anfragen"}
       </button>
       <p className="text-xs leading-relaxed text-[#6a7c80]">Mit dem Absenden stimmst du der Verarbeitung deiner Daten zur Terminvereinbarung zu. Es erfolgt noch keine verbindliche Buchung.</p>

@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
@@ -187,14 +187,49 @@ html {
     border-radius: 0.85rem;
     background: #fbfcfa;
     padding: 0.8rem 0.95rem;
-    color: #10232b;
+    color: #09090b;
     outline: none;
     transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .form-field:focus {
-    border-color: #1d5f57;
+    border-color: #09090b;
     box-shadow: 0 0 0 3px rgb(29 95 87 / 12%);
+}
+
+.modern-site {
+    font-family: var(--font-sans), "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+.modern-site h1,
+.modern-site h2,
+.modern-site h3 {
+    text-wrap: balance;
+}
+
+.course-card {
+    min-height: 26rem;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.course-card:hover {
+    transform: translateY(-0.35rem);
+    box-shadow: 0 1.5rem 3rem rgb(16 35 43 / 12%);
+}
+
+.course-card-lime {
+    background: #ef233c;
+    color: #09090b;
+}
+
+.course-card-coral {
+    background: #d90429;
+    color: #fff;
+}
+
+.course-card-blue {
+    background: #f4f4f5;
+    color: #09090b;
 }
 
 .scene-city {
@@ -256,6 +291,14 @@ html {
 
 .scene-car {
     animation: training-car-exit 12s ease-in-out infinite;
+}
+
+.hero-reference-video {
+    filter: saturate(.9) contrast(1.05);
+}
+
+.hero-video-overlay {
+    background: linear-gradient(135deg, rgb(13 39 48 / 30%), rgb(8 26 32 / 62%));
 }
 
 @keyframes bus-arrival {

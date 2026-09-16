@@ -25,7 +25,7 @@ export function Nav({ className, children, id }: NavProps) {
           className="hover:opacity-75 transition-all flex gap-4 items-center"
           href="/"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f2b84b] text-lg font-black text-[#10232b]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#d90429] text-lg font-black text-white">
             BZ
           </div>
           <h2 className="text-sm font-bold tracking-tight">{siteConfig.site_name}</h2>
@@ -41,7 +41,7 @@ export function Nav({ className, children, id }: NavProps) {
               </Button>
             ))}
           </div>
-          <Button asChild className="hidden bg-[#f2b84b] text-[#10232b] hover:bg-[#f5c968] sm:flex">
+          <Button asChild className="hidden bg-[#d90429] text-white hover:bg-[#ef233c] sm:flex">
             <Link href="/#termin">Probestunde buchen</Link>
           </Button>
           <MobileNav />
