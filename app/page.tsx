@@ -1,146 +1,53 @@
-// Craft Imports
-import { Section, Container, Prose } from "@/components/craft";
-
-// Next.js Imports
 import Link from "next/link";
+import { ArrowRight, Check, Clock3, HeartHandshake, Star, Users } from "lucide-react";
+import { BookingForm } from "@/components/home/booking-form";
+import { HeroScene } from "@/components/home/hero-scene";
 
-// Icons
-import { File, Pen, Tag, Diamond, User, Folder } from "lucide-react";
-import { WordPressIcon } from "@/components/icons/wordpress";
-import { NextJsIcon } from "@/components/icons/nextjs";
+const courses = [
+  { label: "Klasse B", title: "Dein Pkw-Führerschein", text: "Flexibel lernen, sicher fahren und mit einem guten Gefühl in die Prüfung.", color: "bg-[#e8f4ee]" },
+  { label: "Klasse A", title: "Freiheit auf zwei Rädern", text: "Motorradfahren mit erfahrenen Fahrlehrerinnen und Fahrlehrern.", color: "bg-[#fff2d7]" },
+  { label: "Klasse BE", title: "Mehr Platz, mehr Möglichkeiten", text: "Anhänger sicher bewegen – im Alltag und im Beruf.", color: "bg-[#e9eff7]" },
+];
 
-// This page is using the craft.tsx component and design system
 export default function Home() {
   return (
-    <Section>
-      <Container>
-        <ToDelete />
-      </Container>
-    </Section>
+    <main className="overflow-hidden bg-[#f8f7f2] text-[#10232b]">
+      <section className="mx-auto grid max-w-7xl gap-12 px-6 pb-20 pt-12 lg:grid-cols-[.9fr_1.1fr] lg:items-center lg:px-8 lg:pb-28 lg:pt-20">
+        <div>
+          <p className="mb-5 inline-flex items-center gap-2 rounded-full bg-[#e8f4ee] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[#1d5f57]"><span className="h-2 w-2 rounded-full bg-[#e85d4a]" /> Deine Fahrschule in Berlin</p>
+          <h1 className="max-w-xl text-5xl font-black leading-[.98] tracking-[-.06em] sm:text-7xl">Sicher ans Ziel.<br /><span className="text-[#e85d4a]">Mit Bz Ucar.</span></h1>
+          <p className="mt-7 max-w-lg text-lg leading-relaxed text-[#557078]">Führerschein machen, Freiheit gewinnen. Wir begleiten dich persönlich, geduldig und mit einem modernen Ausbildungskonzept.</p>
+          <div className="mt-9 flex flex-wrap items-center gap-4">
+            <Link href="#termin" className="inline-flex items-center gap-3 rounded-full bg-[#1d5f57] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#174e48]">Probestunde buchen <ArrowRight size={17} /></Link>
+            <Link href="#fuehrerscheine" className="text-sm font-bold text-[#1d5f57] underline decoration-[#f2b84b] decoration-2 underline-offset-8">Führerscheine entdecken</Link>
+          </div>
+          <div className="mt-12 flex items-center gap-8 border-t border-[#dce4dd] pt-6">
+            <div><strong className="block text-2xl font-black">4.9/5</strong><span className="flex items-center gap-1 text-xs text-[#6d7d80]"><Star size={12} fill="#f2b84b" className="text-[#f2b84b]" /> aus über 180 Bewertungen</span></div>
+            <div><strong className="block text-2xl font-black">12+</strong><span className="text-xs text-[#6d7d80]">Jahre Erfahrung</span></div>
+          </div>
+        </div>
+        <HeroScene />
+      </section>
+
+      <section id="fuehrerscheine" className="bg-white px-6 py-20 lg:px-8 lg:py-28">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-12 flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#e85d4a]">Dein Weg</p><h2 className="text-4xl font-black tracking-[-.04em] sm:text-5xl">Welcher Führerschein<br />passt zu dir?</h2></div><p className="max-w-sm text-sm leading-relaxed text-[#6a7c80]">Wir finden gemeinsam die passende Ausbildung für deine Ziele und deinen Alltag.</p></div>
+          <div className="grid gap-5 md:grid-cols-3">{courses.map((course) => <article key={course.label} className={`group rounded-3xl p-7 ${course.color} transition hover:-translate-y-1`}><span className="text-xs font-black uppercase tracking-[.2em] text-[#557078]">{course.label}</span><h3 className="mt-12 text-2xl font-black">{course.title}</h3><p className="mt-3 min-h-14 text-sm leading-relaxed text-[#557078]">{course.text}</p><Link href="#termin" className="mt-7 inline-flex items-center gap-2 text-sm font-bold text-[#1d5f57]">Mehr erfahren <ArrowRight size={15} className="transition group-hover:translate-x-1" /></Link></article>)}</div>
+        </div>
+      </section>
+
+      <section id="ueber-uns" className="bg-[#10232b] px-6 py-20 text-white lg:px-8 lg:py-28">
+        <div className="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[.85fr_1.15fr] lg:items-center">
+          <div><p className="mb-3 text-xs font-bold uppercase tracking-[.2em] text-[#f2b84b]">Warum Bz Ucar?</p><h2 className="text-4xl font-black tracking-[-.04em] sm:text-5xl">Lernen, das<br /><span className="text-[#f2b84b]">zu dir passt.</span></h2><p className="mt-6 max-w-md leading-relaxed text-white/65">Wir glauben: Gute Ausbildung beginnt mit Vertrauen. Deshalb nehmen wir uns Zeit, hören zu und bringen dich Schritt für Schritt sicher ans Ziel.</p></div>
+          <div className="grid gap-8 sm:grid-cols-2">{[{ icon: HeartHandshake, title: "Persönlich", text: "Fahrlehrer, die dich wirklich kennen und individuell begleiten." }, { icon: Clock3, title: "Flexibel", text: "Theorie und Praxis, die in deinen Alltag und deinen Rhythmus passen." }, { icon: ShieldCheckIcon, title: "Sicher", text: "Moderne Fahrzeuge und eine Ausbildung mit klarer Struktur." }, { icon: Users, title: "Gemeinsam", text: "Eine starke Community, die dich motiviert und unterstützt." }].map(({ icon: Icon, title, text }) => <div key={title} className="border-t border-white/15 pt-5"><Icon className="mb-5 text-[#f2b84b]" size={24} /><h3 className="font-bold">{title}</h3><p className="mt-2 text-sm leading-relaxed text-white/60">{text}</p></div>)}</div>
+        </div>
+      </section>
+
+      <section id="termin" className="px-6 py-20 lg:px-8 lg:py-28"><div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[.8fr_1.2fr] lg:items-start"><div><p className="mb-3 text-xs font-bold uppercase tracking-[.2em] text-[#e85d4a]">Dein erster Schritt</p><h2 className="text-4xl font-black tracking-[-.04em] sm:text-5xl">Lust auf<br />Führerschein?</h2><p className="mt-6 max-w-sm leading-relaxed text-[#557078]">Vereinbare jetzt deine kostenlose Probestunde. Ganz unverbindlich – wir freuen uns auf dich!</p><div className="mt-8 space-y-3 text-sm text-[#47616a]"><p className="flex items-center gap-3"><Check size={17} className="text-[#1f8a63]" /> Persönliche Beratung inklusive</p><p className="flex items-center gap-3"><Check size={17} className="text-[#1f8a63]" /> Keine versteckten Kosten</p><p className="flex items-center gap-3"><Check size={17} className="text-[#1f8a63]" /> Antwort innerhalb von 24 Stunden</p></div></div><div className="rounded-[2rem] bg-white p-6 shadow-xl shadow-[#10232b]/5 sm:p-10"><BookingForm /></div></div></section>
+    </main>
   );
 }
 
-// This is just some example TSX
-const ToDelete = () => {
-  return (
-    <main className="space-y-6">
-      <Prose>
-        <h1>Headless WordPress built with the Next.js</h1>
-
-        <p>
-          This is <a href="https://github.com/9d8dev/next-wp">next-wp</a>,
-          created as a way to build WordPress sites with Next.js at rapid speed.
-          This starter is designed with{" "}
-          <a href="https://ui.shadcn.com">shadcn/ui</a>,{" "}
-          <a href="https://craft-ds.com">craft-ds</a>, and Tailwind CSS. Use{" "}
-          <a href="https://components.work">brijr/components</a> to build your
-          site with prebuilt components. The data fetching and typesafety is
-          handled in <code>lib/wordpress.ts</code> and{" "}
-          <code>lib/wordpress.d.ts</code>.
-        </p>
-      </Prose>
-
-      <div className="flex justify-between items-center gap-4">
-        {/* Vercel Clone Starter */}
-        <div className="flex items-center gap-3">
-          <a
-            className="h-auto block"
-            href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F9d8dev%2Fnext-wp&env=WORDPRESS_URL,WORDPRESS_HOSTNAME&envDescription=Add%20WordPress%20URL%20with%20Rest%20API%20enabled%20(ie.%20https%3A%2F%2Fwp.example.com)%20abd%20the%20hostname%20for%20Image%20rendering%20in%20Next%20JS%20(ie.%20wp.example.com)&project-name=next-wp&repository-name=next-wp&demo-title=Next%20JS%20and%20WordPress%20Starter&demo-url=https%3A%2F%2Fwp.9d8.dev"
-          >
-            {/* eslint-disable-next-line */}
-            <img
-              className="not-prose my-4"
-              src="https://vercel.com/button"
-              alt="Deploy with Vercel"
-              width={105}
-              height={32.62}
-            />
-          </a>
-          <p className="text-sm! sr-only sm:not-sr-only text-muted-foreground">
-            Deploy with Vercel in seconds.
-          </p>
-        </div>
-
-        <div className="flex gap-2 items-center">
-          <WordPressIcon className="text-foreground" width={32} height={32} />
-          <NextJsIcon className="text-foreground" width={32} height={32} />
-        </div>
-      </div>
-
-      <div className="grid md:grid-cols-3 gap-4 mt-6">
-        <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
-          href="/posts"
-        >
-          <Pen size={32} />
-          <span>
-            Posts{" "}
-            <span className="block text-sm text-muted-foreground">
-              All posts from your WordPress
-            </span>
-          </span>
-        </Link>
-        <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
-          href="/pages"
-        >
-          <File size={32} />
-          <span>
-            Pages{" "}
-            <span className="block text-sm text-muted-foreground">
-              Custom pages from your WordPress
-            </span>
-          </span>
-        </Link>
-        <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
-          href="/posts/authors"
-        >
-          <User size={32} />
-          <span>
-            Authors{" "}
-            <span className="block text-sm text-muted-foreground">
-              List of the authors from your WordPress
-            </span>
-          </span>
-        </Link>
-        <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
-          href="/posts/tags"
-        >
-          <Tag size={32} />
-          <span>
-            Tags{" "}
-            <span className="block text-sm text-muted-foreground">
-              Content by tags from your WordPress
-            </span>
-          </span>
-        </Link>
-        <Link
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
-          href="/posts/categories"
-        >
-          <Diamond size={32} />
-          <span>
-            Categories{" "}
-            <span className="block text-sm text-muted-foreground">
-              Categories from your WordPress
-            </span>
-          </span>
-        </Link>
-        <a
-          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
-          href="https://github.com/9d8dev/next-wp/blob/main/README.md"
-        >
-          <Folder size={32} />
-          <span>
-            Documentation{" "}
-            <span className="block text-sm text-muted-foreground">
-              How to use `next-wp`
-            </span>
-          </span>
-        </a>
-      </div>
-    </main>
-  );
-};
+function ShieldCheckIcon(props: { className?: string; size?: number }) {
+  return <Check {...props} />;
+}

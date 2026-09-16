@@ -176,3 +176,110 @@
         @apply bg-background text-foreground;
     }
 }
+
+html {
+    scroll-behavior: smooth;
+}
+
+.form-field {
+    width: 100%;
+    border: 1px solid #d8e2dd;
+    border-radius: 0.85rem;
+    background: #fbfcfa;
+    padding: 0.8rem 0.95rem;
+    color: #10232b;
+    outline: none;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.form-field:focus {
+    border-color: #1d5f57;
+    box-shadow: 0 0 0 3px rgb(29 95 87 / 12%);
+}
+
+.scene-cloud {
+    position: absolute;
+    height: 3rem;
+    width: 9rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 10%);
+    filter: blur(1px);
+}
+
+.scene-cloud::before,
+.scene-cloud::after {
+    position: absolute;
+    bottom: 0;
+    content: "";
+    border-radius: 999px;
+    background: inherit;
+}
+
+.scene-cloud::before {
+    left: 1.5rem;
+    height: 4rem;
+    width: 4rem;
+}
+
+.scene-cloud::after {
+    right: 1.3rem;
+    height: 3.5rem;
+    width: 3.5rem;
+}
+
+.scene-cloud-one {
+    left: 18%;
+    top: 22%;
+    animation: cloud-drift 18s ease-in-out infinite alternate;
+}
+
+.scene-cloud-two {
+    right: 12%;
+    top: 36%;
+    transform: scale(.65);
+    animation: cloud-drift 23s ease-in-out -5s infinite alternate-reverse;
+}
+
+.scene-bus {
+    animation: bus-arrival 10s ease-in-out infinite;
+}
+
+.scene-person {
+    animation: passenger-exit 10s ease-in-out infinite;
+}
+
+.scene-car {
+    animation: training-car-exit 10s ease-in-out infinite;
+}
+
+@keyframes bus-arrival {
+    0%, 8% { transform: translateX(0); }
+    25%, 58% { transform: translateX(155%); }
+    70%, 100% { transform: translateX(430%); }
+}
+
+@keyframes passenger-exit {
+    0%, 24% { opacity: 0; transform: translateY(1rem); }
+    34%, 55% { opacity: 1; transform: translateY(0); }
+    65%, 100% { opacity: 0; transform: translate(4rem, 0); }
+}
+
+@keyframes training-car-exit {
+    0%, 48% { transform: translateX(0); }
+    62%, 100% { transform: translateX(270%); }
+}
+
+@keyframes cloud-drift {
+    from { transform: translateX(-1rem); }
+    to { transform: translateX(2rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .scene-bus, .scene-person, .scene-car, .scene-cloud-one, .scene-cloud-two {
+        animation: none;
+    }
+    .scene-bus { transform: translateX(155%); }
+    .scene-person { opacity: 1; }
+    .scene-car { transform: translateX(80%); }
+}
