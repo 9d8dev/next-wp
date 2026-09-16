@@ -6,7 +6,6 @@ type SiteConfig = {
 
 export const siteConfig: SiteConfig = {
   site_name: "Fahrschule Bz Ucar",
-  site_description:
-    "Dein Weg zum Führerschein in Berlin – persönlich, sicher und mit Freude am Fahren.",
+  site_description: "Fahrschule Bz Ucar",
   site_domain: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
 };

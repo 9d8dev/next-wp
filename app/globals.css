@@ -234,7 +234,7 @@ html {
 
 .scene-city {
     background:
-        linear-gradient(90deg, transparent 0 3%, #1b424b 3% 10%, transparent 10% 12%, #1b424b 12% 20%, transparent 20% 23%, #1b424b 23% 31%, transparent 31% 34%, #1b424b 34% 44%, transparent 44% 47%, #1b424b 47% 57%, transparent 57% 60%, #1b424b 60% 69%, transparent 69% 73%, #1b424b 73% 84%, transparent 84% 87%, #1b424b 87% 96%, transparent 96%);
+        linear-gradient(90deg, transparent 0 3%, #27272a 3% 10%, transparent 10% 12%, #27272a 12% 20%, transparent 20% 23%, #27272a 23% 31%, transparent 31% 34%, #27272a 34% 44%, transparent 44% 47%, #27272a 47% 57%, transparent 57% 60%, #27272a 60% 69%, transparent 69% 73%, #27272a 73% 84%, transparent 84% 87%, #27272a 87% 96%, transparent 96%);
     clip-path: polygon(0 40%, 3% 40%, 3% 8%, 10% 8%, 10% 34%, 12% 34%, 12% 14%, 20% 14%, 20% 44%, 23% 44%, 23% 23%, 31% 23%, 31% 38%, 34% 38%, 34% 5%, 44% 5%, 44% 35%, 47% 35%, 47% 17%, 57% 17%, 57% 45%, 60% 45%, 60% 10%, 69% 10%, 69% 38%, 73% 38%, 73% 19%, 84% 19%, 84% 43%, 87% 43%, 87% 7%, 96% 7%, 96% 38%, 100% 38%, 100% 100%, 0 100%);
 }
 
