@@ -1,5 +1,7 @@
 # Next WP
 
+[![Deploy to Railyard](https://app.railyard.run/deploy/badge)](https://app.railyard.run/deploy?repo=https://github.com/9d8dev/next-wp)
+
 A modern headless WordPress starter built with Next.js 16, React 19, and TypeScript.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/next-wp?referralCode=AJtQpy&utm_medium=integration&utm_source=template&utm_campaign=generic)
