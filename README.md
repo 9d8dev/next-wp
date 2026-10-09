@@ -6,6 +6,8 @@ A modern headless WordPress starter built with Next.js 16, React 19, and TypeScr
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F9d8dev%2Fnext-wp&env=WORDPRESS_URL,WORDPRESS_HOSTNAME,WORDPRESS_WEBHOOK_SECRET&envDescription=Add%20WordPress%20URL%20with%20Rest%20API%20enabled%20(ie.%20https%3A%2F%2Fwp.example.com)%2C%20the%20hostname%20for%20Image%20rendering%20in%20Next%20JS%20(ie.%20wp.example.com)%2C%20and%20a%20secret%20key%20for%20secure%20revalidation&project-name=next-wp&repository-name=next-wp&demo-title=Next%20JS%20and%20WordPress%20Starter&demo-url=https%3A%2F%2Fwp.9d8.dev)
 
+[![Deploy to ZopDay](https://zop.dev/deploytozopday-inkhard.svg)](https://zop.dev/zopday/app/deploy?repo=https://github.com/9d8dev/next-wp&port=3000)
+
 ![Next WP Screenshot](https://github.com/user-attachments/assets/8b268c36-eb0d-459f-b9f1-b5f129bd29bc)
 
 > **[Live Demo](https://wp.9d8.dev)** | **[Video Tutorial](https://www.youtube.com/watch?v=JZc1-BcOvYw)** | **[Headless Theme (761)](https://github.com/9d8dev/761)**
@@ -22,6 +24,7 @@ A modern headless WordPress starter built with Next.js 16, React 19, and TypeScr
 - [Deployment](#deployment)
   - [Railway (Recommended)](#railway-recommended)
   - [Vercel](#vercel)
+  - [ZopDay](#zopday)
   - [Local Development](#local-development)
 - [WordPress API Functions](#wordpress-api-functions)
 - [Cache Revalidation](#cache-revalidation)
@@ -208,6 +211,19 @@ Railway creates a copy of the repository in your GitHub. You can then:
 3. Deploy and wait for build to complete
 4. Install the revalidation plugin on your WordPress site
 5. Configure the plugin with your Vercel deployment URL
+
+### ZopDay
+
+Deploys the Next.js app as a container from the `Dockerfile` in this repo, either on ZopCloud or into your own AWS, GCP or Azure account. Like Vercel, it connects to a WordPress site you already have.
+
+1. Click the **Deploy to ZopDay** button above
+2. Fill in environment variables:
+   - `WORDPRESS_URL` - Your existing WordPress site URL
+   - `WORDPRESS_HOSTNAME` - WordPress domain (for images)
+   - `WORDPRESS_WEBHOOK_SECRET` - Generate a secure random string
+3. Deploy and wait for the build to complete
+4. Install the revalidation plugin on your WordPress site
+5. Configure the plugin with your ZopDay deployment URL
 
 ### Local Development
 
