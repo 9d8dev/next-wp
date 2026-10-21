@@ -243,10 +243,10 @@ getAllPostsForSitemap()                      // All slugs + modified dates
 ```typescript
 getAllCategories()                           // All categories
 getCategoryById(id)                         // Category by ID
-getCategoryBySlug(slug)                     // Category by slug
+getCategoryBySlug(slug)                     // Category by slug, or undefined if missing
 getAllTags()                                // All tags
 getTagById(id)                              // Tag by ID
-getTagBySlug(slug)                          // Tag by slug
+getTagBySlug(slug)                          // Tag by slug, or undefined if missing
 getPostsByCategory(id)                      // Posts in category
 getPostsByTag(id)                           // Posts with tag
 getTagsByPost(postId)                       // Tags on a post
@@ -256,7 +256,7 @@ getTagsByPost(postId)                       // Tags on a post
 ```typescript
 getAllAuthors()                              // All authors
 getAuthorById(id)                           // Author by ID
-getAuthorBySlug(slug)                       // Author by slug
+getAuthorBySlug(slug)                       // Author by slug, or undefined if missing
 getPostsByAuthor(id)                        // Posts by author
 getAllPages()                               // All pages
 getPageById(id)                             // Page by ID

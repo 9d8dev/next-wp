@@ -246,10 +246,14 @@ export async function getCategoryById(id: number): Promise<Category> {
   return wordpressFetch<Category>(`/wp-json/wp/v2/categories/${id}`);
 }
 
-export async function getCategoryBySlug(slug: string): Promise<Category> {
-  return wordpressFetch<Category[]>("/wp-json/wp/v2/categories", { slug }).then(
-    (categories) => categories[0]
+export async function getCategoryBySlug(
+  slug: string
+): Promise<Category | undefined> {
+  const categories = await wordpressFetch<Category[]>(
+    "/wp-json/wp/v2/categories",
+    { slug }
   );
+  return categories[0];
 }
 
 export async function getPostsByCategory(categoryId: number): Promise<Post[]> {
@@ -279,10 +283,9 @@ export async function getTagById(id: number): Promise<Tag> {
   return wordpressFetch<Tag>(`/wp-json/wp/v2/tags/${id}`);
 }
 
-export async function getTagBySlug(slug: string): Promise<Tag> {
-  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { slug }).then(
-    (tags) => tags[0]
-  );
+export async function getTagBySlug(slug: string): Promise<Tag | undefined> {
+  const tags = await wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { slug });
+  return tags[0];
 }
 
 export async function getAllPages(): Promise<Page[]> {
@@ -320,10 +323,13 @@ export async function getAuthorById(id: number): Promise<Author> {
   return wordpressFetch<Author>(`/wp-json/wp/v2/users/${id}`);
 }
 
-export async function getAuthorBySlug(slug: string): Promise<Author> {
-  return wordpressFetch<Author[]>("/wp-json/wp/v2/users", { slug }).then(
-    (users) => users[0]
-  );
+export async function getAuthorBySlug(
+  slug: string
+): Promise<Author | undefined> {
+  const authors = await wordpressFetch<Author[]>("/wp-json/wp/v2/users", {
+    slug,
+  });
+  return authors[0];
 }
 
 export async function getPostsByAuthor(authorId: number): Promise<Post[]> {
@@ -334,6 +340,8 @@ export async function getPostsByAuthorSlug(
   authorSlug: string
 ): Promise<Post[]> {
   const author = await getAuthorBySlug(authorSlug);
+  if (!author) return [];
+
   return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { author: author.id });
 }
 
@@ -341,6 +349,8 @@ export async function getPostsByCategorySlug(
   categorySlug: string
 ): Promise<Post[]> {
   const category = await getCategoryBySlug(categorySlug);
+  if (!category) return [];
+
   return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", {
     categories: category.id,
   });
@@ -348,6 +358,8 @@ export async function getPostsByCategorySlug(
 
 export async function getPostsByTagSlug(tagSlug: string): Promise<Post[]> {
   const tag = await getTagBySlug(tagSlug);
+  if (!tag) return [];
+
   return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { tags: tag.id });
 }
 

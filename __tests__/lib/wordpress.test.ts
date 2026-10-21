@@ -220,6 +220,37 @@ describe("WordPress API", () => {
     });
   });
 
+  describe("slug lookups", () => {
+    it.each([
+      ["category", "getCategoryBySlug"],
+      ["tag", "getTagBySlug"],
+      ["author", "getAuthorBySlug"],
+    ] as const)(
+      "returns undefined for an unknown %s slug",
+      async (_type, getter) => {
+        mockFetch.mockResolvedValueOnce(mockResponse([]));
+
+        const api = await import("@/lib/wordpress");
+        await expect(api[getter]("missing")).resolves.toBeUndefined();
+      }
+    );
+
+    it.each([
+      ["category", "getPostsByCategorySlug"],
+      ["tag", "getPostsByTagSlug"],
+      ["author", "getPostsByAuthorSlug"],
+    ] as const)(
+      "returns no posts for an unknown %s slug",
+      async (_type, lookup) => {
+        mockFetch.mockResolvedValueOnce(mockResponse([]));
+
+        const api = await import("@/lib/wordpress");
+        await expect(api[lookup]("missing")).resolves.toEqual([]);
+        expect(mockFetch).toHaveBeenCalledTimes(1);
+      }
+    );
+  });
+
   describe("WordPressAPIError", () => {
     it("includes status and endpoint", async () => {
       mockFetch.mockResolvedValue(
